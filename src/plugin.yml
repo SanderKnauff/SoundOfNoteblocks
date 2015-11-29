@@ -2,3 +2,8 @@ name: SoundOfNoteblocks
 main: nl.imine.soundofnoteblocks.SoundOfNoteBlocks
 version: V0.0.1a
 depend: [NoteBlockAPI]
+
+commands:
+  records:
+    description: Main command for musicboxes
+    usage: /records reload for reload the numbers
