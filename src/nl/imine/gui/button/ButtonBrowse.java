@@ -35,7 +35,6 @@ public class ButtonBrowse extends Button {
 
     @Override
     public void doAction(Player player) {
-        System.out.println("Opening inv for player: " + player.getName());
         this.destination.open(player);
     }
 }
