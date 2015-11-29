@@ -1,3 +1,4 @@
 name: SoundOfNoteblocks
 main: nl.imine.soundofnoteblocks.SoundOfNoteBlocks
 version: V0.0.1a
+depend: [NoteBlockAPI]

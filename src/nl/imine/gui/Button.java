@@ -3,6 +3,7 @@ package nl.imine.gui;
 import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -42,7 +43,8 @@ public class Button {
         ItemStack is = new ItemStack(this.material);
         ItemMeta ism = is.getItemMeta();
         ism.setDisplayName(name);
-        ism.setLore(null);
+        ism.setLore(subtext);
+        ism.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         is.setItemMeta(ism);
         return is;
     }
