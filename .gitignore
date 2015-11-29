@@ -19,3 +19,9 @@ nb-configuration.xml
 !Libraries/*.jar
 s
 .DS_Store
+
+# eclipse meuk #
+/bin/
+.settings/
+.project
+.classpath
