@@ -1,15 +1,12 @@
 package nl.imine.soundofnoteblocks;
 
-import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
-import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
-import com.xxmicloxx.NoteBlockAPI.RadioSongPlayer;
-import com.xxmicloxx.NoteBlockAPI.Song;
-import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 import java.util.ArrayList;
-import nl.imine.gui.Button;
-import nl.imine.gui.Container;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
+import nl.imine.gui.Button;
+import nl.imine.gui.Container;
 
 /**
  *
