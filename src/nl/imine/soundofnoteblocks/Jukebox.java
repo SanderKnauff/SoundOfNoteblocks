@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
  * @author Sander
  */
 public class Jukebox implements Listener, Serializable {
+    private static final long serialVersionUID = 3971612771253959236L;
 
     private Coordinate coordinate;
 
