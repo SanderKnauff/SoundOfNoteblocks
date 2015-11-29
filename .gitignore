@@ -16,7 +16,7 @@ nb-configuration.xml
 *.jar
 *.war
 *.ear
-!Libraries/*.jar
+!libs/*.jar
 s
 .DS_Store
 
