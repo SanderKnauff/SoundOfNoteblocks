@@ -1,9 +1,5 @@
 name: SoundOfNoteblocks
 main: nl.imine.soundofnoteblocks.SoundOfNoteBlocks
-<<<<<<< HEAD
-version: V0.0.1a
-depend: [NoteBlockAPI]
-=======
 version: 1.0
 depend: [NoteBlockAPI]
 commands:
@@ -11,4 +7,3 @@ commands:
     description: Main command for musicboxes
     usage: /records reload to reload the track list
     alias: [musicbox, tracklist]
->>>>>>> 022f0ea96faef254921ace748792ae95bb50dc7d
