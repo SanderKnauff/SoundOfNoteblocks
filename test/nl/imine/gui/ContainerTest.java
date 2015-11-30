@@ -1,6 +1,5 @@
 package nl.imine.gui;
 
-import org.bukkit.Material;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

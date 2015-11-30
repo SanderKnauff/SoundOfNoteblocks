@@ -9,6 +9,12 @@ build.xml
 nbactions.xml
 nb-configuration.xml
 
+# Eclipse specific #
+/bin/
+.settings/
+.project
+.classpath
+
 # Class Files #
 *.class
 
@@ -17,11 +23,4 @@ nb-configuration.xml
 *.war
 *.ear
 !libs/*.jar
-s
 .DS_Store
-
-# eclipse meuk #
-/bin/
-.settings/
-.project
-.classpath
