@@ -16,32 +16,33 @@ import org.bukkit.event.player.PlayerMoveEvent;
  *
  * @author Sander
  */
-public class MusicBox implements Listener, Serializable {
+public class Musicbox implements Listener, Serializable {
+    private static final long serialVersionUID = 3971612771253959236L;
 
     private Coordinate coordinate;
 
     private transient boolean isPlaying;
     private transient PositionSongPlayer songPlayer;
 
-    private static ArrayList<MusicBox> jukeboxList = new ArrayList<>();
+    private static ArrayList<Musicbox> jukeboxList = new ArrayList<>();
 
-    public static MusicBox findJukebox(Location location) {
-        for (MusicBox j : jukeboxList) {
+    public static Musicbox findJukebox(Location location) {
+        for (Musicbox j : jukeboxList) {
             if (j.getLocation().equals(location)) {
                 return j;
             }
         }
-        MusicBox j = new MusicBox(location);
+        Musicbox j = new Musicbox(location);
         jukeboxList.add(j);
         Bukkit.getPluginManager().registerEvents(j, SoundOfNoteBlocks.getInstance());
         return j;
     }
 
-    private MusicBox(Coordinate coordinate) {
+    private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
     }
 
-    private MusicBox(Location location) {
+    private Musicbox(Location location) {
         this(new Coordinate(location));
     }
 

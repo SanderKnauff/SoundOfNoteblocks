@@ -35,7 +35,15 @@ public class TrackManager {
         return ret;
     }
     
+    public void setTracks(ArrayList<Track> trackList){
+        this.trackList = trackList;
+    }
+    
     public ArrayList<Track> getTracks(){
         return trackList;
+    }
+    
+    public void reloadTracks(){
+        trackList = loadTracks();
     }
 }

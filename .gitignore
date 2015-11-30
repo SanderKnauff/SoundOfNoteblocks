@@ -9,6 +9,12 @@ build.xml
 nbactions.xml
 nb-configuration.xml
 
+# Eclipse specific #
+/bin/
+.settings/
+.project
+.classpath
+
 # Class Files #
 *.class
 
@@ -16,6 +22,5 @@ nb-configuration.xml
 *.jar
 *.war
 *.ear
-!Libraries/*.jar
-s
+!libs/*.jar
 .DS_Store

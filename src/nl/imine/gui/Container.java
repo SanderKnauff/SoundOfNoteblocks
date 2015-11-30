@@ -21,7 +21,7 @@ public abstract class Container {
 
     private boolean autoResize = false;
     private int maxScreenSize = 0;
-
+    
     private int openPage = 0;
 
     public Container(String title) {

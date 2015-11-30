@@ -8,7 +8,8 @@ import java.io.Serializable;
  * @author Sander
  */
 public class Track implements Serializable {
-
+    private static final long serialVersionUID = -6901663374788956944L;
+	
     private String id;
     private String name;
     private String artist;
