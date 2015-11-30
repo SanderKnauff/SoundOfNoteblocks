@@ -21,7 +21,7 @@ public abstract class Container {
 
     private boolean autoResize = false;
     private int maxScreenSize = 0;
-    
+
     private int openPage = 0;
 
     public Container(String title) {
@@ -52,11 +52,11 @@ public abstract class Container {
             inv = Bukkit.createInventory(null, getInventorySize(maxScreenSize), title);
         } else {
             inv = Bukkit.createInventory(null, getInventorySize(maxScreenSize) + 9, title);
-            Button back = new ButtonChangePage(this, getLastRowSlot((maxScreenSize*page) + 3), page, page == 0 ? BrowseDirection.BLOCKED : BrowseDirection.PREVIOUS);
-            inv.setItem(back.getSlot() - (maxScreenSize*page), back.getItemStack());
+            Button back = new ButtonChangePage(this, getLastRowSlot((maxScreenSize * page) + 3), page, page == 0 ? BrowseDirection.BLOCKED : BrowseDirection.PREVIOUS);
+            inv.setItem(back.getSlot() - (maxScreenSize * page), back.getItemStack());
             buttons.add(back);
-            Button next = new ButtonChangePage(this, getLastRowSlot((maxScreenSize*page) + 5), page, page == getPageAmount() ? BrowseDirection.BLOCKED : BrowseDirection.NEXT);
-            inv.setItem(next.getSlot() - (maxScreenSize*page), next.getItemStack());
+            Button next = new ButtonChangePage(this, getLastRowSlot((maxScreenSize * page) + 5), page, page == getPageAmount() ? BrowseDirection.BLOCKED : BrowseDirection.NEXT);
+            inv.setItem(next.getSlot() - (maxScreenSize * page), next.getItemStack());
             buttons.add(next);
         }
         for (int i = ((page) * maxScreenSize); i < ((page + 1) * maxScreenSize); i++) {
@@ -76,10 +76,22 @@ public abstract class Container {
     }
 
     public Button getButton(int slot, int page) {
-        int id = slot + (maxScreenSize*page);
+        int id = slot + (maxScreenSize * page);
         for (Button b : buttons) {
             if (b.getSlot() == id) {
                 return b;
+            }
+        }
+        return null;
+    }
+
+    public Button getPageButton(int slot, int page) {
+        int id = slot + (maxScreenSize * page);
+        for (Button b : buttons) {
+            if (b instanceof ButtonChangePage) {
+                if (b.getSlot() == id) {
+                    return b;
+                }
             }
         }
         return null;
@@ -134,15 +146,19 @@ public abstract class Container {
         return ((int) ((buttons.size() - 1) / maxScreenSize));
     }
 
+    public int getPageSlot(int slot, int page){
+        return slot + (page * this.getMaxScreenSize());
+    }
+    
     public int getLastRowSlot(int slot) {
         return (maxScreenSize) + slot;
     }
-    
-    public void setOpenPage(int openPage){
+
+    public void setOpenPage(int openPage) {
         this.openPage = openPage;
     }
-    
-    public int getOpenPage(){
+
+    public int getOpenPage() {
         return openPage;
     }
 

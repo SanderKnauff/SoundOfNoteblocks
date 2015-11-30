@@ -22,9 +22,20 @@ public class GuiListener implements Listener {
     public void onPlayerInventoryClick(InventoryClickEvent evt) {
         if (GuiManager.getInstance().isGuiInventory(evt.getClickedInventory())) {
             Container container = GuiManager.getInstance().getInventoryContainer(evt.getClickedInventory());
+            if (container.getButtons().size() > container.getMaxScreenSize()) {
+                if (evt.getSlot() == container.getLastRowSlot(3) || evt.getSlot() == container.getLastRowSlot(5)) {
+                    Button button = container.getPageButton(evt.getSlot(), container.getOpenPage());
+                    button.doAction((Player) evt.getWhoClicked());
+                    evt.setCancelled(true);
+                    return;
+                }
+            }
             if (container.getButton(evt.getSlot(), container.getOpenPage()) != null) {
-                Button button = container.getButton(evt.getSlot(), container.getOpenPage());
-                button.doAction((Player) evt.getWhoClicked());
+                if ((container.getPageSlot(evt.getSlot(), container.getOpenPage()) >= container.getOpenPage() * container.getMaxScreenSize())
+                        && evt.getSlot() + (container.getOpenPage() * container.getMaxScreenSize()) <= (((container.getOpenPage() + 1) * container.getMaxScreenSize()) - 1)) {
+                    Button button = container.getButton(evt.getSlot(), container.getOpenPage());
+                    button.doAction((Player) evt.getWhoClicked());
+                }
             }
             evt.setCancelled(true);
         }
