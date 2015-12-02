@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -17,18 +18,18 @@ public class TrackManager {
     public static final String NBS_EXSTENTION = ".nbs";
     public static final String JSON_EXSTENTION = ".json";
 
-    private ArrayList<Track> trackList = new ArrayList<>();
+    private List<Track> trackList = new ArrayList<>();
 
     public TrackManager() {
         trackList = loadTracks();
     }
 
-    private ArrayList<Track> loadTracks() {
-        ArrayList<Track> ret = new ArrayList<>();
+    private List<Track> loadTracks() {
+        List<Track> ret = new ArrayList<>();
         try {
             Gson gson = new Gson();
             Track[] tracks = gson.fromJson(new FileReader(TRACK_REPO_DIR + "trackList" + JSON_EXSTENTION), Track[].class);
-            ret = new ArrayList<>(Arrays.asList(tracks));
+            ret = Arrays.asList(tracks);
         } catch (FileNotFoundException fnfe) {
             System.out.println("FileNotFoundException: " + fnfe.getMessage());
         }
@@ -39,7 +40,7 @@ public class TrackManager {
         this.trackList = trackList;
     }
     
-    public ArrayList<Track> getTracks(){
+    public List<Track> getTracks(){
         return trackList;
     }
     
