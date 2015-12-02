@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class Musicbox implements Listener, Serializable {
     private static final long serialVersionUID = 3971612771253959236L;
     
-    private static final double DISTANCE = Math.pow(32, 2);
+    private static final double DISTANCE = Math.pow(35, 2);
 
     private Coordinate coordinate;
 
