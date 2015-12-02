@@ -36,7 +36,7 @@ public class TrackManager {
         return ret;
     }
     
-    public void setTracks(ArrayList<Track> trackList){
+    public void setTracks(List<Track> trackList){
         this.trackList = trackList;
     }
     
