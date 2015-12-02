@@ -18,6 +18,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
  */
 public class Musicbox implements Listener, Serializable {
     private static final long serialVersionUID = 3971612771253959236L;
+    
+    private static final double DISTANCE = Math.pow(30, 2);
 
     private Coordinate coordinate;
 
@@ -74,7 +76,7 @@ public class Musicbox implements Listener, Serializable {
     public ArrayList<Player> getPlayersInRange() {
         ArrayList<Player> ret = new ArrayList<>();
         for (Player p : coordinate.getWorld().getPlayers()) {
-            if (coordinate.toLocation().distance(p.getLocation()) < Math.pow(24, 2)) {
+            if (coordinate.toLocation().distance(p.getLocation()) < DISTANCE) {
                 ret.add(p);
             }
         }
@@ -85,7 +87,7 @@ public class Musicbox implements Listener, Serializable {
     public void onPlayerMove(PlayerMoveEvent evt) {
         if (songPlayer != null) {
             if (coordinate.toLocation().getWorld().equals(evt.getPlayer().getLocation().getWorld())) {
-                if (evt.getPlayer().getLocation().distance(coordinate.toLocation()) < Math.pow(24, 2)) {
+                if (evt.getPlayer().getLocation().distance(coordinate.toLocation()) < DISTANCE) {
                     songPlayer.addPlayer(evt.getPlayer());
                 } else {
                     songPlayer.removePlayer(evt.getPlayer());
