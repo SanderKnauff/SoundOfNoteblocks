@@ -78,7 +78,7 @@ public class Musicbox implements Listener, Serializable {
         for (Player p : getPlayersInRange()) {
             songPlayer.addPlayer(p);
         }
-        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, 0, 0.5), EntityType.ARMOR_STAND);
+        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, -0.5, 0.5), EntityType.ARMOR_STAND);
         tag.setVisible(false);
         tag.setGravity(false);
         tag.setBasePlate(false);
@@ -92,6 +92,7 @@ public class Musicbox implements Listener, Serializable {
         if (songPlayer != null) {
             songPlayer.setPlaying(false);
         }
+        songPlayer.destroy();
         tag.remove();
     }
 
