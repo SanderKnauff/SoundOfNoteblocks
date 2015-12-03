@@ -48,7 +48,7 @@ public abstract class Container {
             }
         }
         Inventory inv;
-        if (buttons.size() <= maxScreenSize) {
+        if (buttons.size() < maxScreenSize) {
             inv = Bukkit.createInventory(null, getInventorySize(maxScreenSize), title);
         } else {
             inv = Bukkit.createInventory(null, getInventorySize(maxScreenSize) + 9, title);

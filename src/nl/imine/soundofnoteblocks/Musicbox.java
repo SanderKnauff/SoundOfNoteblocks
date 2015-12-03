@@ -6,7 +6,10 @@ import com.xxmicloxx.NoteBlockAPI.Song;
 import java.io.Serializable;
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,11 +20,14 @@ import org.bukkit.event.player.PlayerMoveEvent;
  * @author Sander
  */
 public class Musicbox implements Listener, Serializable {
+
     private static final long serialVersionUID = 3971612771253959236L;
-    
+
     private static final double DISTANCE = Math.pow(35, 2);
 
     private Coordinate coordinate;
+
+    private ArmorStand tag;
 
     private transient boolean isPlaying;
     private transient PositionSongPlayer songPlayer;
@@ -42,6 +48,12 @@ public class Musicbox implements Listener, Serializable {
 
     private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
+        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, 0, 0.5), EntityType.ARMOR_STAND);
+        tag.setVisible(false);
+        tag.setGravity(false);
+        tag.setRemoveWhenFarAway(true);
+        tag.setCustomName("");
+        tag.setCustomNameVisible(true);
     }
 
     private Musicbox(Location location) {
@@ -64,6 +76,7 @@ public class Musicbox implements Listener, Serializable {
         for (Player p : getPlayersInRange()) {
             songPlayer.addPlayer(p);
         }
+        tag.setCustomName(ChatColor.GOLD + track.getName() + "\n" + ChatColor.BLUE + track.getArtist());
     }
 
     public void stopPlaying() {
@@ -71,6 +84,7 @@ public class Musicbox implements Listener, Serializable {
         if (songPlayer != null) {
             songPlayer.setPlaying(false);
         }
+        tag.setCustomName("");
     }
 
     public ArrayList<Player> getPlayersInRange() {
