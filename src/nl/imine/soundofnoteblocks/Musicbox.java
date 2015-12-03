@@ -3,6 +3,9 @@ package nl.imine.soundofnoteblocks;
 import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
+import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
+import com.xxmicloxx.NoteBlockAPI.SongEndEvent;
+import com.xxmicloxx.NoteBlockAPI.SongStoppedEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
@@ -110,6 +113,19 @@ public class Musicbox implements Listener, Serializable {
                 songPlayer.removePlayer(evt.getPlayer());
             }
         }
+    }
+    
+    @EventHandler
+    public void onSongDestroy(SongDestroyingEvent evt){
+        System.out.println("SongDestroyingEvent");
+    }
+    @EventHandler
+    public void onSongStop(SongStoppedEvent evt){
+        System.out.println("SongStoppedEvent");
+    }
+    @EventHandler
+    public void onSongEnd(SongEndEvent evt){
+        System.out.println("SongEndEvent");
     }
 
     public Location getLocation() {
