@@ -37,8 +37,8 @@ public class Musicbox implements Listener, Serializable {
     private transient PositionSongPlayer songPlayer;
 
     private static ArrayList<Musicbox> jukeboxList = new ArrayList<>();
-    
-    public static List<Musicbox> getMusicBoxes(){
+
+    public static List<Musicbox> getMusicBoxes() {
         return jukeboxList;
     }
 
@@ -53,8 +53,8 @@ public class Musicbox implements Listener, Serializable {
         Bukkit.getPluginManager().registerEvents(j, SoundOfNoteBlocks.getInstance());
         return j;
     }
-    
-    public static void removeJukebox(Musicbox musicbox){
+
+    public static void removeJukebox(Musicbox musicbox) {
         jukeboxList.remove(musicbox);
     }
 
@@ -96,8 +96,8 @@ public class Musicbox implements Listener, Serializable {
         if (songPlayer != null) {
             songPlayer.setPlaying(false);
         }
-        songPlayer = null;
         songPlayer.destroy();
+        songPlayer = null;
         tag.remove();
     }
 
@@ -127,18 +127,8 @@ public class Musicbox implements Listener, Serializable {
     }
 
     @EventHandler
-    public void onSongDestroy(SongDestroyingEvent evt) {
-        System.out.println("SongDestroyingEvent");
-    }
-
-    @EventHandler
     public void onSongStop(SongStoppedEvent evt) {
-        System.out.println("SongStoppedEvent");
-    }
-
-    @EventHandler
-    public void onSongEnd(SongEndEvent evt) {
-        System.out.println("SongEndEvent");
+        stopPlaying();
     }
 
     public Location getLocation() {
