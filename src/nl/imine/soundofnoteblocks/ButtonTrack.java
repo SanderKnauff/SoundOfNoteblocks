@@ -42,6 +42,11 @@ public class ButtonTrack extends Button {
 
     @Override
     public void doAction(Player player) {
-        jukebox.playTrack(track);
+        if (jukebox != null) {
+            if (jukebox.getLocation().getBlock().getType().equals(Material.JUKEBOX)) {
+                jukebox.playTrack(track);
+            }
+        }
+        player.closeInventory();
     }
 }

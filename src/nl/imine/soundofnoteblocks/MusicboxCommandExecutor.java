@@ -7,6 +7,7 @@ package nl.imine.soundofnoteblocks;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -22,6 +23,9 @@ public class MusicboxCommandExecutor implements TabExecutor {
         if (command.getName().equalsIgnoreCase("jukebox")) {
             if (sender.hasPermission("iMine.records") && args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                 SoundOfNoteBlocks.getTrackManager().reloadTracks();
+                sender.sendMessage(ChatColor.GOLD + "Success: Loaded "
+                        + ChatColor.RED + SoundOfNoteBlocks.getTrackManager().getTracks().size()
+                        + ChatColor.GOLD + " tracks from file.");
             }
             return true;
         }
