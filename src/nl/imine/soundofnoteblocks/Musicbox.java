@@ -81,6 +81,7 @@ public class Musicbox implements Listener, Serializable {
         tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, 0, 0.5), EntityType.ARMOR_STAND);
         tag.setVisible(false);
         tag.setGravity(false);
+        tag.setBasePlate(false);
         tag.setRemoveWhenFarAway(true);
         tag.setCustomName(ChatColor.GOLD + track.getName() + "\n" + ChatColor.BLUE + track.getArtist());
         tag.setCustomNameVisible(true);
