@@ -31,6 +31,7 @@ distributefase:
 # Set variable $1 as the jar name
     - set $(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
 # Copy files to there locations
+    - "echo $gitcipass|sudo -S cp -f ../dist/$1 /home/minecraft/multicraft/servers/server9/plugins/update"
     - "echo $gitcipass|sudo -S cp -f ../dist/$1 /home/minecraft/multicraft/servers/server14/plugins/update"
 stages:
   - build
