@@ -129,7 +129,11 @@ public class Musicbox implements Listener, Serializable {
 
     @EventHandler
     public void onSongStop(SongStoppedEvent evt) {
-        stopPlaying();
+        isPlaying = false;
+        songPlayer = null;
+        if (tag != null) {
+            tag.remove();
+        }
     }
 
     public Location getLocation() {
