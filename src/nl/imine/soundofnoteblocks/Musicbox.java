@@ -51,12 +51,6 @@ public class Musicbox implements Listener, Serializable {
 
     private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
-        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, 0, 0.5), EntityType.ARMOR_STAND);
-        tag.setVisible(false);
-        tag.setGravity(false);
-        tag.setRemoveWhenFarAway(true);
-        tag.setCustomName("");
-        tag.setCustomNameVisible(true);
     }
 
     private Musicbox(Location location) {
@@ -80,6 +74,12 @@ public class Musicbox implements Listener, Serializable {
             songPlayer.addPlayer(p);
         }
         tag.setCustomName(ChatColor.GOLD + track.getName() + "\n" + ChatColor.BLUE + track.getArtist());
+        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, 0, 0.5), EntityType.ARMOR_STAND);
+        tag.setVisible(false);
+        tag.setGravity(false);
+        tag.setRemoveWhenFarAway(true);
+        tag.setCustomName("");
+        tag.setCustomNameVisible(true);
     }
 
     public void stopPlaying() {
@@ -87,7 +87,7 @@ public class Musicbox implements Listener, Serializable {
         if (songPlayer != null) {
             songPlayer.setPlaying(false);
         }
-        tag.setCustomName("");
+        tag.remove();
     }
 
     public ArrayList<Player> getPlayersInRange() {
@@ -114,17 +114,19 @@ public class Musicbox implements Listener, Serializable {
             }
         }
     }
-    
+
     @EventHandler
-    public void onSongDestroy(SongDestroyingEvent evt){
+    public void onSongDestroy(SongDestroyingEvent evt) {
         System.out.println("SongDestroyingEvent");
     }
+
     @EventHandler
-    public void onSongStop(SongStoppedEvent evt){
+    public void onSongStop(SongStoppedEvent evt) {
         System.out.println("SongStoppedEvent");
     }
+
     @EventHandler
-    public void onSongEnd(SongEndEvent evt){
+    public void onSongEnd(SongEndEvent evt) {
         System.out.println("SongEndEvent");
     }
 

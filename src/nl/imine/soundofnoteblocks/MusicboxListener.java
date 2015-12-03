@@ -4,11 +4,15 @@ import nl.imine.gui.Container;
 import nl.imine.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class MusicboxListener implements Listener {
 
@@ -22,6 +26,30 @@ public class MusicboxListener implements Listener {
 
     private MusicboxListener() {
 
+    }
+
+    @EventHandler
+    public void onChunkLoad(ChunkLoadEvent evt) {
+        for (Entity e : evt.getChunk().getEntities()) {
+            if (e instanceof ArmorStand) {
+                ArmorStand as = (ArmorStand) e;
+                if (!as.hasBasePlate()) {
+                    as.remove();
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onChunkLoad(ChunkUnloadEvent evt) {
+        for (Entity e : evt.getChunk().getEntities()) {
+            if (e instanceof ArmorStand) {
+                ArmorStand as = (ArmorStand) e;
+                if (!as.hasBasePlate()) {
+                    as.remove();
+                }
+            }
+        }
     }
 
     @EventHandler

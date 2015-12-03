@@ -5,13 +5,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import nl.imine.gui.GuiManager;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
 
 /**
  *
  * @author Sander
  */
 public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
-
 
     public static Plugin plugin;
     private static TrackManager trackManager = new TrackManager();
@@ -20,21 +22,35 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
     public void onEnable() {
         plugin = this;
         GuiManager.init(plugin);
-        MusicboxListener.init();  
+        MusicboxListener.init();
         getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
+        for (World w : Bukkit.getWorlds()) {
+            for (ArmorStand as : w.getEntitiesByClass(ArmorStand.class)) {
+                if (!as.hasBasePlate()) {
+                    as.remove();
+                }
+            }
+        }
     }
 
     @Override
     public void onDisable() {
         trackManager = null;
         plugin = null;
+        for (World w : Bukkit.getWorlds()) {
+            for (ArmorStand as : w.getEntitiesByClass(ArmorStand.class)) {
+                if (!as.hasBasePlate()) {
+                    as.remove();
+                }
+            }
+        }
     }
 
     public static Plugin getInstance() {
         return plugin;
     }
-    
-    public static TrackManager getTrackManager(){
+
+    public static TrackManager getTrackManager() {
         return trackManager;
     }
 }
