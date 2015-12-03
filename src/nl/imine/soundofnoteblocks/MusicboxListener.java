@@ -77,7 +77,9 @@ public class MusicboxListener implements Listener {
     @EventHandler
     public void onPlayerBlockBreak(BlockBreakEvent evt) {
         if (evt.getBlock().getType().equals(Material.JUKEBOX)) {
-            Musicbox.findJukebox(evt.getBlock().getLocation()).stopPlaying();
+            Musicbox musicbox = Musicbox.findJukebox(evt.getBlock().getLocation());
+            musicbox.stopPlaying();
+            Musicbox.removeJukebox(musicbox);
         }
     }
 }

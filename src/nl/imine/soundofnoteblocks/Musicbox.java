@@ -53,6 +53,10 @@ public class Musicbox implements Listener, Serializable {
         Bukkit.getPluginManager().registerEvents(j, SoundOfNoteBlocks.getInstance());
         return j;
     }
+    
+    public static void removeJukebox(Musicbox musicbox){
+        jukeboxList.remove(musicbox);
+    }
 
     private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
