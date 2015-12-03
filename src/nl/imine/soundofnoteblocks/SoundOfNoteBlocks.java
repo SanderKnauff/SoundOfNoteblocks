@@ -44,6 +44,9 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
                 }
             }
         }
+        for(Musicbox m : Musicbox.getMusicBoxes()){
+            m.stopPlaying();
+        }
     }
 
     public static Plugin getInstance() {

@@ -8,6 +8,7 @@ import com.xxmicloxx.NoteBlockAPI.SongEndEvent;
 import com.xxmicloxx.NoteBlockAPI.SongStoppedEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -36,6 +37,10 @@ public class Musicbox implements Listener, Serializable {
     private transient PositionSongPlayer songPlayer;
 
     private static ArrayList<Musicbox> jukeboxList = new ArrayList<>();
+    
+    public static List<Musicbox> getMusicBoxes(){
+        return jukeboxList;
+    }
 
     public static Musicbox findJukebox(Location location) {
         for (Musicbox j : jukeboxList) {
