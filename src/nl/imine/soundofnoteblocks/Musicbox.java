@@ -94,7 +94,9 @@ public class Musicbox implements Listener, Serializable {
     public void stopPlaying() {
         isPlaying = false;
         if (songPlayer != null) {
-            songPlayer.setPlaying(false);
+            if (songPlayer.isPlaying()) {
+                songPlayer.setPlaying(false);
+            }
         }
         songPlayer = null;
         tag.remove();
