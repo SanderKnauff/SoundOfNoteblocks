@@ -87,7 +87,7 @@ public class Musicbox implements Listener, Serializable {
         tag.setGravity(false);
         tag.setBasePlate(false);
         tag.setRemoveWhenFarAway(true);
-        tag.setCustomName(ChatColor.GOLD + track.getName() + "\n" + ChatColor.BLUE + track.getArtist());
+        tag.setCustomName(ChatColor.GOLD + track.getName() + " || " + ChatColor.BLUE + track.getArtist());
         tag.setCustomNameVisible(true);
     }
 
@@ -99,7 +99,9 @@ public class Musicbox implements Listener, Serializable {
             }
         }
         songPlayer = null;
-        tag.remove();
+        if (tag != null) {
+            tag.remove();
+        }
     }
 
     public ArrayList<Player> getPlayersInRange() {

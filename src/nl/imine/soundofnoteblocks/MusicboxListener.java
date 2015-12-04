@@ -57,7 +57,7 @@ public class MusicboxListener implements Listener {
         if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (evt.getClickedBlock().getType().equals(Material.JUKEBOX)) {
                 if (!(((org.bukkit.block.Jukebox) evt.getClickedBlock().getState()).isPlaying())) {
-                    if (evt.getPlayer().hasPermission("imine.uhc.vip")) {
+                    if (evt.getPlayer().hasPermission("iMine.jukebox.play")) {
                         if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")) {
                             Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
                             Container c = GuiManager.getInstance().createContainer("Choose Track", 45);
