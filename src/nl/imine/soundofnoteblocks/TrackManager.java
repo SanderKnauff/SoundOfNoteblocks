@@ -31,7 +31,7 @@ public class TrackManager {
                     Track[].class);
             trackList = Arrays.asList(tracks);
         } catch (FileNotFoundException fnfe) {
-            System.out.println("FileNotFoundException: " + fnfe.getMessage());
+            System.err.println("FileNotFoundException: " + fnfe.getMessage());
         }
     }
 

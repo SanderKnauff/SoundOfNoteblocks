@@ -9,7 +9,6 @@ import org.bukkit.Material;
 public enum BrowseDirection {
 
     PREVIOUS("Previous", -1, Material.STONE_BUTTON),
-    BLOCKED("No page this way", 0, Material.BARRIER),
     NEXT("Next", 1, Material.STONE_BUTTON);
 
     final String title;

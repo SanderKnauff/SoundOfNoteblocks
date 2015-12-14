@@ -1,11 +1,14 @@
 package nl.imine.gui;
 
 import java.util.ArrayList;
-import nl.imine.gui.button.BrowseDirection;
-import nl.imine.gui.button.ButtonChangePage;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+
+import nl.imine.gui.button.BrowseDirection;
+import nl.imine.gui.button.ButtonChangePage;
 
 /**
  *
@@ -13,59 +16,61 @@ import org.bukkit.inventory.Inventory;
  */
 public abstract class Container {
 
-    private final ArrayList<Inventory> openInvs = new ArrayList<>();
+    private final List<Inventory> openInvs = new ArrayList<>();
 
     private final ArrayList<Button> buttons = new ArrayList<>();
+    private final ArrayList<Button> staticButtons = new ArrayList<>();
 
     private final String title;
 
-    private boolean autoResize = false;
-    private int maxScreenSize = 0;
-    
+    private boolean autoResize;
+    private int maxScreenSize;
     private int openPage = 0;
 
     public Container(String title) {
-        this.title = title;
-        this.autoResize = true;
-        this.maxScreenSize = 54;
+        this(title, 9);
     }
 
     public Container(String title, int maxSize) {
-        this(title);
-        this.maxScreenSize = maxSize;
-        this.autoResize = false;
+        this(title, maxSize, true);
     }
 
     public Container(String title, int maxSize, boolean autoResize) {
-        this(title, maxSize);
+        this(title, maxSize, autoResize, true);
+    }
+
+    public Container(String title, int maxSize, boolean autoResize, boolean defaultButtons) {
+        this.title = title;
+        this.maxScreenSize = maxSize;
         this.autoResize = autoResize;
+        if (defaultButtons) {
+            staticButtons.add(getDefaultPreviousButton(this));
+            staticButtons.add(getDefaultNextButton(this));
+        }
     }
 
     public void open(Player player, int page) {
-        for (Button b : (ArrayList<Button>) buttons.clone()) {
+        openPage = page;
+
+        Inventory inv;
+        for (Button b : (List<Button>) buttons.clone()) {
             if (b instanceof ButtonChangePage) {
                 buttons.remove(b);
             }
         }
-        Inventory inv;
-        if (buttons.size() < maxScreenSize) {
+        if (buttons.size() < maxScreenSize && staticButtons.isEmpty()) {
             inv = Bukkit.createInventory(null, getInventorySize(maxScreenSize), title);
         } else {
             inv = Bukkit.createInventory(null, getInventorySize(maxScreenSize) + 9, title);
-            Button back = new ButtonChangePage(this, getLastRowSlot((maxScreenSize * page) + 3), page, page == 0 ? BrowseDirection.BLOCKED : BrowseDirection.PREVIOUS);
-            inv.setItem(back.getSlot() - (maxScreenSize * page), back.getItemStack());
-            buttons.add(back);
-            Button next = new ButtonChangePage(this, getLastRowSlot((maxScreenSize * page) + 5), page, page == getPageAmount() ? BrowseDirection.BLOCKED : BrowseDirection.NEXT);
-            inv.setItem(next.getSlot() - (maxScreenSize * page), next.getItemStack());
-            buttons.add(next);
         }
         for (int i = ((page) * maxScreenSize); i < ((page + 1) * maxScreenSize); i++) {
             if (i < buttons.size()) {
                 Button b = buttons.get(i);
-                if (!(b instanceof ButtonChangePage)) {
-                    inv.setItem(i - ((page) * maxScreenSize), b.getItemStack());
-                }
+                inv.setItem(i - ((page) * maxScreenSize), b.getItemStack());
             }
+        }
+        for (Button staticButton : staticButtons) {
+            inv.setItem(getLastRowSlot(Math.abs(staticButton.getSlot() % 9)), staticButton.getItemStack());
         }
         openInvs.add(inv);
         player.openInventory(inv);
@@ -75,7 +80,24 @@ public abstract class Container {
         this.open(player, 0);
     }
 
+    public void close() {
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            for (Inventory inv : openInvs) {
+                if (pl.getInventory().equals(inv) || pl.getOpenInventory().equals(inv)) {
+                    pl.closeInventory();
+                }
+            }
+        }
+    }
+
     public Button getButton(int slot, int page) {
+        if (slot > maxScreenSize) {
+            for (Button staticButton : staticButtons) {
+                if (staticButton.getSlot() == (slot - maxScreenSize)) {
+                    return staticButton;
+                }
+            }
+        }
         int id = slot + (maxScreenSize * page);
         for (Button b : buttons) {
             if (b.getSlot() == id) {
@@ -85,19 +107,11 @@ public abstract class Container {
         return null;
     }
 
-    public Button getPageButton(int slot, int page) {
-        int id = slot + (maxScreenSize * page);
-        for (Button b : buttons) {
-            if (b instanceof ButtonChangePage) {
-                if (b.getSlot() == id) {
-                    return b;
-                }
-            }
-        }
-        return null;
+    public Button getStaticButton(int slot) {
+        return staticButtons.get(slot);
     }
 
-    public ArrayList<Inventory> getOpenInventories() {
+    public List<Inventory> getOpenInventories() {
         return openInvs;
     }
 
@@ -109,8 +123,16 @@ public abstract class Container {
         buttons.add(button);
     }
 
-    public ArrayList<Button> getButtons() {
+    public void addStaticButton(Button button) {
+        staticButtons.add(button);
+    }
+
+    public List<Button> getButtons() {
         return buttons;
+    }
+
+    public List<Button> getStaticButtons() {
+        return staticButtons;
     }
 
     public String getTitle() {
@@ -146,16 +168,12 @@ public abstract class Container {
         return ((int) ((buttons.size() - 1) / maxScreenSize));
     }
 
-    public int getPageSlot(int slot, int page){
+    public int getPageSlot(int slot, int page) {
         return slot + (page * this.getMaxScreenSize());
     }
-    
+
     public int getLastRowSlot(int slot) {
         return (maxScreenSize) + slot;
-    }
-
-    public void setOpenPage(int openPage) {
-        this.openPage = openPage;
     }
 
     public int getOpenPage() {
@@ -166,6 +184,14 @@ public abstract class Container {
         int size = 9;
         size = ((double) maxSize < 45) ? ((int) ((maxSize - 1) / 9) + 1) * 9 : 45;
         return size;
+    }
+
+    public static Button getDefaultPreviousButton(Container c) {
+        return new ButtonChangePage(c, 3, BrowseDirection.PREVIOUS);
+    }
+
+    public static Button getDefaultNextButton(Container c) {
+        return new ButtonChangePage(c, 5, BrowseDirection.NEXT);
     }
 
     @Override

@@ -2,7 +2,9 @@ package nl.imine.gui.button;
 
 import java.util.ArrayList;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import nl.imine.gui.Button;
 import nl.imine.gui.Container;
@@ -13,34 +15,54 @@ import nl.imine.gui.Container;
  */
 public class ButtonChangePage extends Button {
 
-    final private int currentPage;
-    final private BrowseDirection browseDirection;
+    private final BrowseDirection browseDirection;
 
-    public ButtonChangePage(Container container, int slot, int currentPage, BrowseDirection browseDirection) {
+    public ButtonChangePage(Container container, int slot, BrowseDirection browseDirection) {
         super(container, browseDirection.getMaterial(), browseDirection.getTitle(), slot);
-        this.currentPage = currentPage;
         this.browseDirection = browseDirection;
     }
 
-    public ButtonChangePage(Container container, int slot, ArrayList<String> subtext, int currentPage, BrowseDirection browseDirection) {
+    public ButtonChangePage(Container container, int slot, ArrayList<String> subtext, BrowseDirection browseDirection) {
         super(container, browseDirection.getMaterial(), browseDirection.getTitle(), slot, subtext);
-        this.currentPage = currentPage;
         this.browseDirection = browseDirection;
     }
 
-    public ButtonChangePage(Container container, int slot, String subtext, int currentPage, BrowseDirection browseDirection) {
+    public ButtonChangePage(Container container, int slot, String subtext, BrowseDirection browseDirection) {
         super(container, browseDirection.getMaterial(), browseDirection.getTitle(), slot, subtext);
-        this.currentPage = currentPage;
         this.browseDirection = browseDirection;
     }
 
-    public int getCurrentPage() {
-        return this.currentPage;
+    @Override
+    public ItemStack getItemStack() {
+        ItemStack is = super.getItemStack();
+        if (browseDirection == BrowseDirection.PREVIOUS) {
+            if (container.getOpenPage() == 0) {
+                is.setType(Material.BARRIER);
+            } else {
+                is.setType(browseDirection.getMaterial());
+            }
+        } else if (browseDirection == BrowseDirection.NEXT) {
+            if (container.getOpenPage() == container.getPageAmount()) {
+                is.setType(Material.BARRIER);
+            } else {
+                is.setType(browseDirection.getMaterial());
+            }
+        }
+        return is;
     }
 
     @Override
     public void doAction(Player player) {
-        container.setOpenPage(currentPage + browseDirection.getAmount());
-        container.open(player, currentPage + browseDirection.getAmount());
+        int amount = 0;
+        if (browseDirection == BrowseDirection.PREVIOUS) {
+            if (container.getOpenPage() != 0) {
+                amount = browseDirection.getAmount();
+            }
+        } else if (browseDirection == BrowseDirection.NEXT) {
+            if (container.getOpenPage() != container.getPageAmount()) {
+                amount = browseDirection.getAmount();
+            }
+        }
+        container.open(player, container.getOpenPage() + amount);
     }
 }

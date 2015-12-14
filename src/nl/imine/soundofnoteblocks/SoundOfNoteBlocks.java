@@ -4,6 +4,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import nl.imine.gui.Container;
 import nl.imine.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -46,6 +47,9 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
         }
         for(Musicbox m : Musicbox.getMusicBoxes()){
             m.stopPlaying();
+        }
+        for(Container c : GuiManager.getInstance().getContainers()){
+            c.close();
         }
     }
 

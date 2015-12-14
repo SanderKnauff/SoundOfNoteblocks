@@ -22,9 +22,31 @@ public class GuiManager {
     public static GuiManager getInstance() {
         return manager;
     }
+    
+    public ArrayList<nl.imine.gui.Container> getContainers() {
+        return containers;
+    }
+
+    public Container createContainer(String name) {
+        Container container = new GenericContainer(name);
+        containers.add(container);
+        return container;
+    }
 
     public Container createContainer(String name, int size) {
-        Container container = new AContainer(name, size);
+        Container container = new GenericContainer(name, size);
+        containers.add(container);
+        return container;
+    }
+
+    public Container createContainer(String name, int size, boolean autoResize) {
+        Container container = new GenericContainer(name, size, autoResize);
+        containers.add(container);
+        return container;
+    }
+
+    public Container createContainer(String name, int size, boolean autoResize, boolean defaultButtons) {
+        Container container = new GenericContainer(name, size, autoResize, defaultButtons);
         containers.add(container);
         return container;
     }
@@ -52,21 +74,24 @@ public class GuiManager {
     }
 
     private GuiManager() {
-
     }
 
-    private class AContainer extends Container {
+    private class GenericContainer extends Container {
 
-        public AContainer(String title) {
+        public GenericContainer(String title) {
             super(title);
         }
 
-        public AContainer(String title, int maxSize) {
+        public GenericContainer(String title, int maxSize) {
             super(title, maxSize);
         }
 
-        public AContainer(String title, int maxSize, boolean autoResize) {
+        public GenericContainer(String title, int maxSize, boolean autoResize) {
             super(title, maxSize, autoResize);
+        }
+
+        public GenericContainer(String title, int maxSize, boolean autoResize, boolean defaultButtons) {
+            super(title, maxSize, autoResize, defaultButtons);
         }
     }
 }
