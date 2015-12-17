@@ -24,16 +24,20 @@ buildfase:
 # create a .jar file from everything inside the build directory AND put it in the ../dist directory
     - jar cvf ../dist/$1.jar -C ./build/ .
   only:
-  - master
+    - master
 distributefase:
   stage: deploy
   script:
 # Set variable $1 as the jar name
     - set $(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
+# Sudo su
+    - "echo $gitcipass|sudo -S bash"
 # Copy files to there locations
-    - "echo $gitcipass|sudo -S cp -f ../dist/$1 /home/minecraft/multicraft/servers/server3/plugins/update"
-    - "echo $gitcipass|sudo -S cp -f ../dist/$1 /home/minecraft/multicraft/servers/server9/plugins/update"
-    - "echo $gitcipass|sudo -S cp -f ../dist/$1 /home/minecraft/multicraft/servers/server14/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server3/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server9/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server14/plugins/update"
+  only:
+    - master
 stages:
   - build
   - deploy
