@@ -1,21 +1,27 @@
 package nl.imine.soundofnoteblocks;
 
-import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
-import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
-import com.xxmicloxx.NoteBlockAPI.Song;
-import com.xxmicloxx.NoteBlockAPI.SongStoppedEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+
+import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
+import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
+import com.xxmicloxx.NoteBlockAPI.Song;
+import com.xxmicloxx.NoteBlockAPI.SongStoppedEvent;
+
+import nl.imine.gui.Button;
+import nl.imine.gui.Container;
 
 /**
  *
@@ -30,7 +36,9 @@ public class Musicbox implements Listener, Serializable {
     private Coordinate coordinate;
 
     private ArmorStand tag;
+    private boolean haveTag = true;
 
+    private transient Track lastTrack;
     private transient boolean isPlaying;
     private transient PositionSongPlayer songPlayer;
 
@@ -68,6 +76,7 @@ public class Musicbox implements Listener, Serializable {
         if (isPlaying) {
             stopPlaying();
         }
+        lastTrack = track;
         isPlaying = true;
         Song song = NBSDecoder.parse(track.getFile());
         songPlayer = new PositionSongPlayer(song);
@@ -80,12 +89,19 @@ public class Musicbox implements Listener, Serializable {
         for (Player p : getPlayersInRange()) {
             songPlayer.addPlayer(p);
         }
-        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, -0.5, 0.5), EntityType.ARMOR_STAND);
+        if (haveTag) {
+            summonTag();
+        }
+    }
+
+    private void summonTag() {
+        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, -0.5, 0.5),
+                EntityType.ARMOR_STAND);
         tag.setVisible(false);
         tag.setGravity(false);
         tag.setBasePlate(false);
         tag.setRemoveWhenFarAway(true);
-        tag.setCustomName(ChatColor.GOLD + track.getName() + " || " + ChatColor.BLUE + track.getArtist());
+        tag.setCustomName(ChatColor.GOLD + lastTrack.getName() + " || " + ChatColor.BLUE + lastTrack.getArtist());
         tag.setCustomNameVisible(true);
     }
 
@@ -129,14 +145,71 @@ public class Musicbox implements Listener, Serializable {
 
     @EventHandler
     public void onSongStop(SongStoppedEvent evt) {
-        isPlaying = false;
-        songPlayer = null;
-        if (tag != null) {
-            tag.remove();
+        if (songPlayer.equals(evt.getSongPlayer())) {
+            isPlaying = false;
+            lastTrack = null;
+            songPlayer = null;
+            if (tag != null) {
+                tag.remove();
+                tag = null;
+            }
         }
     }
 
     public Location getLocation() {
         return coordinate.toLocation();
+    }
+
+    public Button createStopButton(Container c, int slot) {
+        return new StopButton(c, slot);
+    }
+
+    public Button createTogglenametagButton(Container c, int slot) {
+        return new ToggleNametagButton(c, slot);
+    }
+
+    public Button createRandomButton(Container c, int slot) {
+        return new RandomNumberButton(c, slot);
+    }
+
+    private class ToggleNametagButton extends Button {
+        public ToggleNametagButton(Container container, int slot) {
+            super(container, Material.NAME_TAG, "Toggle Currentsong Nametag", slot);
+        }
+
+        @Override
+        public void doAction(Player player) {
+            haveTag = !haveTag;
+            if (!haveTag && tag != null) {
+                tag.remove();
+                tag = null;
+            }
+            if (haveTag && tag == null) {
+                summonTag();
+            }
+        }
+    }
+
+    private class RandomNumberButton extends Button {
+        public RandomNumberButton(Container container, int slot) {
+            super(container, Material.RECORD_11, "Random", slot);
+        }
+
+        @Override
+        public void doAction(Player player) {
+            List<Track> tracks = SoundOfNoteBlocks.getTrackManager().getTracks();
+            playTrack(tracks.get((int) (Math.random() * (double) (tracks.size() - 1D))));
+        }
+    }
+
+    private class StopButton extends Button {
+        public StopButton(Container container, int slot) {
+            super(container, Material.APPLE, "Stop", slot, "Stop current song");
+        }
+
+        @Override
+        public void doAction(Player player) {
+            stopPlaying();
+        }
     }
 }
