@@ -75,6 +75,7 @@ public class MusicboxListener implements Listener {
                             c.addStaticButton(jukebox.createStopButton(c, 3));
                             c.addStaticButton(jukebox.createRandomButton(c, 4));
                             c.addStaticButton(jukebox.createTogglenametagButton(c, 5));
+                            c.addStaticButton(jukebox.createRadioButton(c, 6));
                             c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
                             for (Track track : SoundOfNoteBlocks.getTrackManager().getTracks()) {
                                 c.addButton(new ButtonTrack(c, RECORDS[track.getName().length() % RECORDS.length],
