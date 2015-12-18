@@ -91,7 +91,7 @@ public abstract class Container {
     }
 
     public Button getButton(int slot, int page) {
-        if (slot > maxScreenSize) {
+        if (slot >= maxScreenSize) {
             for (Button staticButton : staticButtons) {
                 if (staticButton.getSlot() == (slot - maxScreenSize)) {
                     return staticButton;
