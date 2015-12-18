@@ -147,12 +147,17 @@ public class Musicbox implements Listener, Serializable {
     public void onSongStop(SongStoppedEvent evt) {
         if (songPlayer.equals(evt.getSongPlayer())) {
             isPlaying = false;
-            lastTrack = null;
             songPlayer = null;
             if (tag != null) {
                 tag.remove();
                 tag = null;
             }
+        }
+    }
+
+    public void replayLastSong() {
+        if (!isPlaying && lastTrack != null) {
+            playTrack(lastTrack);
         }
     }
 
@@ -168,8 +173,27 @@ public class Musicbox implements Listener, Serializable {
         return new ToggleNametagButton(c, slot);
     }
 
+    public Button createReplayButton(Container c, int slot) {
+        return new ReplayButton(c, slot);
+    }
+
     public Button createRandomButton(Container c, int slot) {
         return new RandomNumberButton(c, slot);
+    }
+
+    public Button createRadioButton(Container c, int slot) {
+        return new RadioButton(c, slot);
+    }
+
+    private class RadioButton extends Button {
+        public RadioButton(Container container, int slot) {
+            super(container, Material.REDSTONE_TORCH_OFF, "Radio modus", slot);
+        }
+
+        @Override
+        public void doAction(Player player) {
+            player.sendMessage("WIP");
+        }
     }
 
     private class ToggleNametagButton extends Button {
@@ -184,9 +208,20 @@ public class Musicbox implements Listener, Serializable {
                 tag.remove();
                 tag = null;
             }
-            if (haveTag && tag == null) {
+            if (haveTag && tag == null && lastTrack != null) {
                 summonTag();
             }
+        }
+    }
+
+    private class ReplayButton extends Button {
+        public ReplayButton(Container container, int slot) {
+            super(container, Material.FIREWORK_CHARGE, "Replay", slot);
+        }
+
+        @Override
+        public void doAction(Player player) {
+            replayLastSong();
         }
     }
 

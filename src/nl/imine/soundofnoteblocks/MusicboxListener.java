@@ -1,6 +1,5 @@
 package nl.imine.soundofnoteblocks;
 
-import nl.imine.gui.Button;
 import nl.imine.gui.Container;
 import nl.imine.gui.GuiManager;
 import org.bukkit.Bukkit;
@@ -11,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -42,6 +42,14 @@ public class MusicboxListener implements Listener {
     }
 
     @EventHandler
+    public void onRedstoneEvent(BlockRedstoneEvent evt) {
+        if (evt.getBlock().getType() == Material.JUKEBOX) {
+            Musicbox mb = Musicbox.findJukebox(evt.getBlock().getLocation());
+            mb.replayLastSong();
+        }
+    }
+
+    @EventHandler
     public void onChunkLoad(ChunkUnloadEvent evt) {
         for (Entity e : evt.getChunk().getEntities()) {
             if (e instanceof ArmorStand) {
@@ -62,15 +70,12 @@ public class MusicboxListener implements Listener {
                         if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")) {
                             Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
                             Container c = GuiManager.getInstance().createContainer("Choose Track", 45, true, false);
-                            Button previous = Container.getDefaultPreviousButton(c);
-                            previous.setSlot(2);
-                            c.addStaticButton(previous);
-                            Button next = Container.getDefaultNextButton(c);
-                            next.setSlot(6);
-                            c.addStaticButton(next);
+                            c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
+                            c.addStaticButton(jukebox.createReplayButton(c, 2));
                             c.addStaticButton(jukebox.createStopButton(c, 3));
                             c.addStaticButton(jukebox.createRandomButton(c, 4));
                             c.addStaticButton(jukebox.createTogglenametagButton(c, 5));
+                            c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
                             for (Track track : SoundOfNoteBlocks.getTrackManager().getTracks()) {
                                 c.addButton(new ButtonTrack(c, RECORDS[track.getName().length() % RECORDS.length],
                                         track.getName(), c.getButtons().size(), track.getArtist(), jukebox, track));

@@ -115,8 +115,9 @@ public class Button {
     /**
      * @param slot the slot to set
      */
-    public void setSlot(int slot) {
+    public Button setSlot(int slot) {
         this.slot = slot;
+        return this;
     }
 
     public void doAction(Player player) {
