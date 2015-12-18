@@ -155,7 +155,10 @@ public class Musicbox implements Listener, Serializable {
         }
     }
 
-    public void replayLastSong() {
+    public void replayLastSong(boolean force) {
+        if (force) {
+            stopPlaying();
+        }
         if (!isPlaying && lastTrack != null) {
             playTrack(lastTrack);
         }
@@ -187,7 +190,7 @@ public class Musicbox implements Listener, Serializable {
 
     private class RadioButton extends Button {
         public RadioButton(Container container, int slot) {
-            super(container, Material.REDSTONE_TORCH_OFF, "Radio modus", slot);
+            super(container, Material.REDSTONE_COMPARATOR_ON, "Radio modus", slot);
         }
 
         @Override
@@ -221,7 +224,7 @@ public class Musicbox implements Listener, Serializable {
 
         @Override
         public void doAction(Player player) {
-            replayLastSong();
+            replayLastSong(true);
         }
     }
 

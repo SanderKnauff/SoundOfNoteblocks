@@ -1,9 +1,8 @@
 package nl.imine.soundofnoteblocks;
 
-import nl.imine.gui.Container;
-import nl.imine.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -14,6 +13,9 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+
+import nl.imine.gui.Container;
+import nl.imine.gui.GuiManager;
 
 public class MusicboxListener implements Listener {
 
@@ -43,9 +45,19 @@ public class MusicboxListener implements Listener {
 
     @EventHandler
     public void onRedstoneEvent(BlockRedstoneEvent evt) {
-        if (evt.getBlock().getType() == Material.JUKEBOX) {
-            Musicbox mb = Musicbox.findJukebox(evt.getBlock().getLocation());
-            mb.replayLastSong();
+        if (evt.getNewCurrent() > 2 && evt.getNewCurrent() > evt.getOldCurrent()) {
+            System.out.println(evt.getNewCurrent());
+            for (int i = -1; i < 2; i++) {
+                checkRedstoneRenew(evt.getBlock().getLocation().add(i, 0, 0).getBlock());
+                checkRedstoneRenew(evt.getBlock().getLocation().add(0, 0, i).getBlock());
+            }
+        }
+    }
+
+    private void checkRedstoneRenew(Block bl) {
+        if (bl.getType() == Material.JUKEBOX) {
+            Musicbox mb = Musicbox.findJukebox(bl.getLocation());
+            mb.replayLastSong(false);
         }
     }
 
