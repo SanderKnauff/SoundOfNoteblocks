@@ -112,6 +112,10 @@ public class Musicbox implements Listener, Serializable {
                 songPlayer.setPlaying(false);
             }
         }
+        if (tag != null) {
+            tag.remove();
+            tag = null;
+        }
     }
 
     public ArrayList<Player> getPlayersInRange() {
