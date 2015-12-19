@@ -2,6 +2,7 @@ package nl.imine.soundofnoteblocks;
 
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
+
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +23,6 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         plugin = this;
-        GuiManager.init(plugin);
         MusicboxListener.init();
         getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
         for (World w : Bukkit.getWorlds()) {
