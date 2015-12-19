@@ -110,9 +110,8 @@ public class Musicbox implements Listener, Serializable {
         if (songPlayer != null) {
             if (songPlayer.isPlaying()) {
                 songPlayer.setPlaying(false);
-            }
+            }   
         }
-        songPlayer.destroy();
         if (tag != null) {
             tag.remove();
         }
@@ -147,6 +146,9 @@ public class Musicbox implements Listener, Serializable {
     public void onSongStop(SongStoppedEvent evt) {
         if (songPlayer != null && songPlayer.equals(evt.getSongPlayer())) {
             isPlaying = false;
+            if(songPlayer != null) {
+            	songPlayer.destroy();
+            }
             songPlayer = null;
             if (tag != null) {
                 tag.remove();
