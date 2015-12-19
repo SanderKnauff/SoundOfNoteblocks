@@ -16,8 +16,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-
-
 public class MusicboxListener implements Listener {
 
     private static final Material[] RECORDS = new Material[] { Material.RECORD_10, Material.RECORD_12,
@@ -47,7 +45,6 @@ public class MusicboxListener implements Listener {
     @EventHandler
     public void onRedstoneEvent(BlockRedstoneEvent evt) {
         if (evt.getNewCurrent() > 2 && evt.getNewCurrent() > evt.getOldCurrent()) {
-            System.out.println(evt.getNewCurrent());
             for (int i = -1; i < 2; i++) {
                 checkRedstoneRenew(evt.getBlock().getLocation().add(i, 0, 0).getBlock());
                 checkRedstoneRenew(evt.getBlock().getLocation().add(0, 0, i).getBlock());
