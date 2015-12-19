@@ -19,9 +19,9 @@ import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongStoppedEvent;
+import nl.imine.api.gui.Button;
+import nl.imine.api.gui.Container;
 
-import nl.imine.gui.Button;
-import nl.imine.gui.Container;
 
 /**
  *

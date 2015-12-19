@@ -1,12 +1,11 @@
 package nl.imine.soundofnoteblocks;
 
 import java.util.ArrayList;
+import nl.imine.api.gui.Button;
+import nl.imine.api.gui.Container;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
-import nl.imine.gui.Button;
-import nl.imine.gui.Container;
 
 /**
  *

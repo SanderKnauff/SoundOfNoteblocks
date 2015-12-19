@@ -1,11 +1,11 @@
 package nl.imine.soundofnoteblocks;
 
+import nl.imine.api.gui.Container;
+import nl.imine.api.gui.GuiManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import nl.imine.gui.Container;
-import nl.imine.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;

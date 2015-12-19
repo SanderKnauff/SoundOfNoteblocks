@@ -1,5 +1,7 @@
 package nl.imine.soundofnoteblocks;
 
+import nl.imine.api.gui.Container;
+import nl.imine.api.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,8 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import nl.imine.gui.Container;
-import nl.imine.gui.GuiManager;
+
 
 public class MusicboxListener implements Listener {
 
