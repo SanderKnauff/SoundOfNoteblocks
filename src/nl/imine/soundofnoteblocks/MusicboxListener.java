@@ -4,6 +4,7 @@ import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -74,18 +75,23 @@ public class MusicboxListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent evt) {
         if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (evt.getClickedBlock().getType().equals(Material.JUKEBOX)) {
+            if (evt.getClickedBlock().getType().equals(Material.JUKEBOX) && !evt.getPlayer().isSneaking()) {
                 if (!(((org.bukkit.block.Jukebox) evt.getClickedBlock().getState()).isPlaying())) {
                     if (evt.getPlayer().hasPermission("iMine.jukebox.play")) {
                         if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")) {
                             Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
+                            if (jukebox.isLocked()) {
+                                evt.getPlayer().playSound(evt.getPlayer().getLocation(), Sound.VILLAGER_NO, 1F, 1F);
+                                evt.setCancelled(true);
+                                return;
+                            }
                             Container c = GuiManager.getInstance().createContainer("Choose Track", 45, true, false);
                             c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
                             c.addStaticButton(jukebox.createReplayButton(c, 2));
                             c.addStaticButton(jukebox.createStopButton(c, 3));
                             c.addStaticButton(jukebox.createRandomButton(c, 4));
                             c.addStaticButton(jukebox.createTogglenametagButton(c, 5));
-                            c.addStaticButton(jukebox.createRadioButton(c, 6));
+                            c.addStaticButton(jukebox.createLockButton(c, 6));
                             c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
                             for (Track track : SoundOfNoteBlocks.getTrackManager().getTracks()) {
                                 c.addButton(new ButtonTrack(c, RECORDS[track.getName().length() % RECORDS.length],

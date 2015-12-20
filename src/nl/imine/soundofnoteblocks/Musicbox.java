@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -18,10 +19,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
-import com.xxmicloxx.NoteBlockAPI.SongStoppedEvent;
+import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
+
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
-
 
 /**
  *
@@ -39,7 +40,7 @@ public class Musicbox implements Listener, Serializable {
     private boolean haveTag = true;
 
     private transient Track lastTrack;
-    private transient boolean isPlaying;
+    private transient boolean isPlaying, lock;
     private transient PositionSongPlayer songPlayer;
 
     private static ArrayList<Musicbox> jukeboxList = new ArrayList<>();
@@ -111,6 +112,7 @@ public class Musicbox implements Listener, Serializable {
             if (songPlayer.isPlaying()) {
                 songPlayer.setPlaying(false);
             }
+            songPlayer.destroy();
         }
         if (tag != null) {
             tag.remove();
@@ -144,18 +146,16 @@ public class Musicbox implements Listener, Serializable {
     }
 
     @EventHandler
-    public void onSongStop(SongStoppedEvent evt) {
+    public void onSongStop(SongDestroyingEvent evt) {
         if (songPlayer != null && songPlayer.equals(evt.getSongPlayer())) {
             isPlaying = false;
-            if(songPlayer != null) {
-            	songPlayer.destroy();
-            }
             songPlayer = null;
             if (tag != null) {
                 tag.remove();
                 tag = null;
             }
         }
+        lock = false;
     }
 
     public void replayLastSong(boolean force) {
@@ -165,6 +165,10 @@ public class Musicbox implements Listener, Serializable {
         if (!isPlaying && lastTrack != null) {
             playTrack(lastTrack);
         }
+    }
+
+    public boolean isLocked() {
+        return lock;
     }
 
     public Location getLocation() {
@@ -187,18 +191,23 @@ public class Musicbox implements Listener, Serializable {
         return new RandomNumberButton(c, slot);
     }
 
-    public Button createRadioButton(Container c, int slot) {
-        return new RadioButton(c, slot);
+    public Button createLockButton(Container c, int slot) {
+        return new LockButton(c, slot);
     }
 
-    private class RadioButton extends Button {
-        public RadioButton(Container container, int slot) {
-            super(container, Material.REDSTONE_COMPARATOR_ON, "Radio modus", slot);
+    // Radio
+    // Volume
+    
+    private class LockButton extends Button {
+        public LockButton(Container container, int slot) {
+            super(container, Material.REDSTONE_TORCH_ON, "Lock", slot);
         }
 
         @Override
         public void doAction(Player player) {
-            player.sendMessage("WIP");
+            lock = true;
+            player.closeInventory();
+            player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
         }
     }
 
