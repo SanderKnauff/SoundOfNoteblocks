@@ -205,9 +205,11 @@ public class Musicbox implements Listener, Serializable {
 
         @Override
         public void doAction(Player player) {
-            lock = true;
-            player.closeInventory();
-            player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
+            if(songPlayer != null && songPlayer.isPlaying()) {
+                lock = true;
+                player.closeInventory();
+                player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
+            }
         }
     }
 
