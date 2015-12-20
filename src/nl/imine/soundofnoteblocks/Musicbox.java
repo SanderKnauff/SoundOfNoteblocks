@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
@@ -197,7 +198,7 @@ public class Musicbox implements Listener, Serializable {
 
     // Radio
     // Volume
-    
+
     private class LockButton extends Button {
         public LockButton(Container container, int slot) {
             super(container, Material.REDSTONE_TORCH_ON, "Lock", slot);
@@ -205,11 +206,19 @@ public class Musicbox implements Listener, Serializable {
 
         @Override
         public void doAction(Player player) {
-            if(songPlayer != null && songPlayer.isPlaying()) {
+            if (songPlayer != null && songPlayer.isPlaying()) {
                 lock = true;
                 player.closeInventory();
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
             }
+        }
+
+        @Override
+        public ItemStack getItemStack() {
+            ItemStack is = super.getItemStack();
+            is.setType((songPlayer != null && songPlayer.isPlaying()) ? Material.REDSTONE_TORCH_ON
+                    : Material.REDSTONE_TORCH_OFF);
+            return is;
         }
     }
 
