@@ -80,7 +80,7 @@ public class MusicboxListener implements Listener {
                     if (evt.getPlayer().hasPermission("iMine.jukebox.play")) {
                         if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")) {
                             Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
-                            if (jukebox.isLocked()) {
+                            if (jukebox.isLocked() && !evt.getPlayer().hasPermission("iMine.jukebox.lockbypass")) {
                                 evt.getPlayer().playSound(evt.getPlayer().getLocation(), Sound.VILLAGER_NO, 1F, 1F);
                                 evt.setCancelled(true);
                                 return;
