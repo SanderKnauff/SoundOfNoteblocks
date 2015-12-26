@@ -19,6 +19,7 @@ import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongStoppedEvent;
+import java.util.UUID;
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
 
@@ -83,8 +84,8 @@ public class Musicbox implements Listener, Serializable {
         songPlayer.setTargetLocation(coordinate.toLocation());
         songPlayer.setAutoDestroy(true);
         songPlayer.setPlaying(true);
-        for (String pname : songPlayer.getPlayerList()) {
-            songPlayer.removePlayer(Bukkit.getPlayer(pname));
+        for (UUID uuid : songPlayer.getPlayerList()) {
+            songPlayer.removePlayer(Bukkit.getPlayer(uuid));
         }
         for (Player p : getPlayersInRange()) {
             songPlayer.addPlayer(p);
