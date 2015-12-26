@@ -8,21 +8,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
-import com.xxmicloxx.NoteBlockAPI.SongStoppedEvent;
+import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
+
 import java.util.UUID;
+
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
-
 
 /**
  *
@@ -40,7 +43,7 @@ public class Musicbox implements Listener, Serializable {
     private boolean haveTag = true;
 
     private transient Track lastTrack;
-    private transient boolean isPlaying;
+    private transient boolean isPlaying, lock;
     private transient PositionSongPlayer songPlayer;
 
     private static ArrayList<Musicbox> jukeboxList = new ArrayList<>();
@@ -112,10 +115,11 @@ public class Musicbox implements Listener, Serializable {
             if (songPlayer.isPlaying()) {
                 songPlayer.setPlaying(false);
             }
+            songPlayer.destroy();
         }
-        songPlayer = null;
         if (tag != null) {
             tag.remove();
+            tag = null;
         }
     }
 
@@ -145,8 +149,8 @@ public class Musicbox implements Listener, Serializable {
     }
 
     @EventHandler
-    public void onSongStop(SongStoppedEvent evt) {
-        if (songPlayer.equals(evt.getSongPlayer())) {
+    public void onSongStop(SongDestroyingEvent evt) {
+        if (songPlayer != null && songPlayer.equals(evt.getSongPlayer())) {
             isPlaying = false;
             songPlayer = null;
             if (tag != null) {
@@ -154,6 +158,7 @@ public class Musicbox implements Listener, Serializable {
                 tag = null;
             }
         }
+        lock = false;
     }
 
     public void replayLastSong(boolean force) {
@@ -163,6 +168,10 @@ public class Musicbox implements Listener, Serializable {
         if (!isPlaying && lastTrack != null) {
             playTrack(lastTrack);
         }
+    }
+
+    public boolean isLocked() {
+        return lock;
     }
 
     public Location getLocation() {
@@ -185,22 +194,38 @@ public class Musicbox implements Listener, Serializable {
         return new RandomNumberButton(c, slot);
     }
 
-    public Button createRadioButton(Container c, int slot) {
-        return new RadioButton(c, slot);
+    public Button createLockButton(Container c, int slot) {
+        return new LockButton(c, slot);
     }
 
-    private class RadioButton extends Button {
-        public RadioButton(Container container, int slot) {
-            super(container, Material.REDSTONE_COMPARATOR_ON, "Radio modus", slot);
+    // Radio
+    // Volume
+    private class LockButton extends Button {
+
+        public LockButton(Container container, int slot) {
+            super(container, Material.REDSTONE_TORCH_ON, "Lock", slot);
         }
 
         @Override
         public void doAction(Player player) {
-            player.sendMessage("WIP");
+            if (songPlayer != null && songPlayer.isPlaying()) {
+                lock = true;
+                player.closeInventory();
+                player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
+            }
+        }
+
+        @Override
+        public ItemStack getItemStack() {
+            ItemStack is = super.getItemStack();
+            is.setType((songPlayer != null && songPlayer.isPlaying()) ? Material.REDSTONE_TORCH_ON
+                    : Material.REDSTONE_TORCH_OFF);
+            return is;
         }
     }
 
     private class ToggleNametagButton extends Button {
+
         public ToggleNametagButton(Container container, int slot) {
             super(container, Material.NAME_TAG, "Toggle Currentsong Nametag", slot);
         }
@@ -219,6 +244,7 @@ public class Musicbox implements Listener, Serializable {
     }
 
     private class ReplayButton extends Button {
+
         public ReplayButton(Container container, int slot) {
             super(container, Material.FIREWORK_CHARGE, "Replay", slot);
         }
@@ -230,6 +256,7 @@ public class Musicbox implements Listener, Serializable {
     }
 
     private class RandomNumberButton extends Button {
+
         public RandomNumberButton(Container container, int slot) {
             super(container, Material.RECORD_11, "Random", slot);
         }
@@ -242,6 +269,7 @@ public class Musicbox implements Listener, Serializable {
     }
 
     private class StopButton extends Button {
+
         public StopButton(Container container, int slot) {
             super(container, Material.APPLE, "Stop", slot, "Stop current song");
         }
