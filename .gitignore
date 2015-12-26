@@ -24,3 +24,4 @@ nb-configuration.xml
 *.ear
 !libs/*.jar
 .DS_Store
+/target/
