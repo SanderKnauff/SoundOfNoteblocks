@@ -22,6 +22,8 @@ import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
 
+import java.util.UUID;
+
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
 
@@ -85,8 +87,8 @@ public class Musicbox implements Listener, Serializable {
         songPlayer.setTargetLocation(coordinate.toLocation());
         songPlayer.setAutoDestroy(true);
         songPlayer.setPlaying(true);
-        for (String pname : songPlayer.getPlayerList()) {
-            songPlayer.removePlayer(Bukkit.getPlayer(pname));
+        for (UUID uuid : songPlayer.getPlayerList()) {
+            songPlayer.removePlayer(Bukkit.getPlayer(uuid));
         }
         for (Player p : getPlayersInRange()) {
             songPlayer.addPlayer(p);
@@ -198,8 +200,8 @@ public class Musicbox implements Listener, Serializable {
 
     // Radio
     // Volume
-
     private class LockButton extends Button {
+
         public LockButton(Container container, int slot) {
             super(container, Material.REDSTONE_TORCH_ON, "Lock", slot);
         }
@@ -223,6 +225,7 @@ public class Musicbox implements Listener, Serializable {
     }
 
     private class ToggleNametagButton extends Button {
+
         public ToggleNametagButton(Container container, int slot) {
             super(container, Material.NAME_TAG, "Toggle Currentsong Nametag", slot);
         }
@@ -241,6 +244,7 @@ public class Musicbox implements Listener, Serializable {
     }
 
     private class ReplayButton extends Button {
+
         public ReplayButton(Container container, int slot) {
             super(container, Material.FIREWORK_CHARGE, "Replay", slot);
         }
@@ -252,6 +256,7 @@ public class Musicbox implements Listener, Serializable {
     }
 
     private class RandomNumberButton extends Button {
+
         public RandomNumberButton(Container container, int slot) {
             super(container, Material.RECORD_11, "Random", slot);
         }
@@ -264,6 +269,7 @@ public class Musicbox implements Listener, Serializable {
     }
 
     private class StopButton extends Button {
+
         public StopButton(Container container, int slot) {
             super(container, Material.APPLE, "Stop", slot, "Stop current song");
         }
