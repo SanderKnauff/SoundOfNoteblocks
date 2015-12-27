@@ -213,7 +213,7 @@ public class Musicbox implements Listener, Serializable {
                 lock = true;
                 player.closeInventory();
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
-                player.closeInventory();
+                container.close();
             }
         }
 
