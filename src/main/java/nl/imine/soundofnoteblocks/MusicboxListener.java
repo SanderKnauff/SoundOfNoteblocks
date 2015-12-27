@@ -95,11 +95,11 @@ public class MusicboxListener implements Listener {
                             c.addStaticButton(jukebox.createLockButton(c, 6));
                             c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
                             for (Track track : SoundOfNoteBlocks.getTrackManager().getTracks()) {
-                                c.addButton(new ButtonTrack(c, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length])
+                                c.addButton(jukebox.createTrackButton(c, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length])
                                         .setName(track.getName())
                                         .setLore(track.getArtist())
                                         .build(),
-                                        c.getButtons().size(), jukebox, track));
+                                        c.getButtons().size(), track));
                             }
                             c.open(evt.getPlayer());
                             evt.setCancelled(true);

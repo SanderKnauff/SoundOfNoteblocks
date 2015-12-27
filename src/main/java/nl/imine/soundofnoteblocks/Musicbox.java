@@ -180,30 +180,34 @@ public class Musicbox implements Listener, Serializable {
     }
 
     public Button createStopButton(Container c, int slot) {
-        return new StopButton(c, slot);
+        return new ButtonStop(c, slot);
     }
 
     public Button createTogglenametagButton(Container c, int slot) {
-        return new ToggleNametagButton(c, slot);
+        return new ButtonToggleNameTag(c, slot);
     }
 
     public Button createReplayButton(Container c, int slot) {
-        return new ReplayButton(c, slot);
+        return new ButtonReplay(c, slot);
     }
 
     public Button createRandomButton(Container c, int slot) {
-        return new RandomNumberButton(c, slot);
+        return new ButtomRandomTrack(c, slot);
     }
 
     public Button createLockButton(Container c, int slot) {
-        return new LockButton(c, slot);
+        return new ButtonLock(c, slot);
+    }
+    
+    public ButtonTrack createTrackButton(Container container, ItemStack itemStack, int slot, Track track){
+        return new ButtonTrack(container, itemStack, slot, track);
     }
 
     // Radio
     // Volume
-    private class LockButton extends Button {
+    private class ButtonLock extends Button {
 
-        public LockButton(Container container, int slot) {
+        public ButtonLock(Container container, int slot) {
             super(container, ItemUtil.getBuilder(Material.REDSTONE_TORCH_ON).setName("Lock").build(), slot);
         }
 
@@ -213,7 +217,6 @@ public class Musicbox implements Listener, Serializable {
                 lock = true;
                 player.closeInventory();
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
-                container.close();
             }
         }
 
@@ -226,9 +229,9 @@ public class Musicbox implements Listener, Serializable {
         }
     }
 
-    private class ToggleNametagButton extends Button {
+    private class ButtonToggleNameTag extends Button {
 
-        public ToggleNametagButton(Container container, int slot) {
+        public ButtonToggleNameTag(Container container, int slot) {
             super(container, ItemUtil.getBuilder(Material.NAME_TAG).setName("Toggle Currentsong Nametag").build(), slot);
         }
 
@@ -245,9 +248,9 @@ public class Musicbox implements Listener, Serializable {
         }
     }
 
-    private class ReplayButton extends Button {
+    private class ButtonReplay extends Button {
 
-        public ReplayButton(Container container, int slot) {
+        public ButtonReplay(Container container, int slot) {
             super(container, ItemUtil.getBuilder(Material.FIREWORK_CHARGE).setName("Replay").build(), slot);
         }
 
@@ -257,9 +260,9 @@ public class Musicbox implements Listener, Serializable {
         }
     }
 
-    private class RandomNumberButton extends Button {
+    private class ButtomRandomTrack extends Button {
 
-        public RandomNumberButton(Container container, int slot) {
+        public ButtomRandomTrack(Container container, int slot) {
             super(container, ItemUtil.getBuilder(Material.RECORD_11).setName("Random").build(), slot);
         }
 
@@ -271,15 +274,39 @@ public class Musicbox implements Listener, Serializable {
         }
     }
 
-    private class StopButton extends Button {
+    private class ButtonStop extends Button {
 
-        public StopButton(Container container, int slot) {
-            super(container, ItemUtil.getBuilder(Material.APPLE).setName("Stop").setLore("Stop current song").build(), slot);            
+        public ButtonStop(Container container, int slot) {
+            super(container, ItemUtil.getBuilder(Material.APPLE).setName("Stop").setLore("Stop current song").build(), slot);
         }
 
         @Override
         public void doAction(Player player) {
             stopPlaying();
+        }
+    }
+
+    private class ButtonTrack extends Button {
+
+        private final Track track;
+
+        public ButtonTrack(Container container, ItemStack itemStack, int slot, Track track) {
+            super(container, itemStack, slot);
+            this.track = track;
+        }
+
+        public Track getTrack() {
+            return track;
+        }
+
+        @Override
+        public void doAction(Player player) {
+            if (isLocked() && !player.hasPermission("iMine.jukebox.lockbypass")) {
+                player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1F, 1F);
+            } else {
+                playTrack(track);
+            }
+            player.closeInventory();
         }
     }
 }
