@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
+import nl.imine.api.util.ItemUtil;
 
 /**
  *
@@ -203,7 +204,7 @@ public class Musicbox implements Listener, Serializable {
     private class LockButton extends Button {
 
         public LockButton(Container container, int slot) {
-            super(container, Material.REDSTONE_TORCH_ON, "Lock", slot);
+            super(container, ItemUtil.getBuilder(Material.REDSTONE_TORCH_ON).setName("Lock").build(), slot);
         }
 
         @Override
@@ -228,7 +229,7 @@ public class Musicbox implements Listener, Serializable {
     private class ToggleNametagButton extends Button {
 
         public ToggleNametagButton(Container container, int slot) {
-            super(container, Material.NAME_TAG, "Toggle Currentsong Nametag", slot);
+            super(container, ItemUtil.getBuilder(Material.NAME_TAG).setName("Toggle Currentsong Nametag").build(), slot);
         }
 
         @Override
@@ -247,7 +248,7 @@ public class Musicbox implements Listener, Serializable {
     private class ReplayButton extends Button {
 
         public ReplayButton(Container container, int slot) {
-            super(container, Material.FIREWORK_CHARGE, "Replay", slot);
+            super(container, ItemUtil.getBuilder(Material.FIREWORK_CHARGE).setName("Replay").build(), slot);
         }
 
         @Override
@@ -259,7 +260,7 @@ public class Musicbox implements Listener, Serializable {
     private class RandomNumberButton extends Button {
 
         public RandomNumberButton(Container container, int slot) {
-            super(container, Material.RECORD_11, "Random", slot);
+            super(container, ItemUtil.getBuilder(Material.RECORD_11).setName("Random").build(), slot);
         }
 
         @Override
@@ -273,7 +274,7 @@ public class Musicbox implements Listener, Serializable {
     private class StopButton extends Button {
 
         public StopButton(Container container, int slot) {
-            super(container, Material.APPLE, "Stop", slot, "Stop current song");
+            super(container, ItemUtil.getBuilder(Material.APPLE).setName("Stop").setLore("Stop current song").build(), slot);            
         }
 
         @Override

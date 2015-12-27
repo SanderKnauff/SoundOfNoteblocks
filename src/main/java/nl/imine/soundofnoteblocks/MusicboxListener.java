@@ -2,6 +2,7 @@ package nl.imine.soundofnoteblocks;
 
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
+import nl.imine.api.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,9 +20,9 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class MusicboxListener implements Listener {
 
-    private static final Material[] RECORDS = new Material[] { Material.RECORD_10, Material.RECORD_12,
-            Material.RECORD_3, Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7,
-            Material.RECORD_8, Material.RECORD_9, Material.GOLD_RECORD, Material.GREEN_RECORD };
+    private static final Material[] RECORDS = new Material[]{Material.RECORD_10, Material.RECORD_12,
+        Material.RECORD_3, Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7,
+        Material.RECORD_8, Material.RECORD_9, Material.GOLD_RECORD, Material.GREEN_RECORD};
 
     public static void init() {
         Bukkit.getPluginManager().registerEvents(new MusicboxListener(), SoundOfNoteBlocks.getInstance());
@@ -94,8 +95,11 @@ public class MusicboxListener implements Listener {
                             c.addStaticButton(jukebox.createLockButton(c, 6));
                             c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
                             for (Track track : SoundOfNoteBlocks.getTrackManager().getTracks()) {
-                                c.addButton(new ButtonTrack(c, RECORDS[track.getName().length() % RECORDS.length],
-                                        track.getName(), c.getButtons().size(), track.getArtist(), jukebox, track));
+                                c.addButton(new ButtonTrack(c, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length])
+                                        .setName(track.getName())
+                                        .setLore(track.getArtist())
+                                        .build(),
+                                        c.getButtons().size(), jukebox, track));
                             }
                             c.open(evt.getPlayer());
                             evt.setCancelled(true);

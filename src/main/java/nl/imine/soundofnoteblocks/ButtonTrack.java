@@ -1,11 +1,11 @@
 package nl.imine.soundofnoteblocks;
 
-import java.util.ArrayList;
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -13,24 +13,11 @@ import org.bukkit.entity.Player;
  */
 public class ButtonTrack extends Button {
 
-    private Musicbox jukebox;
-    private Track track;
-
-    public ButtonTrack(Container container, Material material, String name, int slot, Musicbox jukebox, Track track) {
-
-        super(container, material, name, slot);
-        this.track = track;
-        this.jukebox = jukebox;
-    }
-
-    public ButtonTrack(Container container, Material material, String name, int slot, ArrayList<String> subtext, Musicbox jukebox, Track track) {
-        super(container, material, name, slot, subtext);
-        this.track = track;
-        this.jukebox = jukebox;
-    }
-
-    public ButtonTrack(Container container, Material material, String name, int slot, String subtext, Musicbox jukebox, Track track) {
-        super(container, material, name, slot, subtext);
+    private final Musicbox jukebox;
+    private final Track track;
+    
+    public ButtonTrack(Container container, ItemStack itemStack, int slot, Musicbox jukebox, Track track) {
+        super(container, itemStack, slot);
         this.track = track;
         this.jukebox = jukebox;
     }
