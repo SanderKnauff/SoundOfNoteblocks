@@ -78,24 +78,26 @@ public class Musicbox implements Listener, Serializable {
     }
 
     public void playTrack(Track track) {
-        if (isPlaying) {
-            stopPlaying();
-        }
-        lastTrack = track;
-        isPlaying = true;
-        Song song = NBSDecoder.parse(track.getFile());
-        songPlayer = new PositionSongPlayer(song);
-        songPlayer.setTargetLocation(coordinate.toLocation());
-        songPlayer.setAutoDestroy(true);
-        songPlayer.setPlaying(true);
-        for (UUID uuid : songPlayer.getPlayerList()) {
-            songPlayer.removePlayer(Bukkit.getPlayer(uuid));
-        }
-        for (Player p : getPlayersInRange()) {
-            songPlayer.addPlayer(p);
-        }
-        if (haveTag) {
-            summonTag();
+        if (this.getLocation().getBlock().getType().equals(Material.JUKEBOX)) {
+            if (isPlaying) {
+                stopPlaying();
+            }
+            lastTrack = track;
+            isPlaying = true;
+            Song song = NBSDecoder.parse(track.getFile());
+            songPlayer = new PositionSongPlayer(song);
+            songPlayer.setTargetLocation(coordinate.toLocation());
+            songPlayer.setAutoDestroy(true);
+            songPlayer.setPlaying(true);
+            for (UUID uuid : songPlayer.getPlayerList()) {
+                songPlayer.removePlayer(Bukkit.getPlayer(uuid));
+            }
+            for (Player p : getPlayersInRange()) {
+                songPlayer.addPlayer(p);
+            }
+            if (haveTag) {
+                summonTag();
+            }
         }
     }
 
@@ -198,8 +200,8 @@ public class Musicbox implements Listener, Serializable {
     public Button createLockButton(Container c, int slot) {
         return new ButtonLock(c, slot);
     }
-    
-    public ButtonTrack createTrackButton(Container container, ItemStack itemStack, int slot, Track track){
+
+    public ButtonTrack createTrackButton(Container container, ItemStack itemStack, int slot, Track track) {
         return new ButtonTrack(container, itemStack, slot, track);
     }
 
