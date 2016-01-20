@@ -3,6 +3,7 @@ package nl.imine.soundofnoteblocks;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,8 +22,6 @@ import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
-
-import java.util.UUID;
 
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
@@ -105,16 +104,6 @@ public class Musicbox implements Listener, Serializable {
         }
     }
 
-//    private void summonTag() {
-//        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, -0.5, 0.5),
-//                EntityType.ARMOR_STAND);
-//        tag.setVisible(false);
-//        tag.setGravity(false);
-//        tag.setBasePlate(false);
-//        tag.setRemoveWhenFarAway(true);
-//        tag.setCustomName(ChatColor.GOLD + lastTrack.getName() + " || " + ChatColor.BLUE + lastTrack.getArtist());
-//        tag.setCustomNameVisible(true);
-//    }
     public void stopPlaying() {
         isPlaying = false;
         if (songPlayer != null) {
@@ -226,8 +215,7 @@ public class Musicbox implements Listener, Serializable {
         @Override
         public ItemStack getItemStack() {
             ItemStack is = super.getItemStack();
-            is.setType((songPlayer != null && songPlayer.isPlaying()) ? Material.REDSTONE_TORCH_ON
-                    : Material.REDSTONE_TORCH_OFF);
+            is.setType((songPlayer != null && songPlayer.isPlaying()) ? Material.REDSTONE_TORCH_ON : Material.REDSTONE_TORCH_OFF);
             return is;
         }
     }
@@ -282,7 +270,7 @@ public class Musicbox implements Listener, Serializable {
         }
     }
 
-    private class ButtonTrack extends Button {
+    public class ButtonTrack extends Button {
 
         private final Track track;
 
