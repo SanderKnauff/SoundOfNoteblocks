@@ -42,6 +42,7 @@ public class Musicbox implements Listener, Serializable {
     private Coordinate coordinate;
 
     private Tag tag;
+    private boolean tagVisible = true;
     private boolean haveTag = true;
 
     private transient Track lastTrack;
@@ -72,9 +73,10 @@ public class Musicbox implements Listener, Serializable {
 
     private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
-        tag = TagAPI.createTag(coordinate.toLocation().add(0.5, -0.5, 0.5));
-        tag.addLine("");
-        tag.addLine("");
+        tag = TagAPI.createTag(coordinate.toLocation().add(0.5, 1, 0.5));
+        tag.addLine(" ");
+        tag.addLine(" ");
+        tag.setVisible(false);
     }
 
     private Musicbox(Location location) {
@@ -101,6 +103,7 @@ public class Musicbox implements Listener, Serializable {
             }
             tag.getLine(0).setLabel(ChatColor.GOLD + lastTrack.getName());
             tag.getLine(0).setLabel(ChatColor.BLUE + lastTrack.getArtist());
+            tag.setVisible(tagVisible);
         }
     }
 
@@ -112,8 +115,7 @@ public class Musicbox implements Listener, Serializable {
             }
             songPlayer.destroy();
         }
-        tag.getLine(0).setLabel("");
-        tag.getLine(1).setLabel("");
+        tag.setVisible(false);
     }
 
     public ArrayList<Player> getPlayersInRange() {
@@ -146,10 +148,7 @@ public class Musicbox implements Listener, Serializable {
         if (songPlayer != null && songPlayer.equals(evt.getSongPlayer())) {
             isPlaying = false;
             songPlayer = null;
-            if (tag != null) {
-                tag.remove();
-                tag = null;
-            }
+            tag.setVisible(false);
         }
         lock = false;
     }
@@ -228,7 +227,8 @@ public class Musicbox implements Listener, Serializable {
 
         @Override
         public void doAction(Player player) {
-            tag.setVisible(!tag.isVisible());
+            tagVisible = !tagVisible;
+            tag.setVisible(tagVisible);
         }
     }
 
