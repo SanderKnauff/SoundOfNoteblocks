@@ -26,6 +26,8 @@ import java.util.UUID;
 
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
+import nl.imine.api.holotag.Tag;
+import nl.imine.api.holotag.TagAPI;
 import nl.imine.api.util.ItemUtil;
 
 /**
@@ -40,7 +42,7 @@ public class Musicbox implements Listener, Serializable {
 
     private Coordinate coordinate;
 
-    private ArmorStand tag;
+    private Tag tag;
     private boolean haveTag = true;
 
     private transient Track lastTrack;
@@ -71,6 +73,9 @@ public class Musicbox implements Listener, Serializable {
 
     private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
+        tag = TagAPI.createTag(coordinate.toLocation().add(0.5, -0.5, 0.5));
+        tag.addLine("");
+        tag.addLine("");
     }
 
     private Musicbox(Location location) {
@@ -95,23 +100,21 @@ public class Musicbox implements Listener, Serializable {
             for (Player p : getPlayersInRange()) {
                 songPlayer.addPlayer(p);
             }
-            if (haveTag) {
-                summonTag();
-            }
+            tag.getLine(0).setLabel(ChatColor.GOLD + lastTrack.getName());
+            tag.getLine(0).setLabel(ChatColor.BLUE + lastTrack.getArtist());
         }
     }
 
-    private void summonTag() {
-        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, -0.5, 0.5),
-                EntityType.ARMOR_STAND);
-        tag.setVisible(false);
-        tag.setGravity(false);
-        tag.setBasePlate(false);
-        tag.setRemoveWhenFarAway(true);
-        tag.setCustomName(ChatColor.GOLD + lastTrack.getName() + " || " + ChatColor.BLUE + lastTrack.getArtist());
-        tag.setCustomNameVisible(true);
-    }
-
+//    private void summonTag() {
+//        tag = (ArmorStand) coordinate.getWorld().spawnEntity(coordinate.toLocation().add(0.5, -0.5, 0.5),
+//                EntityType.ARMOR_STAND);
+//        tag.setVisible(false);
+//        tag.setGravity(false);
+//        tag.setBasePlate(false);
+//        tag.setRemoveWhenFarAway(true);
+//        tag.setCustomName(ChatColor.GOLD + lastTrack.getName() + " || " + ChatColor.BLUE + lastTrack.getArtist());
+//        tag.setCustomNameVisible(true);
+//    }
     public void stopPlaying() {
         isPlaying = false;
         if (songPlayer != null) {
@@ -120,10 +123,8 @@ public class Musicbox implements Listener, Serializable {
             }
             songPlayer.destroy();
         }
-        if (tag != null) {
-            tag.remove();
-            tag = null;
-        }
+        tag.getLine(0).setLabel("");
+        tag.getLine(1).setLabel("");
     }
 
     public ArrayList<Player> getPlayersInRange() {
@@ -239,14 +240,7 @@ public class Musicbox implements Listener, Serializable {
 
         @Override
         public void doAction(Player player) {
-            haveTag = !haveTag;
-            if (!haveTag && tag != null) {
-                tag.remove();
-                tag = null;
-            }
-            if (haveTag && tag == null && lastTrack != null) {
-                summonTag();
-            }
+            tag.setVisible(!tag.isVisible());
         }
     }
 
