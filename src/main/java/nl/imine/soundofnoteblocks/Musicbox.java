@@ -127,6 +127,10 @@ public class Musicbox implements Listener, Serializable {
         return ret;
     }
 
+    public Tag getTag(){
+        return tag;
+    }
+    
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent evt) {
         if (songPlayer != null) {

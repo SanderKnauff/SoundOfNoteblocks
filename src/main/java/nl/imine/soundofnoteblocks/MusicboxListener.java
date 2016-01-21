@@ -2,21 +2,18 @@ package nl.imine.soundofnoteblocks;
 
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
+import nl.imine.api.holotag.PlayerInteractTagEvent;
 import nl.imine.api.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class MusicboxListener implements Listener {
 
@@ -84,7 +81,41 @@ public class MusicboxListener implements Listener {
                 }
             }
         }
+    }
 
+    @EventHandler
+    public void onPlayerTagInteract(PlayerInteractTagEvent evt) {
+        for (Musicbox jukebox : Musicbox.getMusicBoxes()) {
+            if (evt.getTag().equals(jukebox.getTag())) {
+                if (!evt.getPlayer().isSneaking()) {
+                    if (!(((org.bukkit.block.Jukebox) jukebox.getLocation().getBlock().getState()).isPlaying())) {
+                        if (evt.getPlayer().hasPermission("iMine.jukebox.play")) {
+                            if (jukebox.isLocked() && !evt.getPlayer().hasPermission("iMine.jukebox.lockbypass")) {
+                                evt.getPlayer().playSound(evt.getPlayer().getLocation(), Sound.VILLAGER_NO, 1F, 1F);
+                                return;
+                            }
+                            Container c = GuiManager.getInstance().createContainer("Choose Track", 45, true, false);
+                            c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
+                            c.addStaticButton(jukebox.createReplayButton(c, 2));
+                            c.addStaticButton(jukebox.createStopButton(c, 3));
+                            c.addStaticButton(jukebox.createRandomButton(c, 4));
+                            c.addStaticButton(jukebox.createTogglenametagButton(c, 5));
+                            c.addStaticButton(jukebox.createLockButton(c, 6));
+                            c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
+                            for (Track track : SoundOfNoteBlocks.getTrackManager().getTracks()) {
+                                c.addButton(jukebox.createTrackButton(c, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length])
+                                        .setName(track.getName())
+                                        .setLore(track.getArtist())
+                                        .build(),
+                                        c.getButtons().size(), track));
+                            }
+                            c.open(evt.getPlayer());
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println(evt.getAction());
     }
 
     @EventHandler
