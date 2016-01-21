@@ -43,7 +43,6 @@ public class Musicbox implements Listener, Serializable {
 
     private Tag tag;
     private boolean tagVisible = true;
-    private boolean haveTag = true;
 
     private transient Track lastTrack;
     private transient boolean isPlaying, lock;
@@ -73,7 +72,7 @@ public class Musicbox implements Listener, Serializable {
 
     private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
-        tag = TagAPI.createTag(coordinate.toLocation().add(0.5, 1, 0.5));
+        tag = TagAPI.createTag(coordinate.toLocation().add(0.5, 0.5, 0.5));
         tag.addLine(" ");
         tag.addLine(" ");
         tag.setVisible(false);
@@ -102,7 +101,7 @@ public class Musicbox implements Listener, Serializable {
                 songPlayer.addPlayer(p);
             }
             tag.getLine(0).setLabel(ChatColor.GOLD + lastTrack.getName());
-            tag.getLine(0).setLabel(ChatColor.BLUE + lastTrack.getArtist());
+            tag.getLine(1).setLabel(ChatColor.BLUE + lastTrack.getArtist());
             tag.setVisible(tagVisible);
         }
     }
