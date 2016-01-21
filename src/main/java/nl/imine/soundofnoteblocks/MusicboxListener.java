@@ -33,18 +33,6 @@ public class MusicboxListener implements Listener {
     }
 
     @EventHandler
-    public void onChunkLoad(ChunkLoadEvent evt) {
-        for (Entity e : evt.getChunk().getEntities()) {
-            if (e instanceof ArmorStand) {
-                ArmorStand as = (ArmorStand) e;
-                if (!as.hasBasePlate()) {
-                    as.remove();
-                }
-            }
-        }
-    }
-
-    @EventHandler
     public void onRedstoneEvent(BlockRedstoneEvent evt) {
         if (evt.getNewCurrent() > 2 && evt.getNewCurrent() > evt.getOldCurrent()) {
             for (int i = -1; i < 2; i++) {
@@ -58,18 +46,6 @@ public class MusicboxListener implements Listener {
         if (bl.getType() == Material.JUKEBOX) {
             Musicbox mb = Musicbox.findJukebox(bl.getLocation());
             mb.replayLastSong(false);
-        }
-    }
-
-    @EventHandler
-    public void onChunkLoad(ChunkUnloadEvent evt) {
-        for (Entity e : evt.getChunk().getEntities()) {
-            if (e instanceof ArmorStand) {
-                ArmorStand as = (ArmorStand) e;
-                if (!as.hasBasePlate()) {
-                    as.remove();
-                }
-            }
         }
     }
 
