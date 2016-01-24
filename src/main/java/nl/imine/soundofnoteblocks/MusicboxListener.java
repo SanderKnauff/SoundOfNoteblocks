@@ -1,5 +1,10 @@
 package nl.imine.soundofnoteblocks;
 
+import nl.imine.api.gui.Container;
+import nl.imine.api.gui.GuiManager;
+import nl.imine.api.holotag.ActionType;
+import nl.imine.api.holotag.PlayerInteractTagEvent;
+import nl.imine.api.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -12,26 +17,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import nl.imine.api.gui.Container;
-import nl.imine.api.gui.GuiManager;
-import nl.imine.api.holotag.ActionType;
-import nl.imine.api.holotag.PlayerInteractTagEvent;
-import nl.imine.api.util.ItemUtil;
-
 public class MusicboxListener implements Listener {
 
-    private static final Material[] RECORDS = new Material[] {
-            Material.RECORD_10,
-            Material.RECORD_12,
-            Material.RECORD_3,
-            Material.RECORD_4,
-            Material.RECORD_5,
-            Material.RECORD_6,
-            Material.RECORD_7,
-            Material.RECORD_8,
-            Material.RECORD_9,
-            Material.GOLD_RECORD,
-            Material.GREEN_RECORD };
+    private static final Material[] RECORDS = new Material[]{Material.RECORD_10, Material.RECORD_12,
+        Material.RECORD_3, Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7,
+        Material.RECORD_8, Material.RECORD_9, Material.GOLD_RECORD, Material.GREEN_RECORD};
 
     public static void init() {
         Bukkit.getPluginManager().registerEvents(new MusicboxListener(), SoundOfNoteBlocks.getInstance());
@@ -72,9 +62,10 @@ public class MusicboxListener implements Listener {
 
     @EventHandler
     public void onPlayerTagInteract(PlayerInteractTagEvent evt) {
-        if (evt.getAction().equals(ActionType.RICHT_CLICK)) {
-            for (Musicbox jukebox : Musicbox.getMusicBoxes()) {
-                if (evt.getTag().equals(jukebox.getTag())) {
+        if(evt.getAction().equals(ActionType.RICHT_CLICK))
+        for (Musicbox jukebox : Musicbox.getMusicBoxes()) {
+            if (evt.getTag().equals(jukebox.getTag())) {
+                if (!evt.getPlayer().isSneaking()) {
                     openJukebox(evt.getPlayer(), jukebox);
                 }
             }
@@ -97,7 +88,11 @@ public class MusicboxListener implements Listener {
                 c.addStaticButton(jukebox.createLockButton(c, 6));
                 c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
                 for (Track track : SoundOfNoteBlocks.getTrackManager().getTracks()) {
-                    c.addButton(jukebox.createTrackButton(c, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length]).setName(track.getName()).setLore(track.getArtist()).build(), c.getButtons().size(), track));
+                    c.addButton(jukebox.createTrackButton(c, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length])
+                            .setName(track.getName())
+                            .setLore(track.getArtist())
+                            .build(),
+                            c.getButtons().size(), track));
                 }
                 c.open(player);
             }

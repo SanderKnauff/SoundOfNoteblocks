@@ -10,6 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -125,10 +127,10 @@ public class Musicbox implements Listener, Serializable {
         return ret;
     }
 
-    public Tag getTag() {
+    public Tag getTag(){
         return tag;
     }
-
+    
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent evt) {
         if (songPlayer != null) {
