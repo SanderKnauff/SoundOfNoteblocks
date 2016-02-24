@@ -13,6 +13,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -204,7 +205,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player) {
+        public void doAction(Player player, ClickType clickType) {
             if (songPlayer != null && songPlayer.isPlaying()) {
                 lock = true;
                 player.closeInventory();
@@ -227,7 +228,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player) {
+        public void doAction(Player player, ClickType clickType) {
             tagVisible = !tagVisible;
             tag.setVisible(tagVisible);
         }
@@ -240,7 +241,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player) {
+        public void doAction(Player player, ClickType clickType) {
             replayLastSong(true);
         }
     }
@@ -252,7 +253,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player) {
+        public void doAction(Player player, ClickType clickType) {
             List<Track> tracks = SoundOfNoteBlocks.getTrackManager().getTracks();
             playTrack(tracks.get((int) (Math.random() * (double) (tracks.size() - 1D))));
             player.closeInventory();
@@ -266,7 +267,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player) {
+        public void doAction(Player player, ClickType clickType) {
             stopPlaying();
         }
     }
@@ -285,7 +286,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player) {
+        public void doAction(Player player, ClickType clickType) {
             if (isLocked() && !player.hasPermission("iMine.jukebox.lockbypass")) {
                 player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1F, 1F);
             } else {
