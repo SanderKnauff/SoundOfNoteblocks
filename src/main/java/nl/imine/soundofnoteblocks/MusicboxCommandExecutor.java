@@ -7,15 +7,13 @@ package nl.imine.soundofnoteblocks;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.ChatColor;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 
-/**
- *
- * @author Sansko1337
- */
+import nl.imine.api.util.ColorUtil;
+
 public class MusicboxCommandExecutor implements TabExecutor {
 
     @Override
@@ -23,9 +21,7 @@ public class MusicboxCommandExecutor implements TabExecutor {
         if (command.getName().equalsIgnoreCase("jukebox")) {
             if (sender.hasPermission("iMine.jukebox.reload") && args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                 SoundOfNoteBlocks.getTrackManager().reloadTracks();
-                sender.sendMessage(ChatColor.GOLD + "Success: Loaded "
-                        + ChatColor.RED + SoundOfNoteBlocks.getTrackManager().getTracks().size()
-                        + ChatColor.GOLD + " tracks from file.");
+                sender.sendMessage(ColorUtil.replaceColors("&7Success: Loaded &c%d &7tracks from file.", SoundOfNoteBlocks.getTrackManager().getTracks().size()));
             }
             return true;
         }
@@ -35,11 +31,7 @@ public class MusicboxCommandExecutor implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> ret = new ArrayList<>();
-        if (command.getName().equalsIgnoreCase("records")) {
-            if (args.length == 1) {
-                ret.add("reload");
-            }
-        }
+        ret.add("reload");
         return ret;
     }
 }

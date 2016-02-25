@@ -1,22 +1,19 @@
 package nl.imine.soundofnoteblocks;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
 import com.google.gson.Gson;
 
-/**
- *
- * @author Sander
- */
-public class TrackManager {
+import nl.imine.api.file.FileFilter;
+import nl.imine.api.util.WebUtil;
 
-    public static final String TRACK_REPO_DIR = "/home/webserver/files/iMineNetwork/NBS/";
-    public static final String NBS_EXSTENTION = ".nbs";
-    public static final String JSON_EXSTENTION = ".json";
+public class TrackManager {
 
     private List<Track> trackList = new ArrayList<>();
 
@@ -27,11 +24,10 @@ public class TrackManager {
     private void loadTracks() {
         try {
             Gson gson = new Gson();
-            Track[] tracks = gson.fromJson(new FileReader(TRACK_REPO_DIR + "trackList" + JSON_EXSTENTION),
-                    Track[].class);
+            Track[] tracks = gson.fromJson(WebUtil.getResponse("http://files.imine.nl/iMineNetwork/NBS/trackList.json"), Track[].class);
             trackList = Arrays.asList(tracks);
-        } catch (FileNotFoundException fnfe) {
-            System.err.println("FileNotFoundException: " + fnfe.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -45,5 +41,27 @@ public class TrackManager {
 
     public void reloadTracks() {
         loadTracks();
+    }
+
+    public static File getTrack(String id) {
+        File ret = null;
+        File[] tempFolder = SoundOfNoteBlocks.getInstance().getTempFolder().listFiles(new FileFilter(".nbs"));
+        for (File tempFile : tempFolder) {
+            if (tempFile.getName().startsWith(id)) {
+                ret = tempFile;
+                break;
+            }
+        }
+        if (ret != null) {
+            return ret;
+        }
+        ret = new File(String.format("%s%s%s.nbs", SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(), File.separator, id));
+        try {
+            FileUtils.copyURLToFile(new URL("http://files.imine.nl/iMineNetwork/NBS/" + id + ".nbs"), ret);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            ret = null;
+        }
+        return ret;
     }
 }

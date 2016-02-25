@@ -36,7 +36,7 @@ public class Track implements Serializable {
     }
 
     public File getFile() {
-        return new File(TrackManager.TRACK_REPO_DIR + id + TrackManager.NBS_EXSTENTION);
+        return TrackManager.getTrack(id);
     }
 
     @Override
