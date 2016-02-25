@@ -16,15 +16,15 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
     public static SoundOfNoteBlocks plugin;
     private static TrackManager trackManager = new TrackManager();
 
-    private File temp;
+    private File tempFolder;
 
     @Override
     public void onEnable() {
         plugin = this;
         MusicboxListener.init();
         getDataFolder().mkdirs();
-        temp = new File(getDataFolder().getAbsolutePath() + File.separator + "tmp");
-        temp.mkdirs();
+        tempFolder = new File(getDataFolder().getAbsolutePath() + File.separator + "tmp");
+        tempFolder.mkdirs();
         getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
         for (World w : Bukkit.getWorlds()) {
             for (ArmorStand as : w.getEntitiesByClass(ArmorStand.class)) {
@@ -52,10 +52,15 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
         for (Container c : GuiManager.getInstance().getContainers()) {
             c.close();
         }
+        for (File tempFile : tempFolder.listFiles()) {
+            if (!tempFile.delete()) {
+                tempFile.deleteOnExit();
+            }
+        }
     }
 
     public File getTempFolder() {
-        return temp;
+        return tempFolder;
     }
 
     public static SoundOfNoteBlocks getInstance() {
