@@ -28,6 +28,7 @@ public class TrackManager {
             Gson gson = new Gson();
             Plugin pl = SoundOfNoteBlocks.getInstance();
             FileConfiguration config = pl.getConfig();
+            trackList.clear();
             for (Object url : config.getList("repositories")) {
                 try {
                     if (url instanceof String) {
