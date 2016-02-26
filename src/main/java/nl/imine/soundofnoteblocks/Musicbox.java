@@ -254,7 +254,7 @@ public class Musicbox implements Listener, Serializable {
 
         @Override
         public void doAction(Player player, ClickType clickType) {
-            List<Track> tracks = SoundOfNoteBlocks.getTrackManager().getTracks();
+            List<Track> tracks = SoundOfNoteBlocks.getInstance().getTrackManager().getTracks();
             playTrack(tracks.get((int) (Math.random() * (double) (tracks.size() - 1D))));
             player.closeInventory();
         }

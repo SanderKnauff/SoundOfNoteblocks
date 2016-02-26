@@ -15,7 +15,7 @@ import nl.imine.api.util.MktUtil;
 public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
 
     public static SoundOfNoteBlocks plugin;
-    private static TrackManager trackManager = new TrackManager();
+    private TrackManager trackManager;
 
     private File tempFolder;
 
@@ -23,6 +23,7 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
     public void onEnable() {
         plugin = this;
         setupConfig();
+        trackManager = new TrackManager();
         MusicboxListener.init();
         tempFolder = new File(getDataFolder().getAbsolutePath() + File.separator + "tmp");
         tempFolder.mkdirs();
@@ -76,7 +77,7 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
         return plugin;
     }
 
-    public static TrackManager getTrackManager() {
+    public TrackManager getTrackManager() {
         return trackManager;
     }
 }

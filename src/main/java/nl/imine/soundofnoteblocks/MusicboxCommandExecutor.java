@@ -20,8 +20,8 @@ public class MusicboxCommandExecutor implements TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("jukebox")) {
             if (sender.hasPermission("iMine.jukebox.reload") && args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                SoundOfNoteBlocks.getTrackManager().reloadTracks();
-                sender.sendMessage(ColorUtil.replaceColors("&7Success: Loaded &c%d &7tracks from file.", SoundOfNoteBlocks.getTrackManager().getTracks().size()));
+                SoundOfNoteBlocks.getInstance().getTrackManager().reloadTracks();
+                sender.sendMessage(ColorUtil.replaceColors("&7Success: Loaded &c%d &7tracks from file.", SoundOfNoteBlocks.getInstance().getTrackManager().getTracks().size()));
             }
             return true;
         }
