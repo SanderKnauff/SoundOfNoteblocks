@@ -24,8 +24,16 @@ public class TrackManager {
     private void loadTracks() {
         try {
             Gson gson = new Gson();
-            Track[] tracks = gson.fromJson(WebUtil.getResponse("http://files.imine.nl/iMineNetwork/NBS/trackList.json"), Track[].class);
-            trackList = Arrays.asList(tracks);
+            for (Object url : SoundOfNoteBlocks.getInstance().getConfig().getList("repositories")) {
+                try {
+                    if (url instanceof String) {
+                        Track[] tracks = gson.fromJson(WebUtil.getResponse((String) url), Track[].class);
+                        trackList = Arrays.asList(tracks);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
