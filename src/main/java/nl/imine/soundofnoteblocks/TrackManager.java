@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import com.google.gson.Gson;
 
@@ -24,7 +26,9 @@ public class TrackManager {
     private void loadTracks() {
         try {
             Gson gson = new Gson();
-            for (Object url : SoundOfNoteBlocks.getInstance().getConfig().getList("repositories")) {
+            Plugin pl = SoundOfNoteBlocks.getInstance();
+            FileConfiguration config = pl.getConfig();
+            for (Object url : config.getList("repositories")) {
                 try {
                     if (url instanceof String) {
                         Track[] tracks = gson.fromJson(WebUtil.getResponse((String) url), Track[].class);

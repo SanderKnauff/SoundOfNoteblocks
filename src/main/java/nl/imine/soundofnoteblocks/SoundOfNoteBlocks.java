@@ -22,10 +22,10 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         plugin = this;
+        setupConfig();
         MusicboxListener.init();
         tempFolder = new File(getDataFolder().getAbsolutePath() + File.separator + "tmp");
         tempFolder.mkdirs();
-        setupConfig();
         getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
         for (World w : Bukkit.getWorlds()) {
             for (ArmorStand as : w.getEntitiesByClass(ArmorStand.class)) {
