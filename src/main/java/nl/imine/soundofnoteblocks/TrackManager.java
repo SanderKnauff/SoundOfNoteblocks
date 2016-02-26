@@ -34,7 +34,8 @@ public class TrackManager {
                         Track[] tracks = gson.fromJson(WebUtil.getResponse((String) url), Track[].class);
                         for (Track track : tracks) {
                             // Place where music should be
-                            track.setUrl(((String) url).replaceAll("\\/\\w{0,}\\.{0,}\\w{0,}$", "/"));
+                            track.setUrlIfNotSet(((String) url).replaceAll("\\/\\w{0,}\\.{0,}\\w{0,}$", "/"));
+                            track.getSong();
                         }
                         trackList.addAll(Arrays.asList(tracks));
                     }

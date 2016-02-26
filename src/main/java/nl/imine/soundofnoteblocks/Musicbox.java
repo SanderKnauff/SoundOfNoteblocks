@@ -2,6 +2,7 @@ package nl.imine.soundofnoteblocks;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,16 +17,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
 
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
+import nl.imine.api.gui.button.ButtonSort;
+import nl.imine.api.gui.button.ButtonSort.InventorySorter;
 import nl.imine.api.holotag.Tag;
 import nl.imine.api.holotag.TagAPI;
+import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
 
 /**
@@ -35,8 +39,19 @@ import nl.imine.api.util.ItemUtil;
 public class Musicbox implements Listener, Serializable {
 
     private static final long serialVersionUID = 3971612771253959236L;
-
     private static final double DISTANCE = Math.pow(35, 2);
+    private static final Material[] RECORDS = new Material[] {
+            Material.RECORD_10,
+            Material.RECORD_12,
+            Material.RECORD_3,
+            Material.RECORD_4,
+            Material.RECORD_5,
+            Material.RECORD_6,
+            Material.RECORD_7,
+            Material.RECORD_8,
+            Material.RECORD_9,
+            Material.GOLD_RECORD,
+            Material.GREEN_RECORD };
 
     private Coordinate coordinate;
 
@@ -88,7 +103,7 @@ public class Musicbox implements Listener, Serializable {
             }
             lastTrack = track;
             isPlaying = true;
-            Song song = NBSDecoder.parse(track.getFile());
+            Song song = track.getSong();
             songPlayer = new PositionSongPlayer(song);
             songPlayer.setTargetLocation(coordinate.toLocation());
             songPlayer.setAutoDestroy(true);
@@ -192,8 +207,12 @@ public class Musicbox implements Listener, Serializable {
         return new ButtonLock(c, slot);
     }
 
-    public ButtonTrack createTrackButton(Container container, ItemStack itemStack, int slot, Track track) {
-        return new ButtonTrack(container, itemStack, slot, track);
+    public ButtonTrack createTrackButton(Container container, Track track, int slot) {
+        return new ButtonTrack(container, track, slot);
+    }
+
+    public ButtonMusicSort createSortButton(Container container, int slot) {
+        return new ButtonMusicSort(container, slot);
     }
 
     // Radio
@@ -276,13 +295,25 @@ public class Musicbox implements Listener, Serializable {
 
         private final Track track;
 
-        public ButtonTrack(Container container, ItemStack itemStack, int slot, Track track) {
-            super(container, itemStack, slot);
+        public ButtonTrack(Container container, Track track, int slot) {
+            super(container, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length]).build(), slot);
             this.track = track;
         }
 
         public Track getTrack() {
             return track;
+        }
+
+        @Override
+        public ItemStack getItemStack() {
+            ItemStack is = super.getItemStack();
+            ItemMeta im = is.getItemMeta();
+            im.setDisplayName(ColorUtil.replaceColors("&b" + track.getName()));
+            im.setLore(Arrays.asList(new String[] {
+                    ColorUtil.replaceColors("&e" + track.getArtist()),
+                    ColorUtil.replaceColors("&c" + track.getSong().getLength()) }));
+            is.setItemMeta(im);
+            return is;
         }
 
         @Override
@@ -293,6 +324,63 @@ public class Musicbox implements Listener, Serializable {
                 playTrack(track);
             }
             player.closeInventory();
+        }
+    }
+
+    private class ButtonMusicSort extends ButtonSort {
+        public ButtonMusicSort(Container container, int slot) {
+            super(container, ItemUtil.getBuilder(Material.NAME_TAG).setName(ColorUtil.replaceColors("&6Sort on")).build(), slot, new InventorySorter[] {
+                    new InventoryTrackNameSorter(),
+                    new InventoryTrackArtistSorter(),
+                    new InventoryTrackSongLenghtSorter() });
+        }
+    }
+
+    private static class InventoryTrackNameSorter extends InventorySorter {
+        public InventoryTrackNameSorter() {
+            super("On name");
+        }
+
+        @Override
+        public int compare(Button o1, Button o2) {
+            if (o1 instanceof ButtonTrack && o2 instanceof ButtonTrack) {
+                Track t1 = ((ButtonTrack) o1).getTrack();
+                Track t2 = ((ButtonTrack) o2).getTrack();
+                return t1.getName().compareTo(t2.getName());
+            }
+            return 1000;
+        }
+    }
+
+    private static class InventoryTrackArtistSorter extends InventorySorter {
+        public InventoryTrackArtistSorter() {
+            super("On artist");
+        }
+
+        @Override
+        public int compare(Button o1, Button o2) {
+            if (o1 instanceof ButtonTrack && o2 instanceof ButtonTrack) {
+                Track t1 = ((ButtonTrack) o1).getTrack();
+                Track t2 = ((ButtonTrack) o2).getTrack();
+                return t1.getArtist().compareTo(t2.getArtist());
+            }
+            return 1000;
+        }
+    }
+
+    private static class InventoryTrackSongLenghtSorter extends InventorySorter {
+        public InventoryTrackSongLenghtSorter() {
+            super("On length");
+        }
+
+        @Override
+        public int compare(Button o1, Button o2) {
+            if (o1 instanceof ButtonTrack && o2 instanceof ButtonTrack) {
+                Song s1 = ((ButtonTrack) o1).getTrack().getSong();
+                Song s2 = ((ButtonTrack) o2).getTrack().getSong();
+                return s1.getLength() - s2.getLength();
+            }
+            return 1000;
         }
     }
 }

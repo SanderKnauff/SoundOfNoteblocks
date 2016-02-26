@@ -16,29 +16,15 @@ import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
 import nl.imine.api.holotag.ActionType;
 import nl.imine.api.holotag.PlayerInteractTagEvent;
-import nl.imine.api.util.ItemUtil;
+import nl.imine.api.util.ColorUtil;
 
 public class MusicboxListener implements Listener {
-
-    private static final Material[] RECORDS = new Material[] {
-            Material.RECORD_10,
-            Material.RECORD_12,
-            Material.RECORD_3,
-            Material.RECORD_4,
-            Material.RECORD_5,
-            Material.RECORD_6,
-            Material.RECORD_7,
-            Material.RECORD_8,
-            Material.RECORD_9,
-            Material.GOLD_RECORD,
-            Material.GREEN_RECORD };
 
     public static void init() {
         Bukkit.getPluginManager().registerEvents(new MusicboxListener(), SoundOfNoteBlocks.getInstance());
     }
 
     private MusicboxListener() {
-
     }
 
     @EventHandler
@@ -89,17 +75,18 @@ public class MusicboxListener implements Listener {
                     player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.VILLAGER_NO, 1F, 1F);
                     return;
                 }
-                Container c = GuiManager.getInstance().createContainer("Choose Track", 45, true, false);
+                Container c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zJukebox"), 45, true, false);
+                for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
+                    c.addButton(jukebox.createTrackButton(c, track, c.getButtons().size()));
+                }
                 c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
+                c.addStaticButton(jukebox.createSortButton(c, 1));
                 c.addStaticButton(jukebox.createReplayButton(c, 2));
                 c.addStaticButton(jukebox.createStopButton(c, 3));
                 c.addStaticButton(jukebox.createRandomButton(c, 4));
                 c.addStaticButton(jukebox.createTogglenametagButton(c, 5));
                 c.addStaticButton(jukebox.createLockButton(c, 6));
                 c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
-                for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
-                    c.addButton(jukebox.createTrackButton(c, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length]).setName(track.getName()).setLore(track.getArtist()).build(), c.getButtons().size(), track));
-                }
                 c.open(player);
             }
         }
