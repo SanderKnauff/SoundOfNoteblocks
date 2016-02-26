@@ -32,7 +32,11 @@ public class TrackManager {
                 try {
                     if (url instanceof String) {
                         Track[] tracks = gson.fromJson(WebUtil.getResponse((String) url), Track[].class);
-                        trackList = Arrays.asList(tracks);
+                        for (Track track : tracks) {
+                            // Place where music should be
+                            track.setUrl(((String) url).replaceAll("\\/\\w{0,}\\.{0,}\\w{0,}$", "/"));
+                        }
+                        trackList.addAll(Arrays.asList(tracks));
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -55,11 +59,11 @@ public class TrackManager {
         loadTracks();
     }
 
-    public static File getTrack(String id) {
+    public static File getFile(Track track) {
         File ret = null;
         File[] tempFolder = SoundOfNoteBlocks.getInstance().getTempFolder().listFiles(new FileFilter(".nbs"));
         for (File tempFile : tempFolder) {
-            if (tempFile.getName().startsWith(id)) {
+            if (tempFile.getName().startsWith(track.getId())) {
                 ret = tempFile;
                 break;
             }
@@ -67,9 +71,9 @@ public class TrackManager {
         if (ret != null) {
             return ret;
         }
-        ret = new File(String.format("%s%s%s.nbs", SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(), File.separator, id));
+        ret = new File(String.format("%s%s%s.nbs", SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(), File.separator, track.getId()));
         try {
-            FileUtils.copyURLToFile(new URL("http://files.imine.nl/iMineNetwork/NBS/" + id + ".nbs"), ret);
+            FileUtils.copyURLToFile(new URL(track.getUrl() + track.getId() + ".nbs"), ret);
         } catch (Exception ex) {
             ex.printStackTrace();
             ret = null;

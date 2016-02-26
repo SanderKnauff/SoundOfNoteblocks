@@ -3,16 +3,13 @@ package nl.imine.soundofnoteblocks;
 import java.io.File;
 import java.io.Serializable;
 
-/**
- *
- * @author Sander
- */
 public class Track implements Serializable {
     private static final long serialVersionUID = -6901663374788956944L;
 
     private String id;
     private String name;
     private String artist;
+    private transient String url;
 
     public Track() {
     }
@@ -21,6 +18,10 @@ public class Track implements Serializable {
         this.id = id;
         this.name = name;
         this.artist = artist;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getId() {
@@ -36,7 +37,11 @@ public class Track implements Serializable {
     }
 
     public File getFile() {
-        return TrackManager.getTrack(id);
+        return TrackManager.getFile(this);
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
