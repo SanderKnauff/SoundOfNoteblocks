@@ -25,8 +25,8 @@ import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
 
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
+import nl.imine.api.gui.InventorySorter;
 import nl.imine.api.gui.button.ButtonSort;
-import nl.imine.api.gui.button.ButtonSort.InventorySorter;
 import nl.imine.api.holotag.Tag;
 import nl.imine.api.holotag.TagAPI;
 import nl.imine.api.util.ColorUtil;
