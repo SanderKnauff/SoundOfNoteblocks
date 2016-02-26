@@ -311,7 +311,7 @@ public class Musicbox implements Listener, Serializable {
             im.setDisplayName(ColorUtil.replaceColors("&b" + track.getName()));
             im.setLore(Arrays.asList(new String[] {
                     ColorUtil.replaceColors("&e" + track.getArtist()),
-                    ColorUtil.replaceColors("&c" + track.getSong().getLength()) }));
+                    ColorUtil.replaceColors("&c" + track.getSong().getLength() * track.getSong().getDelay()) }));
             is.setItemMeta(im);
             return is;
         }
