@@ -329,7 +329,7 @@ public class Musicbox implements Listener, Serializable {
 
     private class ButtonMusicSort extends ButtonSort {
         public ButtonMusicSort(Container container, int slot) {
-            super(container, ItemUtil.getBuilder(Material.NAME_TAG).setName(ColorUtil.replaceColors("&6Sort on")).build(), slot, new InventorySorter[] {
+            super(container, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&6Sort on")).build(), slot, new InventorySorter[] {
                     new InventoryTrackNameSorter(),
                     new InventoryTrackArtistSorter(),
                     new InventoryTrackSongLenghtSorter() });

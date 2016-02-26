@@ -75,7 +75,7 @@ public class MusicboxListener implements Listener {
                     player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.VILLAGER_NO, 1F, 1F);
                     return;
                 }
-                Container c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zJukebox"), 45, true, false);
+                Container c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&dJukebox   &cChoose your number!"), 45, true, false);
                 for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
                     c.addButton(jukebox.createTrackButton(c, track, c.getButtons().size()));
                 }
