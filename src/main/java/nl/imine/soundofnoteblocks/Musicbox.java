@@ -378,8 +378,10 @@ public class Musicbox implements Listener, Serializable {
         public int compare(Button o1, Button o2) {
             if (o1 instanceof ButtonTrack && o2 instanceof ButtonTrack) {
                 Song s1 = ((ButtonTrack) o1).getTrack().getSong();
+                int ds1 = (int) (s1.getLength() / s1.getSpeed());
                 Song s2 = ((ButtonTrack) o2).getTrack().getSong();
-                return s1.getLength() - s2.getLength();
+                int ds2 = (int) (s2.getLength() / s2.getSpeed());
+                return ds1 - ds2;
             }
             return 1000;
         }
