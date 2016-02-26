@@ -53,7 +53,7 @@ public class Track implements Serializable {
     }
 
     public void setUrlIfNotSet(String url) {
-        if (url == null) {
+        if (url == null || url.isEmpty() || url.equalsIgnoreCase("null")) {
             setUrl(url);
         }
     }
