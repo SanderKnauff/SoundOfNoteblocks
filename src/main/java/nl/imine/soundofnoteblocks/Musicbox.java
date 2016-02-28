@@ -86,7 +86,11 @@ public class Musicbox implements Listener, Serializable {
 
     private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
-        tag = TagAPI.createTag(coordinate.toLocation().add(0.5, 0.5, 0.5));
+        Location loc = coordinate.toLocation();
+        if (loc.clone().add(0, 1, 0).getBlock().getType() == Material.AIR) {
+            loc = loc.add(0, -1, 0);
+        }
+        tag = TagAPI.createTag(loc.add(0.5, 0.5, 0.5));
         tag.addLine(" ");
         tag.addLine(" ");
         tag.setVisible(false);
