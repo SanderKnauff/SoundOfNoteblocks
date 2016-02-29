@@ -177,11 +177,13 @@ public class Musicbox implements Listener, Serializable {
 
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent evt) {
-        if (songPlayer != null) {
-            songPlayer.destroy();
-        }
-        if (tag != null) {
-            tag.remove();
+        if (evt.getChunk().equals(getLocation().getChunk())) {
+            if (songPlayer != null) {
+                songPlayer.destroy();
+            }
+            if (tag != null) {
+                tag.remove();
+            }
         }
     }
 
