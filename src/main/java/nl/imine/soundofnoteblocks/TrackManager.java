@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -24,29 +25,31 @@ public class TrackManager {
     }
 
     private void loadTracks() {
-        try {
-            Gson gson = new Gson();
-            Plugin pl = SoundOfNoteBlocks.getInstance();
-            FileConfiguration config = pl.getConfig();
-            trackList.clear();
-            for (Object url : config.getList("repositories")) {
-                try {
-                    if (url instanceof String) {
-                        Track[] tracks = gson.fromJson(WebUtil.getResponse((String) url), Track[].class);
-                        for (Track track : tracks) {
-                            // Place where music should be
-                            track.setUrlIfNotSet(((String) url).replaceAll("\\/\\w{0,}\\.{0,}\\w{0,}$", "/"));
-                            track.getSong();
+        Bukkit.getScheduler().runTaskAsynchronously(SoundOfNoteBlocks.plugin, () -> {
+            try {
+                Gson gson = new Gson();
+                Plugin pl = SoundOfNoteBlocks.getInstance();
+                FileConfiguration config = pl.getConfig();
+                trackList.clear();
+                for (Object url : config.getList("repositories")) {
+                    try {
+                        if (url instanceof String) {
+                            Track[] tracks = gson.fromJson(WebUtil.getResponse((String) url), Track[].class);
+                            for (Track track : tracks) {
+                                // Place where music should be
+                                track.setUrlIfNotSet(((String) url).replaceAll("\\/\\w{0,}\\.{0,}\\w{0,}$", "/"));
+                                track.getSong();
+                            }
+                            trackList.addAll(Arrays.asList(tracks));
                         }
-                        trackList.addAll(Arrays.asList(tracks));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
     }
 
     public void setTracks(List<Track> trackList) {
