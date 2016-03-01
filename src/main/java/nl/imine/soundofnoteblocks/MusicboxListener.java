@@ -51,7 +51,8 @@ public class MusicboxListener implements Listener {
                 if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")) {
                     Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
                     openJukebox(evt.getPlayer(), jukebox);
-                }
+                    evt.setCancelled(true);
+                } 
             }
         }
     }
