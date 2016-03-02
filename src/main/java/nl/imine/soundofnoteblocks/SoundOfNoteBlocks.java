@@ -2,9 +2,6 @@ package nl.imine.soundofnoteblocks;
 
 import java.io.File;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,26 +25,12 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
         trackManager = new TrackManager();
         MusicboxListener.init();
         getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
-        for (World w : Bukkit.getWorlds()) {
-            for (ArmorStand as : w.getEntitiesByClass(ArmorStand.class)) {
-                if (!as.hasBasePlate()) {
-                    as.remove();
-                }
-            }
-        }
     }
 
     @Override
     public void onDisable() {
         trackManager = null;
         plugin = null;
-        for (World w : Bukkit.getWorlds()) {
-            for (ArmorStand as : w.getEntitiesByClass(ArmorStand.class)) {
-                if (!as.hasBasePlate()) {
-                    as.remove();
-                }
-            }
-        }
         for (Musicbox m : Musicbox.getMusicBoxes()) {
             m.stopPlaying();
         }
