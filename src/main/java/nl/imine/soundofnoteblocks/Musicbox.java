@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -31,7 +32,6 @@ import nl.imine.api.holotag.Tag;
 import nl.imine.api.holotag.TagAPI;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 /**
  *
@@ -41,18 +41,18 @@ public class Musicbox implements Listener, Serializable {
 
     private static final long serialVersionUID = 3971612771253959236L;
     private static final double DISTANCE = Math.pow(35, 2);
-    private static final Material[] RECORDS = new Material[]{
-        Material.RECORD_10,
-        Material.RECORD_12,
-        Material.RECORD_3,
-        Material.RECORD_4,
-        Material.RECORD_5,
-        Material.RECORD_6,
-        Material.RECORD_7,
-        Material.RECORD_8,
-        Material.RECORD_9,
-        Material.GOLD_RECORD,
-        Material.GREEN_RECORD};
+    private static final Material[] RECORDS = new Material[] {
+            Material.RECORD_10,
+            Material.RECORD_12,
+            Material.RECORD_3,
+            Material.RECORD_4,
+            Material.RECORD_5,
+            Material.RECORD_6,
+            Material.RECORD_7,
+            Material.RECORD_8,
+            Material.RECORD_9,
+            Material.GOLD_RECORD,
+            Material.GREEN_RECORD };
 
     private Coordinate coordinate;
 
@@ -87,11 +87,7 @@ public class Musicbox implements Listener, Serializable {
 
     private Musicbox(Coordinate coordinate) {
         this.coordinate = coordinate;
-        Location loc = coordinate.toLocation();
-        if (loc.clone().add(0, 1, 0).getBlock().getType() == Material.AIR) {
-            loc = loc.add(0, -1, 0);
-        }
-        tag = TagAPI.createTag(loc.add(0.5, 0.5, 0.5));
+        tag = TagAPI.createTag(getTagLocation());
         tag.addLine(" ");
         tag.addLine(" ");
         tag.setVisible(false);
@@ -121,8 +117,17 @@ public class Musicbox implements Listener, Serializable {
             }
             tag.getLine(0).setLabel(ChatColor.GOLD + lastTrack.getName());
             tag.getLine(1).setLabel(ChatColor.BLUE + lastTrack.getArtist());
+            tag.setLocation(getTagLocation());
             tag.setVisible(tagVisible);
         }
+    }
+
+    public Location getTagLocation() {
+        Location loc = coordinate.toLocation();
+        if (loc.clone().add(0, 1, 0).getBlock().getType() == Material.AIR) {
+            loc = loc.add(0, -1, 0);
+        }
+        return loc.add(0.5, 0.5, 0.5);
     }
 
     public void stopPlaying() {
@@ -267,6 +272,7 @@ public class Musicbox implements Listener, Serializable {
         public void doAction(Player player, ClickType clickType) {
             if (isPlaying) {
                 tagVisible = !tagVisible;
+                tag.setLocation(getTagLocation());
                 tag.setVisible(tagVisible);
             }
         }
@@ -329,9 +335,9 @@ public class Musicbox implements Listener, Serializable {
             ItemMeta im = is.getItemMeta();
             im.setDisplayName(ColorUtil.replaceColors("&b" + track.getName()));
             int duratio = (int) (track.getSong().getLength() / track.getSong().getSpeed());
-            im.setLore(Arrays.asList(new String[]{
-                ColorUtil.replaceColors("&eArtist: " + track.getArtist()),
-                ColorUtil.replaceColors("&cLength: %d:%02d", duratio / 60, duratio % 60)}));
+            im.setLore(Arrays.asList(new String[] {
+                    ColorUtil.replaceColors("&eArtist: " + track.getArtist()),
+                    ColorUtil.replaceColors("&cLength: %d:%02d", duratio / 60, duratio % 60) }));
             is.setItemMeta(im);
             return is;
         }
@@ -350,10 +356,10 @@ public class Musicbox implements Listener, Serializable {
     private class ButtonMusicSort extends ButtonSort {
 
         public ButtonMusicSort(Container container, int slot) {
-            super(container, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&6Sort on")).build(), slot, new InventorySorter[]{
-                new InventoryTrackNameSorter(),
-                new InventoryTrackArtistSorter(),
-                new InventoryTrackSongLenghtSorter()});
+            super(container, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&6Sort on")).build(), slot, new InventorySorter[] {
+                    new InventoryTrackNameSorter(),
+                    new InventoryTrackArtistSorter(),
+                    new InventoryTrackSongLenghtSorter() });
         }
     }
 
