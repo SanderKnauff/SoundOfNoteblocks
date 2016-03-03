@@ -10,7 +10,5 @@ buildfase:
     - curl -T target/$1.jar ftp://Deploy.9:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.14:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.16:$ftppass@localhost/plugins/update/
-  only:
-    - master
 stages:
   - build
