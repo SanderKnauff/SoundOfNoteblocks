@@ -73,7 +73,7 @@ public class MusicboxListener implements Listener {
         if (!(((org.bukkit.block.Jukebox) jukebox.getLocation().getBlock().getState()).isPlaying())) {
             if (player.hasPermission("iMine.jukebox.play")) {
                 if (jukebox.isLocked() && !player.getPlayer().hasPermission("iMine.jukebox.lockbypass")) {
-                    player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.VILLAGER_NO, 1F, 1F);
+                    player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 1F);
                     return;
                 }
                 Container c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);

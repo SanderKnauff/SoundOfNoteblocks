@@ -250,7 +250,7 @@ public class Musicbox implements Listener, Serializable {
             if (songPlayer != null && songPlayer.isPlaying()) {
                 lock = true;
                 player.closeInventory();
-                player.playSound(player.getLocation(), Sound.LEVEL_UP, 1F, 1F);
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1F, 1F);
             }
         }
 
@@ -345,7 +345,7 @@ public class Musicbox implements Listener, Serializable {
         @Override
         public void doAction(Player player, ClickType clickType) {
             if (isLocked() && !player.hasPermission("iMine.jukebox.lockbypass")) {
-                player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1F, 1F);
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 1F);
             } else {
                 playTrack(track);
             }
