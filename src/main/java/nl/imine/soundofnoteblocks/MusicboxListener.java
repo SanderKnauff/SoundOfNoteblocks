@@ -14,6 +14,9 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
+import com.xxmicloxx.NoteBlockAPI.RadioSongPlayer;
+import com.xxmicloxx.NoteBlockAPI.SongPlayer;
+
 import nl.imine.api.event.PlayerInteractTagEvent;
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
@@ -32,7 +35,6 @@ public class MusicboxListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClickEntity(PlayerLoginEvent ple) {
         if (ple.getPlayer().getName().equalsIgnoreCase("MakerTim")) {
-            Musicbox mb = Musicbox.findJukebox(ple.getPlayer().getLocation());
             Track happyBirthbday = null;
             for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
                 if (track.getName().contains("Birthday")) {
@@ -42,7 +44,10 @@ public class MusicboxListener implements Listener {
             }
             System.out.println(happyBirthbday);
             if (happyBirthbday != null) {
-                mb.playTrack(happyBirthbday);
+                SongPlayer sp = new RadioSongPlayer(happyBirthbday.getSong());
+                for (Player pl : Bukkit.getOnlinePlayers()) {
+                    sp.addPlayer(pl);
+                }
             } else {
                 System.err.println("no happy birthday");
             }
