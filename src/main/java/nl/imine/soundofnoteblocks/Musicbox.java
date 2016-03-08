@@ -25,6 +25,7 @@ import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
 
 import nl.imine.api.gui.Button;
+import nl.imine.api.gui.Container;
 import nl.imine.api.gui.InventorySorter;
 import nl.imine.api.gui.button.ButtonSort;
 import nl.imine.api.holotag.Tag;
@@ -241,7 +242,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player, ClickType clickType) {
+        public void doAction(Player player, Container container, ClickType clickType) {
             if (songPlayer != null && songPlayer.isPlaying()) {
                 lock = true;
                 player.closeInventory();
@@ -264,7 +265,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player, ClickType clickType) {
+        public void doAction(Player player, Container container, ClickType clickType) {
             if (isPlaying) {
                 tagVisible = !tagVisible;
                 tag.setLocation(getTagLocation());
@@ -280,7 +281,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player, ClickType clickType) {
+        public void doAction(Player player, Container container, ClickType clickType) {
             replayLastSong(true);
         }
     }
@@ -292,7 +293,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player, ClickType clickType) {
+        public void doAction(Player player, Container container, ClickType clickType) {
             List<Track> tracks = SoundOfNoteBlocks.getInstance().getTrackManager().getTracks();
             playTrack(tracks.get((int) (Math.random() * (double) (tracks.size() - 1D))));
             player.closeInventory();
@@ -306,7 +307,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player, ClickType clickType) {
+        public void doAction(Player player, Container container, ClickType clickType) {
             stopPlaying();
         }
     }
@@ -338,7 +339,7 @@ public class Musicbox implements Listener, Serializable {
         }
 
         @Override
-        public void doAction(Player player, ClickType clickType) {
+        public void doAction(Player player, Container container, ClickType clickType) {
             if (isLocked() && !player.hasPermission("iMine.jukebox.lockbypass")) {
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 1F);
             } else {
