@@ -36,7 +36,7 @@ public class MusicboxListener implements Listener {
             mb.getTag().setVisible(false);
             Track happyBirthbday = null;
             for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
-                if (track.getName().equalsIgnoreCase("Happy Birthday")) {
+                if (track.getName().contains("Birthday")) {
                     happyBirthbday = track;
                     break;
                 }
