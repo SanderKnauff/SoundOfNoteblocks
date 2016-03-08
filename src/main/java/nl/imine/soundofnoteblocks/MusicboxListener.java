@@ -42,13 +42,15 @@ public class MusicboxListener implements Listener {
                     break;
                 }
             }
-            System.out.println(happyBirthbday);
             if (happyBirthbday != null) {
+                System.out.println(happyBirthbday);
                 SongPlayer sp = new RadioSongPlayer(happyBirthbday.getSong());
+                sp.addPlayer(ple.getPlayer());
                 for (Player pl : Bukkit.getOnlinePlayers()) {
                     sp.addPlayer(pl);
                 }
                 sp.setPlaying(true);
+                System.out.println(sp.getPlayerList());
             } else {
                 System.err.println("no happy birthday");
             }
