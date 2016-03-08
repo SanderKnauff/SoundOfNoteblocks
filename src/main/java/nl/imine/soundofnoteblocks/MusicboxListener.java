@@ -48,6 +48,7 @@ public class MusicboxListener implements Listener {
                 for (Player pl : Bukkit.getOnlinePlayers()) {
                     sp.addPlayer(pl);
                 }
+                sp.setPlaying(true);
             } else {
                 System.err.println("no happy birthday");
             }
