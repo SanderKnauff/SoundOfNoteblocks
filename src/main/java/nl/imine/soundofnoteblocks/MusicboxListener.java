@@ -6,11 +6,13 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 
 import nl.imine.api.event.PlayerInteractTagEvent;
 import nl.imine.api.gui.Container;
@@ -25,6 +27,26 @@ public class MusicboxListener implements Listener {
     }
 
     private MusicboxListener() {
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onClickEntity(PlayerLoginEvent ple) {
+        if (ple.getPlayer().getName().equalsIgnoreCase("MakerTim")) {
+            Musicbox mb = Musicbox.findJukebox(ple.getPlayer().getLocation());
+            mb.getTag().setVisible(false);
+            Track happyBirthbday = null;
+            for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
+                if (track.getName().equalsIgnoreCase("Happy Birthday")) {
+                    happyBirthbday = track;
+                    break;
+                }
+            }
+            if (happyBirthbday != null) {
+                mb.playTrack(happyBirthbday);
+            } else {
+                System.err.println("no happy birthday");
+            }
+        }
     }
 
     @EventHandler
