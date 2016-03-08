@@ -31,24 +31,22 @@ public class MusicboxListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClickEntity(PlayerLoginEvent ple) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> {
-            if (ple.getPlayer().getName().equalsIgnoreCase("MakerTim")) {
-                Musicbox mb = Musicbox.findJukebox(ple.getPlayer().getLocation());
-                mb.getTag().setVisible(false);
-                Track happyBirthbday = null;
-                for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
-                    if (track.getName().contains("Birthday")) {
-                        happyBirthbday = track;
-                        break;
-                    }
-                }
-                if (happyBirthbday != null) {
-                    mb.playTrack(happyBirthbday);
-                } else {
-                    System.err.println("no happy birthday");
+        if (ple.getPlayer().getName().equalsIgnoreCase("MakerTim")) {
+            Musicbox mb = Musicbox.findJukebox(ple.getPlayer().getLocation());
+            Track happyBirthbday = null;
+            for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
+                if (track.getName().contains("Birthday")) {
+                    happyBirthbday = track;
+                    break;
                 }
             }
-        } , 150L);
+            System.out.println(happyBirthbday);
+            if (happyBirthbday != null) {
+                mb.playTrack(happyBirthbday);
+            } else {
+                System.err.println("no happy birthday");
+            }
+        }
     }
 
     @EventHandler
