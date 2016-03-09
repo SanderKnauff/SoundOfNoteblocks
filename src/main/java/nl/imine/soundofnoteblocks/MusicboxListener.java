@@ -34,7 +34,7 @@ public class MusicboxListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onClickEntity(PlayerLoginEvent ple) {
-        if (ple.getPlayer().getName().equalsIgnoreCase("MakerTim")) {
+        if (ple.getPlayer().getName().equalsIgnoreCase("Beauseant")) {
             Track happyBirthbday = null;
             for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
                 if (track.getName().contains("Birthday")) {
