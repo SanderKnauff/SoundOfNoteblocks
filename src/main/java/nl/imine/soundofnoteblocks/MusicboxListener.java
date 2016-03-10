@@ -6,16 +6,11 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-
-import com.xxmicloxx.NoteBlockAPI.RadioSongPlayer;
-import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 
 import nl.imine.api.event.PlayerInteractTagEvent;
 import nl.imine.api.gui.Container;
@@ -30,31 +25,6 @@ public class MusicboxListener implements Listener {
     }
 
     private MusicboxListener() {
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onClickEntity(PlayerLoginEvent ple) {
-        if (ple.getPlayer().getName().equalsIgnoreCase("Beauseant")) {
-            Track happyBirthbday = null;
-            for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
-                if (track.getName().contains("Birthday")) {
-                    happyBirthbday = track;
-                    break;
-                }
-            }
-            if (happyBirthbday != null) {
-                System.out.println(happyBirthbday);
-                SongPlayer sp = new RadioSongPlayer(happyBirthbday.getSong());
-                sp.addPlayer(ple.getPlayer());
-                for (Player pl : Bukkit.getOnlinePlayers()) {
-                    sp.addPlayer(pl);
-                }
-                sp.setPlaying(true);
-                System.out.println(sp.getPlayerList());
-            } else {
-                System.err.println("no happy birthday");
-            }
-        }
     }
 
     @EventHandler
