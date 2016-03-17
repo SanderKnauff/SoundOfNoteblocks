@@ -89,6 +89,7 @@ public class MusicboxListener implements Listener {
 				c.addStaticButton(jukebox.createRandomButton(4));
 				c.addStaticButton(jukebox.createTogglenametagButton(5));
 				c.addStaticButton(jukebox.createLockButton(6));
+				c.addStaticButton(jukebox.createRadioButton(7));
 				c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
 				c.open(player);
 			}
