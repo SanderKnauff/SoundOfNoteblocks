@@ -173,10 +173,9 @@ public class Musicbox implements Listener, Serializable {
 			songPlayer = null;
 			if (isRadioMode()) {
 				Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> randomTrack());
-			} else {
-				tag.setVisible(false);
-				lock = false;
 			}
+			tag.setVisible(false);
+			lock = false;
 		}
 	}
 

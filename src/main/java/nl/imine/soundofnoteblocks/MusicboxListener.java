@@ -62,9 +62,7 @@ public class MusicboxListener implements Listener {
 		if (evt.getAction().equals(ActionType.RICHT_CLICK)) {
 			for (Musicbox jukebox : Musicbox.getMusicBoxes()) {
 				if (evt.getTag().equals(jukebox.getTag())) {
-					if (!evt.getPlayer().isSneaking()) {
-						openJukebox(evt.getPlayer(), jukebox);
-					}
+					openJukebox(evt.getPlayer(), jukebox);
 				}
 			}
 		}
