@@ -93,6 +93,9 @@ public class Musicbox implements Listener, Serializable {
 	public void playTrack(Track track) {
 		if (this.getLocation().getBlock().getType().equals(Material.JUKEBOX)) {
 			if (isPlaying) {
+				if (isRadioMode()) {
+					return;
+				}
 				stopPlaying();
 			}
 			lastTrack = track;
@@ -172,8 +175,8 @@ public class Musicbox implements Listener, Serializable {
 				Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> randomTrack());
 			} else {
 				tag.setVisible(false);
+				lock = false;
 			}
-			lock = false;
 		}
 	}
 
