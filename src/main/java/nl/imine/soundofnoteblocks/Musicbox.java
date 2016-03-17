@@ -168,11 +168,12 @@ public class Musicbox implements Listener, Serializable {
 		if (songPlayer != null && songPlayer.equals(evt.getSongPlayer())) {
 			isPlaying = false;
 			songPlayer = null;
-			tag.setVisible(false);
-		}
-		lock = false;
-		if (isRadioMode()) {
-			randomTrack();
+			if (isRadioMode()) {
+				randomTrack();
+			} else {
+				tag.setVisible(false);
+			}
+			lock = false;
 		}
 	}
 
