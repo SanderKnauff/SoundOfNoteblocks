@@ -16,22 +16,24 @@ import nl.imine.api.util.ColorUtil;
 
 public class MusicboxCommandExecutor implements TabExecutor {
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("jukebox")) {
-            if (sender.hasPermission("iMine.jukebox.reload") && args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                SoundOfNoteBlocks.getInstance().getTrackManager().reloadTracks();
-                sender.sendMessage(ColorUtil.replaceColors("&7Reloaded tracks from repo's.", SoundOfNoteBlocks.getInstance().getTrackManager().getTracks().size()));
-            }
-            return true;
-        }
-        return false;
-    }
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (command.getName().equalsIgnoreCase("jukebox")) {
+			if (sender.hasPermission("iMine.jukebox.reload") && args.length == 1
+					&& args[0].equalsIgnoreCase("reload")) {
+				SoundOfNoteBlocks.getInstance().getTrackManager().reloadTracks();
+				sender.sendMessage(ColorUtil.replaceColors("&7Reloaded tracks from repo's.",
+					SoundOfNoteBlocks.getInstance().getTrackManager().getTracks().size()));
+			}
+			return true;
+		}
+		return false;
+	}
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> ret = new ArrayList<>();
-        ret.add("reload");
-        return ret;
-    }
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		List<String> ret = new ArrayList<>();
+		ret.add("reload");
+		return ret;
+	}
 }

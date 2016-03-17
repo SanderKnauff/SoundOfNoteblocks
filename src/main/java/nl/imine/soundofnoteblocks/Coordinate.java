@@ -1,14 +1,11 @@
 package nl.imine.soundofnoteblocks;
 
 import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-/**
- *
- * @author Sander
- */
 public class Coordinate {
 
 	private UUID uuid;
