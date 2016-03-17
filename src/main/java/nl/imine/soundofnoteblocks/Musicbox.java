@@ -305,9 +305,9 @@ public class Musicbox implements Listener, Serializable {
 
 		@Override
 		public ItemStack getItemStack() {
-			ItemUtil.getBuilder(super.getItemStack().getType(), super.getItemStack().getItemMeta())
-					.addLore(ColorUtil.replaceColors("&7RadioMode: " + (isRadioMode() ? "&aEnabled" : "&cDisabled")));
-			return super.getItemStack();
+			return ItemUtil.getBuilder(super.getItemStack().getType(), super.getItemStack().getItemMeta())
+					.addLore(ColorUtil.replaceColors("&7RadioMode: " + (isRadioMode() ? "&aEnabled" : "&cDisabled")))
+					.build();
 		}
 
 		@Override
