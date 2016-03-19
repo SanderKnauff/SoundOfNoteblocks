@@ -75,20 +75,25 @@ public class MusicboxListener implements Listener {
 					player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 1F);
 					return;
 				}
-				Container c = GuiManager.getInstance()
-						.createContainer(ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);
-				for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
-					c.addButton(jukebox.createTrackButton(track, c.getButtons().size()));
+				Container c = GuiManager.getInstance().createContainer(
+					ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), jukebox.isRadioMode() ? 9 : 45, true,
+					false);
+				if (jukebox.isRadioMode()) {
+					c.addStaticButton(jukebox.createRadioButton(4));
+				} else {
+					for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
+						c.addButton(jukebox.createTrackButton(track, c.getButtons().size()));
+					}
+					c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
+					c.addStaticButton(jukebox.createSortButton(1));
+					c.addStaticButton(jukebox.createReplayButton(2));
+					c.addStaticButton(jukebox.createStopButton(3));
+					c.addStaticButton(jukebox.createRandomButton(4));
+					c.addStaticButton(jukebox.createTogglenametagButton(5));
+					c.addStaticButton(jukebox.createLockButton(6));
+					c.addStaticButton(jukebox.createRadioButton(7));
+					c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
 				}
-				c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
-				c.addStaticButton(jukebox.createSortButton(1));
-				c.addStaticButton(jukebox.createReplayButton(2));
-				c.addStaticButton(jukebox.createStopButton(3));
-				c.addStaticButton(jukebox.createRandomButton(4));
-				c.addStaticButton(jukebox.createTogglenametagButton(5));
-				c.addStaticButton(jukebox.createLockButton(6));
-				c.addStaticButton(jukebox.createRadioButton(7));
-				c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
 				c.open(player);
 			}
 		}
