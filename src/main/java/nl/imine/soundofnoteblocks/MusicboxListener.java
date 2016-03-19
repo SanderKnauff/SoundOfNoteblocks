@@ -75,12 +75,13 @@ public class MusicboxListener implements Listener {
 					player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 1F);
 					return;
 				}
-				Container c = GuiManager.getInstance().createContainer(
-					ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), jukebox.isRadioMode() ? 9 : 45, true,
-					false);
+				Container c;
 				if (jukebox.isRadioMode()) {
-					c.addStaticButton(jukebox.createRadioButton(4));
+					c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zRadio!"), 9, false, false);
+					c.addButton(jukebox.createRadioButton(4));
 				} else {
+					c = GuiManager.getInstance().createContainer(
+						ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);
 					for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
 						c.addButton(jukebox.createTrackButton(track, c.getButtons().size()));
 					}

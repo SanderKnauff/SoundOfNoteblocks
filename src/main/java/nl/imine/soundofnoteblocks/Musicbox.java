@@ -206,6 +206,9 @@ public class Musicbox implements Listener, Serializable {
 
 	public void setRadioMode(boolean radioMode) {
 		this.radioMode = radioMode;
+		if (radioMode && !isPlaying) {
+			randomTrack();
+		}
 	}
 
 	public boolean isRadioMode() {
