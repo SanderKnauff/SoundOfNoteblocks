@@ -30,10 +30,6 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-/**
- *
- * @author Sander
- */
 public class Musicbox implements Listener, Serializable {
 
 	private static final long serialVersionUID = 3971612771253959236L;
@@ -46,6 +42,7 @@ public class Musicbox implements Listener, Serializable {
 
 	private Tag tag;
 	private boolean tagVisible = true;
+	private boolean radioMode = false;
 
 	private transient Track lastTrack;
 	private transient boolean isPlaying, lock;
@@ -81,9 +78,17 @@ public class Musicbox implements Listener, Serializable {
 		tag.setVisible(false);
 	}
 
+	public void randomTrack() {
+		List<Track> tracks = SoundOfNoteBlocks.getInstance().getTrackManager().getTracks();
+		playTrack(tracks.get((int) (Math.random() * (tracks.size() - 1D))));
+	}
+
 	public void playTrack(Track track) {
 		if (this.getLocation().getBlock().getType().equals(Material.JUKEBOX)) {
 			if (isPlaying) {
+				if (isRadioMode()) {
+					return;
+				}
 				stopPlaying();
 			}
 			lastTrack = track;
@@ -107,11 +112,11 @@ public class Musicbox implements Listener, Serializable {
 	}
 
 	public Location getTagLocation() {
-
-		if (location.clone().add(0, 1, 0).getBlock().getType() == Material.AIR) {
-			location = location.clone().add(0, -1, 0);
+		Location loc = location;
+		if (loc.clone().add(0, 1, 0).getBlock().getType() == Material.AIR) {
+			loc = loc.add(0, -1, 0);
 		}
-		return location.clone().add(0.5, 0.5, 0.5);
+		return loc.add(0.5, 0.5, 0.5);
 	}
 
 	public void stopPlaying() {
@@ -159,9 +164,12 @@ public class Musicbox implements Listener, Serializable {
 		if (songPlayer != null && songPlayer.equals(evt.getSongPlayer())) {
 			isPlaying = false;
 			songPlayer = null;
+			if (isRadioMode()) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> randomTrack(), 20L);
+			}
 			tag.setVisible(false);
+			lock = false;
 		}
-		lock = false;
 	}
 
 	@EventHandler
@@ -189,48 +197,61 @@ public class Musicbox implements Listener, Serializable {
 		return lock;
 	}
 
+	public void setRadioMode(boolean radioMode) {
+		this.radioMode = radioMode;
+		if (radioMode && !isPlaying) {
+			randomTrack();
+		}
+	}
+
+	public boolean isRadioMode() {
+		return radioMode;
+	}
+
 	public Location getLocation() {
 		return location;
 	}
 
-	public Button createStopButton(Container c, int slot) {
-		return new ButtonStop(c, slot);
+	public Button createStopButton(int slot) {
+		return new ButtonStop(slot);
 	}
 
-	public Button createTogglenametagButton(Container c, int slot) {
-		return new ButtonToggleNameTag(c, slot);
+	public Button createTogglenametagButton(int slot) {
+		return new ButtonToggleNameTag(slot);
 	}
 
-	public Button createReplayButton(Container c, int slot) {
-		return new ButtonReplay(c, slot);
+	public Button createReplayButton(int slot) {
+		return new ButtonReplay(slot);
 	}
 
-	public Button createRandomButton(Container c, int slot) {
-		return new ButtomRandomTrack(c, slot);
+	public Button createRandomButton(int slot) {
+		return new ButtomRandomTrack(slot);
 	}
 
-	public Button createLockButton(Container c, int slot) {
-		return new ButtonLock(c, slot);
+	public Button createLockButton(int slot) {
+		return new ButtonLock(slot);
 	}
 
-	public ButtonTrack createTrackButton(Container container, Track track, int slot) {
-		return new ButtonTrack(container, track, slot);
+	public ButtonTrack createTrackButton(Track track, int slot) {
+		return new ButtonTrack(track, slot);
 	}
 
-	public ButtonMusicSort createSortButton(Container container, int slot) {
-		return new ButtonMusicSort(container, slot);
+	public ButtonMusicSort createSortButton(int slot) {
+		return new ButtonMusicSort(slot);
 	}
 
-	// Radio
-	// Volume
+	public ButtonRadiomode createRadioButton(int slot) {
+		return new ButtonRadiomode(slot);
+	}
+
 	private class ButtonLock extends Button {
 
-		public ButtonLock(Container container, int slot) {
-			super(container, ItemUtil.getBuilder(Material.REDSTONE_TORCH_ON).setName("Lock").build(), slot);
+		public ButtonLock(int slot) {
+			super(ItemUtil.getBuilder(Material.REDSTONE_TORCH_ON).setName("Lock").build(), slot);
 		}
 
 		@Override
-		public void doAction(Player player, ClickType clickType) {
+		public void doAction(Player player, Container container, ClickType clickType) {
 			if (songPlayer != null && songPlayer.isPlaying()) {
 				lock = true;
 				player.closeInventory();
@@ -249,13 +270,12 @@ public class Musicbox implements Listener, Serializable {
 
 	private class ButtonToggleNameTag extends Button {
 
-		public ButtonToggleNameTag(Container container, int slot) {
-			super(container, ItemUtil.getBuilder(Material.NAME_TAG).setName("Toggle Currentsong Nametag").build(),
-					slot);
+		public ButtonToggleNameTag(int slot) {
+			super(ItemUtil.getBuilder(Material.NAME_TAG).setName("Toggle Currentsong Nametag").build(), slot);
 		}
 
 		@Override
-		public void doAction(Player player, ClickType clickType) {
+		public void doAction(Player player, Container container, ClickType clickType) {
 			if (isPlaying) {
 				tagVisible = !tagVisible;
 				tag.setLocation(getTagLocation());
@@ -266,39 +286,57 @@ public class Musicbox implements Listener, Serializable {
 
 	private class ButtonReplay extends Button {
 
-		public ButtonReplay(Container container, int slot) {
-			super(container, ItemUtil.getBuilder(Material.FIREWORK_CHARGE).setName("Replay").build(), slot);
+		public ButtonReplay(int slot) {
+			super(ItemUtil.getBuilder(Material.FIREWORK_CHARGE).setName("Replay").build(), slot);
 		}
 
 		@Override
-		public void doAction(Player player, ClickType clickType) {
+		public void doAction(Player player, Container container, ClickType clickType) {
 			replayLastSong(true);
+		}
+	}
+
+	private class ButtonRadiomode extends Button {
+
+		public ButtonRadiomode(int slot) {
+			super(ItemUtil.getBuilder(Material.ARMOR_STAND).setName("Radio").build(), slot);
+		}
+
+		@Override
+		public ItemStack getItemStack() {
+			return ItemUtil.getBuilder(super.getItemStack().getType(), super.getItemStack().getItemMeta())
+					.addLore(ColorUtil.replaceColors("&7RadioMode: " + (isRadioMode() ? "&aEnabled" : "&cDisabled")))
+					.build();
+		}
+
+		@Override
+		public void doAction(Player player, Container container, ClickType clickType) {
+			setRadioMode(!isRadioMode());
+			player.closeInventory();
 		}
 	}
 
 	private class ButtomRandomTrack extends Button {
 
-		public ButtomRandomTrack(Container container, int slot) {
-			super(container, ItemUtil.getBuilder(Material.RECORD_11).setName("Random").build(), slot);
+		public ButtomRandomTrack(int slot) {
+			super(ItemUtil.getBuilder(Material.RECORD_11).setName("Random").build(), slot);
 		}
 
 		@Override
-		public void doAction(Player player, ClickType clickType) {
-			List<Track> tracks = SoundOfNoteBlocks.getInstance().getTrackManager().getTracks();
-			playTrack(tracks.get((int) (Math.random() * (double) (tracks.size() - 1D))));
+		public void doAction(Player player, Container container, ClickType clickType) {
+			randomTrack();
 			player.closeInventory();
 		}
 	}
 
 	private class ButtonStop extends Button {
 
-		public ButtonStop(Container container, int slot) {
-			super(container, ItemUtil.getBuilder(Material.APPLE).setName("Stop").setLore("Stop current song").build(),
-					slot);
+		public ButtonStop(int slot) {
+			super(ItemUtil.getBuilder(Material.APPLE).setName("Stop").setLore("Stop current song").build(), slot);
 		}
 
 		@Override
-		public void doAction(Player player, ClickType clickType) {
+		public void doAction(Player player, Container container, ClickType clickType) {
 			stopPlaying();
 		}
 	}
@@ -307,8 +345,8 @@ public class Musicbox implements Listener, Serializable {
 
 		private final Track track;
 
-		public ButtonTrack(Container container, Track track, int slot) {
-			super(container, ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length]).build(), slot);
+		public ButtonTrack(Track track, int slot) {
+			super(ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length]).build(), slot);
 			this.track = track;
 		}
 
@@ -329,7 +367,7 @@ public class Musicbox implements Listener, Serializable {
 		}
 
 		@Override
-		public void doAction(Player player, ClickType clickType) {
+		public void doAction(Player player, Container container, ClickType clickType) {
 			if (isLocked() && !player.hasPermission("iMine.jukebox.lockbypass")) {
 				player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 1F);
 			} else {
@@ -341,9 +379,9 @@ public class Musicbox implements Listener, Serializable {
 
 	private class ButtonMusicSort extends ButtonSort {
 
-		public ButtonMusicSort(Container container, int slot) {
-			super(container, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&6Sort on")).build(),
-					slot, new InventorySorter[]{new InventoryTrackNameSorter(), new InventoryTrackArtistSorter(),
+		public ButtonMusicSort(int slot) {
+			super(ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&6Sort on")).build(), slot,
+					new InventorySorter[]{new InventoryTrackNameSorter(), new InventoryTrackArtistSorter(),
 							new InventoryTrackSongLenghtSorter()});
 		}
 	}

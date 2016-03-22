@@ -1,11 +1,14 @@
 package nl.imine.soundofnoteblocks;
 
 import java.io.File;
-import nl.imine.api.gui.Container;
-import nl.imine.api.gui.GuiManager;
-import nl.imine.api.util.MktUtil;
+import java.util.Arrays;
+
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import nl.imine.api.gui.Container;
+import nl.imine.api.gui.GuiManager;
+import nl.imine.api.util.ConfigUtil;
 
 public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
 
@@ -45,8 +48,8 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
 	private void setupConfig() {
 		if (getConfig().getDouble("version", 0) <= 0.0D) {
 			getConfig().set("version", 0.1D);
-			MktUtil.configSetIfNotSet(this, "repositories",
-				MktUtil.toList(new String[]{"http://files.imine.nl/iMineNetwork/NBS/trackList.json"}));
+			ConfigUtil.configSetIfNotSet(this, "repositories",
+				Arrays.asList(new String[]{"http://files.imine.nl/iMineNetwork/NBS/trackList.json"}));
 			saveConfig();
 		}
 	}
