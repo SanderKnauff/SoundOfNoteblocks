@@ -42,7 +42,7 @@ public class Musicbox implements Listener, Serializable {
 			Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7, Material.RECORD_8,
 			Material.RECORD_9, Material.GOLD_RECORD, Material.GREEN_RECORD};
 
-	private Coordinate coordinate;
+	private Location location;
 
 	private Tag tag;
 	private boolean tagVisible = true;
@@ -73,16 +73,12 @@ public class Musicbox implements Listener, Serializable {
 		jukeboxList.remove(musicbox);
 	}
 
-	private Musicbox(Coordinate coordinate) {
-		this.coordinate = coordinate;
+	private Musicbox(Location location) {
+		this.location = location;
 		tag = TagAPI.createTag(getTagLocation());
 		tag.addLine(" ");
 		tag.addLine(" ");
 		tag.setVisible(false);
-	}
-
-	private Musicbox(Location location) {
-		this(new Coordinate(location));
 	}
 
 	public void playTrack(Track track) {
@@ -94,7 +90,7 @@ public class Musicbox implements Listener, Serializable {
 			isPlaying = true;
 			Song song = track.getSong();
 			songPlayer = new PositionSongPlayer(song);
-			songPlayer.setTargetLocation(coordinate.toLocation());
+			songPlayer.setTargetLocation(location);
 			songPlayer.setAutoDestroy(true);
 			songPlayer.setPlaying(true);
 			for (UUID uuid : songPlayer.getPlayerList()) {
@@ -111,11 +107,11 @@ public class Musicbox implements Listener, Serializable {
 	}
 
 	public Location getTagLocation() {
-		Location loc = coordinate.toLocation();
-		if (loc.clone().add(0, 1, 0).getBlock().getType() == Material.AIR) {
-			loc = loc.add(0, -1, 0);
+
+		if (location.clone().add(0, 1, 0).getBlock().getType() == Material.AIR) {
+			location = location.clone().add(0, -1, 0);
 		}
-		return loc.add(0.5, 0.5, 0.5);
+		return location.clone().add(0.5, 0.5, 0.5);
 	}
 
 	public void stopPlaying() {
@@ -131,8 +127,8 @@ public class Musicbox implements Listener, Serializable {
 
 	public ArrayList<Player> getPlayersInRange() {
 		ArrayList<Player> ret = new ArrayList<>();
-		for (Player p : coordinate.getWorld().getPlayers()) {
-			if (coordinate.toLocation().distance(p.getLocation()) < DISTANCE) {
+		for (Player p : location.getWorld().getPlayers()) {
+			if (location.distance(p.getLocation()) < DISTANCE) {
 				ret.add(p);
 			}
 		}
@@ -146,8 +142,8 @@ public class Musicbox implements Listener, Serializable {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent evt) {
 		if (songPlayer != null) {
-			if (coordinate.toLocation().getWorld().equals(evt.getPlayer().getLocation().getWorld())) {
-				if (evt.getPlayer().getLocation().distance(coordinate.toLocation()) < DISTANCE) {
+			if (location.getWorld().equals(evt.getPlayer().getLocation().getWorld())) {
+				if (evt.getPlayer().getLocation().distance(location) < DISTANCE) {
 					songPlayer.addPlayer(evt.getPlayer());
 				} else {
 					songPlayer.removePlayer(evt.getPlayer());
@@ -194,7 +190,7 @@ public class Musicbox implements Listener, Serializable {
 	}
 
 	public Location getLocation() {
-		return coordinate.toLocation();
+		return location;
 	}
 
 	public Button createStopButton(Container c, int slot) {
