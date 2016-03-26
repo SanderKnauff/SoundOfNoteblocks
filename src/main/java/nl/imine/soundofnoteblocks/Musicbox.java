@@ -112,9 +112,9 @@ public class Musicbox implements Listener, Serializable {
 	}
 
 	public Location getTagLocation() {
-		Location loc = location;
+		Location loc = location.clone();
 		if (loc.clone().add(0, 1, 0).getBlock().getType() == Material.AIR) {
-			loc = loc.add(0, -1, 0);
+			loc.add(0, -1, 0);
 		}
 		return loc.add(0.5, 0.5, 0.5);
 	}
