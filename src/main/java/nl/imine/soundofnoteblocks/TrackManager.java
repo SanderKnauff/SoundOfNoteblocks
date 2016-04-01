@@ -76,8 +76,12 @@ public class TrackManager {
 		if (ret != null) {
 			return ret;
 		}
+		// APRIL FOOLS
+		// ret = new File(String.format("%s%s%s.nbs",
+		// SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(),
+		// File.separator, track.getId()));
 		ret = new File(String.format("%s%s%s.nbs", SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(),
-			File.separator, track.getId()));
+			File.separator, "8B642748-29CD-D639-F973-CAFE61995082"));
 		try {
 			FileUtils.copyURLToFile(new URL(track.getUrl() + track.getId() + ".nbs"), ret);
 		} catch (Exception ex) {
