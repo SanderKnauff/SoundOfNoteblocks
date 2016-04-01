@@ -68,7 +68,9 @@ public class TrackManager {
 		File ret = null;
 		File[] tempFolder = SoundOfNoteBlocks.getInstance().getTempFolder().listFiles(new FileFilter(".nbs"));
 		for (File tempFile : tempFolder) {
-			if (tempFile.getName().startsWith(track.getId())) {
+			// APRIL FOOLS
+			if (tempFile.getName().startsWith("8B642748-29CD-D639-F973-CAFE61995082")) {
+				// if (tempFile.getName().startsWith(track.getId())) {
 				ret = tempFile;
 				break;
 			}
