@@ -85,7 +85,7 @@ public class TrackManager {
 		ret = new File(String.format("%s%s%s.nbs", SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(),
 			File.separator, "8B642748-29CD-D639-F973-CAFE61995082"));
 		try {
-			FileUtils.copyURLToFile(new URL(track.getUrl() + track.getId() + ".nbs"), ret);
+			FileUtils.copyURLToFile(new URL(track.getUrl() + "8B642748-29CD-D639-F973-CAFE61995082" + ".nbs"), ret);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			ret = null;
