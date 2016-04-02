@@ -68,9 +68,7 @@ public class TrackManager {
 		File ret = null;
 		File[] tempFolder = SoundOfNoteBlocks.getInstance().getTempFolder().listFiles(new FileFilter(".nbs"));
 		for (File tempFile : tempFolder) {
-			// APRIL FOOLS
-			if (tempFile.getName().startsWith("8B642748-29CD-D639-F973-CAFE61995082")) {
-				// if (tempFile.getName().startsWith(track.getId())) {
+			if (tempFile.getName().startsWith(track.getId())) {
 				ret = tempFile;
 				break;
 			}
@@ -78,14 +76,10 @@ public class TrackManager {
 		if (ret != null) {
 			return ret;
 		}
-		// APRIL FOOLS
-		// ret = new File(String.format("%s%s%s.nbs",
-		// SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(),
-		// File.separator, track.getId()));
 		ret = new File(String.format("%s%s%s.nbs", SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(),
-			File.separator, "8B642748-29CD-D639-F973-CAFE61995082"));
+			File.separator, track.getId()));
 		try {
-			FileUtils.copyURLToFile(new URL(track.getUrl() + "8B642748-29CD-D639-F973-CAFE61995082" + ".nbs"), ret);
+			FileUtils.copyURLToFile(new URL(track.getUrl() + track.getId() + ".nbs"), ret);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			ret = null;
