@@ -18,6 +18,7 @@ import nl.imine.api.gui.GuiManager;
 import nl.imine.api.holotag.ActionType;
 import nl.imine.api.util.ColorUtil;
 import org.bukkit.block.Jukebox;
+import org.bukkit.event.EventPriority;
 
 public class MusicboxListener implements Listener {
 
@@ -45,26 +46,30 @@ public class MusicboxListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent evt) {
-		if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-			if (evt.getClickedBlock().getType().equals(Material.JUKEBOX) && !evt.getPlayer().isSneaking()) {
-				if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")
-						&& !((Jukebox) evt.getClickedBlock()).getPlaying().equals(Material.AIR)) {
-					Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
-					openJukebox(evt.getPlayer(), jukebox);
-					evt.setCancelled(true);
+		if (!evt.isCancelled()) {
+			if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+				if (evt.getClickedBlock().getType().equals(Material.JUKEBOX) && !evt.getPlayer().isSneaking()) {
+					if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")
+							&& !((Jukebox) evt.getClickedBlock()).getPlaying().equals(Material.AIR)) {
+						Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
+						openJukebox(evt.getPlayer(), jukebox);
+						evt.setCancelled(true);
+					}
 				}
 			}
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerTagInteract(PlayerInteractTagEvent evt) {
-		if (evt.getAction().equals(ActionType.RICHT_CLICK)) {
-			for (Musicbox jukebox : Musicbox.getMusicBoxes()) {
-				if (evt.getTag().equals(jukebox.getTag())) {
-					openJukebox(evt.getPlayer(), jukebox);
+		if (!evt.isCancelled()) {
+			if (evt.getAction().equals(ActionType.RICHT_CLICK)) {
+				for (Musicbox jukebox : Musicbox.getMusicBoxes()) {
+					if (evt.getTag().equals(jukebox.getTag())) {
+						openJukebox(evt.getPlayer(), jukebox);
+					}
 				}
 			}
 		}
