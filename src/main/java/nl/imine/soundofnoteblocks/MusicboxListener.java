@@ -17,6 +17,7 @@ import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
 import nl.imine.api.holotag.ActionType;
 import nl.imine.api.util.ColorUtil;
+import org.bukkit.block.Jukebox;
 
 public class MusicboxListener implements Listener {
 
@@ -48,7 +49,8 @@ public class MusicboxListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent evt) {
 		if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if (evt.getClickedBlock().getType().equals(Material.JUKEBOX) && !evt.getPlayer().isSneaking()) {
-				if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")) {
+				if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")
+						&& !((Jukebox) evt.getClickedBlock()).getPlaying().equals(Material.AIR)) {
 					Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
 					openJukebox(evt.getPlayer(), jukebox);
 					evt.setCancelled(true);
