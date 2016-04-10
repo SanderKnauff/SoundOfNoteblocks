@@ -54,7 +54,7 @@ public class MusicboxListener implements Listener {
 		if (!evt.isCancelled()) {
 			if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				if (evt.getClickedBlock().getType().equals(Material.JUKEBOX) && !evt.getPlayer().isSneaking()) {
-					if (!((Jukebox) evt.getClickedBlock().getState()).getPlaying().equals(Material.AIR)) {
+					if (((Jukebox) evt.getClickedBlock().getState()).getPlaying().equals(Material.AIR)) {
 						if (evt.getItem() == null || !evt.getItem().getType().name().toLowerCase().contains("record")) {
 							Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
 							openJukebox(evt.getPlayer(), jukebox);
