@@ -1,5 +1,6 @@
 package nl.imine.soundofnoteblocks;
 
+import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,6 +20,8 @@ import nl.imine.api.holotag.ActionType;
 import nl.imine.api.util.ColorUtil;
 import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class MusicboxListener implements Listener {
 
@@ -113,6 +116,53 @@ public class MusicboxListener implements Listener {
 			Musicbox musicbox = Musicbox.findJukebox(evt.getBlock().getLocation());
 			musicbox.stopPlaying();
 			Musicbox.removeJukebox(musicbox);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent evt) {
+		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+			if (musicbox.getSongPlayer() != null) {
+				if (musicbox.getLocation().getWorld().equals(evt.getPlayer().getLocation().getWorld())) {
+					if (evt.getPlayer().getLocation().distance(musicbox.getLocation()) < Musicbox.DISTANCE) {
+						musicbox.getSongPlayer().addPlayer(evt.getPlayer());
+					} else {
+						musicbox.getSongPlayer().removePlayer(evt.getPlayer());
+					}
+				} else {
+					musicbox.getSongPlayer().removePlayer(evt.getPlayer());
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onSongStop(SongDestroyingEvent evt) {
+		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+			if (musicbox.getSongPlayer() != null && musicbox.getSongPlayer().equals(evt.getSongPlayer())) {
+				musicbox.setPlaying(false);
+				musicbox.setSongPlayer(null);
+				if (musicbox.isRadioMode()) {
+					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin,
+						() -> musicbox.randomTrack(), 20L);
+				}
+				musicbox.getTag().setVisible(false);
+				musicbox.setLocked(false);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onChunkUnload(ChunkUnloadEvent evt) {
+		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
+				if (musicbox.getSongPlayer() != null) {
+					musicbox.getSongPlayer().destroy();
+				}
+				if (musicbox.getTag() != null) {
+					musicbox.getTag().remove();
+				}
+			}
 		}
 	}
 }

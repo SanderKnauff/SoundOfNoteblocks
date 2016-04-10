@@ -2,7 +2,7 @@ package nl.imine.soundofnoteblocks;
 
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
-import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
+import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,25 +22,23 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class Musicbox implements Listener, Serializable {
+public class Musicbox implements Serializable {
+
+	public static final double DISTANCE = Math.pow(35, 2);
 
 	private static final long serialVersionUID = 3971612771253959236L;
-	private static final double DISTANCE = Math.pow(35, 2);
 	private static final Material[] RECORDS = new Material[]{Material.RECORD_10, Material.RECORD_12, Material.RECORD_3,
 			Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7, Material.RECORD_8,
 			Material.RECORD_9, Material.GOLD_RECORD, Material.GREEN_RECORD};
 
-	private Location location;
+	private final Location location;
 
-	private Tag tag;
+	private final Tag tag;
 	private boolean tagVisible = true;
 	private boolean radioMode = false;
 
@@ -48,7 +46,7 @@ public class Musicbox implements Listener, Serializable {
 	private transient boolean isPlaying, lock;
 	private transient PositionSongPlayer songPlayer;
 
-	private static ArrayList<Musicbox> jukeboxList = new ArrayList<>();
+	private static final ArrayList<Musicbox> jukeboxList = new ArrayList<>();
 
 	public static List<Musicbox> getMusicBoxes() {
 		return jukeboxList;
@@ -62,7 +60,6 @@ public class Musicbox implements Listener, Serializable {
 		}
 		Musicbox j = new Musicbox(location);
 		jukeboxList.add(j);
-		Bukkit.getPluginManager().registerEvents(j, SoundOfNoteBlocks.getInstance());
 		return j;
 	}
 
@@ -81,6 +78,14 @@ public class Musicbox implements Listener, Serializable {
 	public void randomTrack() {
 		List<Track> tracks = SoundOfNoteBlocks.getInstance().getTrackManager().getTracks();
 		playTrack(tracks.get((int) (Math.random() * (tracks.size() - 1D))));
+	}
+
+	public void setPlaying(boolean playing) {
+		this.isPlaying = playing;
+	}
+
+	public boolean isPlaying() {
+		return isPlaying;
 	}
 
 	public void playTrack(Track track) {
@@ -119,6 +124,14 @@ public class Musicbox implements Listener, Serializable {
 		return loc.add(0.5, 0.5, 0.5);
 	}
 
+	public SongPlayer getSongPlayer() {
+		return songPlayer;
+	}
+
+	public void setSongPlayer(PositionSongPlayer songPlayer) {
+		this.songPlayer = songPlayer;
+	}
+
 	public void stopPlaying() {
 		isPlaying = false;
 		if (songPlayer != null) {
@@ -144,46 +157,6 @@ public class Musicbox implements Listener, Serializable {
 		return tag;
 	}
 
-	@EventHandler
-	public void onPlayerMove(PlayerMoveEvent evt) {
-		if (songPlayer != null) {
-			if (location.getWorld().equals(evt.getPlayer().getLocation().getWorld())) {
-				if (evt.getPlayer().getLocation().distance(location) < DISTANCE) {
-					songPlayer.addPlayer(evt.getPlayer());
-				} else {
-					songPlayer.removePlayer(evt.getPlayer());
-				}
-			} else {
-				songPlayer.removePlayer(evt.getPlayer());
-			}
-		}
-	}
-
-	@EventHandler
-	public void onSongStop(SongDestroyingEvent evt) {
-		if (songPlayer != null && songPlayer.equals(evt.getSongPlayer())) {
-			isPlaying = false;
-			songPlayer = null;
-			if (isRadioMode()) {
-				Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> randomTrack(), 20L);
-			}
-			tag.setVisible(false);
-			lock = false;
-		}
-	}
-
-	@EventHandler
-	public void onChunkUnload(ChunkUnloadEvent evt) {
-		if (evt.getChunk().equals(getLocation().getChunk())) {
-			if (songPlayer != null) {
-				songPlayer.destroy();
-			}
-			if (tag != null) {
-				tag.remove();
-			}
-		}
-	}
-
 	public void replayLastSong(boolean force) {
 		if (force) {
 			stopPlaying();
@@ -191,6 +164,10 @@ public class Musicbox implements Listener, Serializable {
 		if (!isPlaying && lastTrack != null) {
 			playTrack(lastTrack);
 		}
+	}
+
+	public void setLocked(boolean locked) {
+		this.lock = locked;
 	}
 
 	public boolean isLocked() {
@@ -341,7 +318,7 @@ public class Musicbox implements Listener, Serializable {
 		}
 	}
 
-	public class ButtonTrack extends Button {
+	private final class ButtonTrack extends Button {
 
 		private final Track track;
 
@@ -377,7 +354,7 @@ public class Musicbox implements Listener, Serializable {
 		}
 	}
 
-	private class ButtonMusicSort extends ButtonSort {
+	private static final class ButtonMusicSort extends ButtonSort {
 
 		public ButtonMusicSort(int slot) {
 			super(ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&6Sort on")).build(), slot,
@@ -386,7 +363,7 @@ public class Musicbox implements Listener, Serializable {
 		}
 	}
 
-	private static class InventoryTrackNameSorter extends InventorySorter {
+	private static final class InventoryTrackNameSorter extends InventorySorter {
 
 		public InventoryTrackNameSorter() {
 			super("On name");
@@ -403,7 +380,7 @@ public class Musicbox implements Listener, Serializable {
 		}
 	}
 
-	private static class InventoryTrackArtistSorter extends InventorySorter {
+	private static final class InventoryTrackArtistSorter extends InventorySorter {
 
 		public InventoryTrackArtistSorter() {
 			super("On artist");
@@ -420,7 +397,7 @@ public class Musicbox implements Listener, Serializable {
 		}
 	}
 
-	private static class InventoryTrackSongLenghtSorter extends InventorySorter {
+	private static final class InventoryTrackSongLenghtSorter extends InventorySorter {
 
 		public InventoryTrackSongLenghtSorter() {
 			super("On length");
