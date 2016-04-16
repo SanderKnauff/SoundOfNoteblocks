@@ -80,6 +80,7 @@ public class Musicbox {
 	public void randomTrack() {
 		List<Track> tracks = SoundOfNoteBlocks.getInstance().getTrackManager().getTracks();
 		playTrack(tracks.get((int) (Math.random() * (tracks.size() - 1D))));
+		System.out.println("Choose Random Track");
 	}
 
 	public void setPlaying(boolean playing) {

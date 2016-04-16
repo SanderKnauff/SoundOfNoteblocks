@@ -153,17 +153,20 @@ public class MusicboxListener implements Listener {
 				if (evt.getSlotType().equals(SlotType.ARMOR)) {
 					Player player = (Player) evt.getWhoClicked();
 					if (player.hasPermission("imine.jukebox.play")) {
-						if (evt.getCursor() != null) {
-							if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
-								evt.setResult(Event.Result.ALLOW);
-								player.closeInventory();
-								Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocks.getInstance(), () -> {
-									openWalkman(player, Walkman.findWalkman(player));
-								} , 1);
+						if (evt.getCurrentItem() == null) {
+							if (evt.getCursor() != null) {
+								if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
+									evt.setCurrentItem(evt.getCursor());
+									evt.setCursor(null);
+									evt.setResult(Event.Result.ALLOW);
+									player.closeInventory();
+									Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocks.getInstance(), () -> {
+										openWalkman(player, Walkman.findWalkman(player));
+									} , 1);
+								}
 							}
 						}
-					}
-					if (evt.getCurrentItem() != null) {
+					} else {
 						if (evt.getCurrentItem().getType().equals(Material.JUKEBOX)) {
 							Walkman.removeWalkman(Walkman.findWalkman(player));
 						}
