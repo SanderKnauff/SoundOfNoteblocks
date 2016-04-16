@@ -28,9 +28,8 @@ public class MusicboxManager {
 	private static final ArrayList<Musicbox> musicBoxes = new ArrayList<>();
 
 	public static Musicbox findJukebox(Location location) {
-		System.out.println(location);
 		for (Musicbox musicbox : musicBoxes) {
-			System.out.println(musicbox.getLocation());
+			System.out.println(musicbox.getLastTrack());
 			if (musicbox.getLocation().equals(location)) {
 				return musicbox;
 			}
