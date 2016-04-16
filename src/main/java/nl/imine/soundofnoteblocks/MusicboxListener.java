@@ -211,11 +211,12 @@ public class MusicboxListener implements Listener {
 				System.out.println("Destroying song: " + musicbox.lastTrack.getName());
 				musicbox.setPlaying(false);
 				musicbox.setSongPlayer(null);
-				if (musicbox.isRadioMode()) {
-					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> {
-						musicbox.randomTrack();
-					} , 40L);
-				}
+				/*
+				 * if (musicbox.isRadioMode()) {
+				 * Bukkit.getScheduler().scheduleSyncDelayedTask(
+				 * SoundOfNoteBlocks.plugin, () -> { musicbox.randomTrack(); } ,
+				 * 40L); }
+				 */
 				musicbox.getTag().setVisible(false);
 				musicbox.setLocked(false);
 			}
