@@ -21,9 +21,10 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
 	public void onEnable() {
 		plugin = this;
 		setupConfig();
-		tempFolder = new File(getDataFolder().getAbsolutePath() + File.separator + "tmp");
+		tempFolder = new File(getDataFolder().getAbsolutePath(), "tmp");
 		tempFolder.mkdirs();
 		trackManager = new TrackManager();
+		MusicboxManager.loadMusicboxesFromConfig();
 		MusicboxListener.init();
 		getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
 	}
@@ -32,7 +33,7 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
 	public void onDisable() {
 		trackManager = null;
 		plugin = null;
-		for (Musicbox m : Musicbox.getMusicBoxes()) {
+		for (Musicbox m : MusicboxManager.getMusicboxes()) {
 			m.stopPlaying();
 		}
 		for (Container c : GuiManager.getInstance().getContainers()) {

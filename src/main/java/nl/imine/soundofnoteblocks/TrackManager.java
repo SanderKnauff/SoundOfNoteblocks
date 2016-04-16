@@ -12,13 +12,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import com.google.gson.Gson;
+import java.util.Optional;
+import java.util.UUID;
 
 import nl.imine.api.file.FileFilter;
 import nl.imine.api.util.WebUtil;
 
 public class TrackManager {
 
-	private List<Track> trackList = new ArrayList<>();
+	private static List<Track> trackList = new ArrayList<>();
 
 	public TrackManager() {
 		loadTracks();
@@ -64,11 +66,19 @@ public class TrackManager {
 		loadTracks();
 	}
 
+	public static Track getTrack(UUID trackId) {
+		Optional<Track> oTrack = trackList.stream().filter(t -> t.getId().equals(trackId)).findFirst();
+		if (oTrack.isPresent()) {
+			return oTrack.get();
+		}
+		return null;
+	}
+
 	public static File getFile(Track track) {
 		File ret = null;
 		File[] tempFolder = SoundOfNoteBlocks.getInstance().getTempFolder().listFiles(new FileFilter(".nbs"));
 		for (File tempFile : tempFolder) {
-			if (tempFile.getName().startsWith(track.getId())) {
+			if (tempFile.getName().startsWith(track.getId().toString())) {
 				ret = tempFile;
 				break;
 			}

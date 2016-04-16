@@ -47,7 +47,7 @@ public class MusicboxListener implements Listener {
 
 	private void checkRedstoneRenew(Block bl) {
 		if (bl.getType() == Material.JUKEBOX) {
-			Musicbox mb = Musicbox.findJukebox(bl.getLocation());
+			Musicbox mb = MusicboxManager.findJukebox(bl.getLocation());
 			mb.replayLastSong(false);
 		}
 	}
@@ -57,7 +57,7 @@ public class MusicboxListener implements Listener {
 		if (!evt.isCancelled()) {
 			if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				if (evt.getClickedBlock().getType().equals(Material.JUKEBOX)) {
-					Musicbox jukebox = Musicbox.findJukebox(evt.getClickedBlock().getLocation());
+					Musicbox jukebox = MusicboxManager.findJukebox(evt.getClickedBlock().getLocation());
 					if (!evt.getPlayer().isSneaking()) {
 						if (((Jukebox) evt.getClickedBlock().getState()).getPlaying().equals(Material.AIR)) {
 							if (evt.getItem() == null
@@ -79,7 +79,7 @@ public class MusicboxListener implements Listener {
 	public void onPlayerTagInteract(PlayerInteractTagEvent evt) {
 		if (!evt.isCancelled()) {
 			if (evt.getAction().equals(ActionType.RICHT_CLICK)) {
-				for (Musicbox jukebox : Musicbox.getMusicBoxes()) {
+				for (Musicbox jukebox : MusicboxManager.getMusicboxes()) {
 					if (evt.getTag().equals(jukebox.getTag())) {
 						openJukebox(evt.getPlayer(), jukebox);
 					}
@@ -147,7 +147,7 @@ public class MusicboxListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent evt) {
 		if (evt.getEntity().hasPermission("imine.jukebox.play")) {
-			Walkman.removeWalkman(Walkman.findWalkman(evt.getEntity()));
+			WalkmanManager.removeWalkman(WalkmanManager.findWalkman(evt.getEntity()));
 		}
 	}
 
@@ -157,10 +157,10 @@ public class MusicboxListener implements Listener {
 		if (player.hasPermission("imine.jukebox.play")) {
 			if (evt.getOffHandItem().getType().equals(Material.JUKEBOX)) {
 				Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocks.getInstance(), () -> {
-					openWalkman(player, Walkman.findWalkman(player));
+					openWalkman(player, WalkmanManager.findWalkman(player));
 				} , 1);
 			} else if (evt.getMainHandItem().getType().equals(Material.JUKEBOX)) {
-				Walkman.removeWalkman(Walkman.findWalkman(player));
+				WalkmanManager.removeWalkman(WalkmanManager.findWalkman(player));
 			}
 		}
 	}
@@ -168,18 +168,18 @@ public class MusicboxListener implements Listener {
 	@EventHandler
 	public void onPlayerBlockBreak(BlockBreakEvent evt) {
 		if (evt.getBlock().getType().equals(Material.JUKEBOX)) {
-			Musicbox musicbox = Musicbox.findJukebox(evt.getBlock().getLocation());
+			Musicbox musicbox = MusicboxManager.findJukebox(evt.getBlock().getLocation());
 			musicbox.stopPlaying();
-			Musicbox.removeJukebox(musicbox);
+			MusicboxManager.removeJukebox(musicbox);
 		}
 	}
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent evt) {
-		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+		for (Musicbox musicbox : MusicboxManager.getMusicboxes()) {
 			if (musicbox.getSongPlayer() != null) {
 				if (musicbox.getLocation().getWorld().equals(evt.getPlayer().getLocation().getWorld())) {
-					if (evt.getPlayer().getLocation().distance(musicbox.getLocation()) < Musicbox.DISTANCE) {
+					if (evt.getPlayer().getLocation().distance(musicbox.getLocation()) < MusicboxManager.DISTANCE) {
 						musicbox.getSongPlayer().addPlayer(evt.getPlayer());
 					} else {
 						musicbox.getSongPlayer().removePlayer(evt.getPlayer());
@@ -193,7 +193,7 @@ public class MusicboxListener implements Listener {
 
 	@EventHandler
 	public void onSongStop(SongDestroyingEvent evt) {
-		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+		for (Musicbox musicbox : MusicboxManager.getMusicboxes()) {
 			if (musicbox.getSongPlayer() != null && musicbox.getSongPlayer().equals(evt.getSongPlayer())) {
 				musicbox.setPlaying(false);
 				musicbox.setSongPlayer(null);
@@ -206,7 +206,7 @@ public class MusicboxListener implements Listener {
 				musicbox.setLocked(false);
 			}
 		}
-		for (Walkman walkman : Walkman.getWalkmans()) {
+		for (Walkman walkman : WalkmanManager.getWalkmans()) {
 			if (walkman.getSongPlayer() != null && walkman.getSongPlayer().equals(evt.getSongPlayer())) {
 				walkman.setPlaying(false);
 				walkman.setSongPlayer(null);
@@ -221,7 +221,7 @@ public class MusicboxListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onChunkLoad(ChunkLoadEvent evt) {
-		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+		for (Musicbox musicbox : MusicboxManager.getMusicboxes()) {
 			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
 				if (musicbox.isRadioMode()) {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin,
@@ -234,7 +234,7 @@ public class MusicboxListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onChunkUnload(ChunkUnloadEvent evt) {
 		if (!evt.isCancelled()) {
-			for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+			for (Musicbox musicbox : MusicboxManager.getMusicboxes()) {
 				if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
 					if (musicbox.getSongPlayer() != null) {
 						musicbox.getSongPlayer().destroy();

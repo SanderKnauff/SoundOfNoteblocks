@@ -4,12 +4,13 @@ import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import java.io.File;
 import java.io.Serializable;
+import java.util.UUID;
 
 public class Track implements Serializable {
 
 	private static final long serialVersionUID = -6901663374788956944L;
 
-	private String id;
+	private UUID id;
 	private String name;
 	private String artist;
 	private String url;
@@ -19,7 +20,7 @@ public class Track implements Serializable {
 	}
 
 	public Track(String id, String name, String artist, String url) {
-		this.id = id;
+		this.id = UUID.fromString(id);
 		this.name = name;
 		this.artist = artist;
 		this.url = url;
@@ -29,7 +30,7 @@ public class Track implements Serializable {
 		return url;
 	}
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 

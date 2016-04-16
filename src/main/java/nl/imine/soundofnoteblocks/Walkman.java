@@ -14,27 +14,6 @@ public class Walkman extends Musicbox {
 
 	private final Player player;
 
-	private static final ArrayList<Walkman> walkmanList = new ArrayList<>();
-
-	public static List<Walkman> getWalkmans() {
-		return walkmanList;
-	}
-
-	public static Walkman findWalkman(Player player) {
-		for (Walkman w : walkmanList) {
-			if (w.getPlayer().getUniqueId().equals(player.getUniqueId())) {
-				return w;
-			}
-		}
-		Walkman w = new Walkman(player);
-		walkmanList.add(w);
-		return w;
-	}
-
-	public static void removeWalkman(Walkman walkman) {
-		walkman.stopPlaying();
-		walkmanList.remove(walkman);
-	}
 
 	public Walkman(Player player) {
 		super();

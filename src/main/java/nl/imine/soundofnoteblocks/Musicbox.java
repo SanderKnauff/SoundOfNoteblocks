@@ -27,54 +27,36 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Musicbox {
 
-	public static final double DISTANCE = Math.pow(35, 2);
-
-	protected static final Material[] RECORDS = new Material[]{Material.RECORD_10, Material.RECORD_12,
-			Material.RECORD_3, Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7,
-			Material.RECORD_8, Material.RECORD_9, Material.GOLD_RECORD, Material.GREEN_RECORD};
-
 	protected Location location;
 
 	protected final Tag tag;
 	protected boolean tagVisible = true;
 	protected boolean radioMode = false;
 
-	protected transient Track lastTrack;
-	protected transient boolean isPlaying, lock;
-	protected transient SongPlayer songPlayer;
-
-	private static final ArrayList<Musicbox> jukeboxList = new ArrayList<>();
-
-	public static List<Musicbox> getMusicBoxes() {
-		return jukeboxList;
-	}
-
-	public static Musicbox findJukebox(Location location) {
-		for (Musicbox j : jukeboxList) {
-			if (j.getLocation().equals(location)) {
-				return j;
-			}
-		}
-		Musicbox j = new Musicbox(location);
-		jukeboxList.add(j);
-		return j;
-	}
-
-	public static void removeJukebox(Musicbox musicbox) {
-		jukeboxList.remove(musicbox);
-	}
+	protected Track lastTrack;
+	protected boolean isPlaying, lock;
+	protected SongPlayer songPlayer;
 
 	protected Musicbox() {
 		this.location = null;
 		tag = null;
 	}
 
-	protected Musicbox(Location location) {
+	public Musicbox(Location location, boolean tagVisible, boolean radioMode, UUID lastTrack) {
 		this.location = location;
+		this.tagVisible = false;
+		this.radioMode = false;
+		if (lastTrack != null) {
+			this.lastTrack = TrackManager.getTrack(lastTrack);
+		}
 		tag = TagAPI.createTag(getTagLocation());
 		tag.addLine(" ");
 		tag.addLine(" ");
 		tag.setVisible(false);
+	}
+
+	protected Musicbox(Location location) {
+		this(location, false, false, null);
 	}
 
 	public void randomTrack() {
@@ -116,6 +98,7 @@ public class Musicbox {
 				tag.getLine(1).setLabel(ChatColor.BLUE + lastTrack.getArtist());
 				tag.setLocation(getTagLocation());
 				tag.setVisible(tagVisible);
+				MusicboxManager.saveMusicboxToConfig();
 			}
 		}
 	}
@@ -150,7 +133,7 @@ public class Musicbox {
 	public ArrayList<Player> getPlayersInRange() {
 		ArrayList<Player> ret = new ArrayList<>();
 		for (Player p : location.getWorld().getPlayers()) {
-			if (location.distance(p.getLocation()) < DISTANCE) {
+			if (location.distance(p.getLocation()) < MusicboxManager.DISTANCE) {
 				ret.add(p);
 			}
 		}
@@ -187,6 +170,18 @@ public class Musicbox {
 
 	public boolean isRadioMode() {
 		return radioMode;
+	}
+
+	public boolean isTagVisible() {
+		return tagVisible;
+	}
+
+	public void setLastTrack(Track lastTrack) {
+		this.lastTrack = lastTrack;
+	}
+
+	public Track getLastTrack() {
+		return lastTrack;
 	}
 
 	public Location getLocation() {
@@ -261,6 +256,7 @@ public class Musicbox {
 				tagVisible = !tagVisible;
 				tag.setLocation(getTagLocation());
 				tag.setVisible(tagVisible);
+				MusicboxManager.saveMusicboxToConfig();
 			}
 		}
 	}
@@ -294,6 +290,7 @@ public class Musicbox {
 		public void doAction(Player player, Container container, ClickType clickType) {
 			setRadioMode(!isRadioMode());
 			player.closeInventory();
+			MusicboxManager.saveMusicboxToConfig();
 		}
 	}
 
@@ -327,7 +324,9 @@ public class Musicbox {
 		private final Track track;
 
 		public ButtonTrack(Track track, int slot) {
-			super(ItemUtil.getBuilder(RECORDS[track.getName().length() % RECORDS.length]).build(), slot);
+			super(ItemUtil
+					.getBuilder(MusicboxManager.RECORDS[track.getName().length() % MusicboxManager.RECORDS.length])
+					.build(), slot);
 			this.track = track;
 		}
 
