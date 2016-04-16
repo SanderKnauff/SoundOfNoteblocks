@@ -44,11 +44,9 @@ public class Musicbox {
 
 	public Musicbox(Location location, boolean tagVisible, boolean radioMode, UUID lastTrack) {
 		this.location = location;
-		System.out.println(location);
 		this.tagVisible = false;
 		this.radioMode = false;
 		if (lastTrack != null) {
-			System.out.println(lastTrack.toString());
 			this.lastTrack = TrackManager.getTrack(lastTrack);
 		}
 		tag = TagAPI.createTag(getTagLocation());
