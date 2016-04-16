@@ -157,7 +157,9 @@ public class MusicboxListener implements Listener {
 							if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
 								evt.setResult(Event.Result.ALLOW);
 								player.closeInventory();
-								openWalkman(player, Walkman.findWalkman(player));
+								Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocks.getInstance(), () -> {
+									openWalkman(player, Walkman.findWalkman(player));
+								} , 1);
 							}
 						}
 					}
