@@ -210,10 +210,7 @@ public class MusicboxListener implements Listener {
 				musicbox.setSongPlayer(null);
 				if (musicbox.isRadioMode()) {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> {
-						if (musicbox.getLocation().getChunk().isLoaded()) {
-
-							musicbox.randomTrack();
-						}
+						musicbox.randomTrack();
 					} , 20L);
 				}
 

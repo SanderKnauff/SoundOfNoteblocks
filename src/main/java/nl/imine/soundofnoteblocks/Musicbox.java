@@ -92,30 +92,32 @@ public class Musicbox {
 	}
 
 	public void playTrack(Track track) {
-		if (this.getLocation().getBlock().getType().equals(Material.JUKEBOX)) {
-			if (isPlaying) {
-				if (isRadioMode()) {
-					return;
+		if (this.getLocation().getChunk().isLoaded()) {
+			if (this.getLocation().getBlock().getType().equals(Material.JUKEBOX)) {
+				if (isPlaying) {
+					if (isRadioMode()) {
+						return;
+					}
+					stopPlaying();
 				}
-				stopPlaying();
+				lastTrack = track;
+				isPlaying = true;
+				Song song = track.getSong();
+				songPlayer = new PositionSongPlayer(song);
+				((PositionSongPlayer) songPlayer).setTargetLocation(location);
+				songPlayer.setAutoDestroy(true);
+				songPlayer.setPlaying(true);
+				for (UUID uuid : songPlayer.getPlayerList()) {
+					songPlayer.removePlayer(Bukkit.getPlayer(uuid));
+				}
+				for (Player p : getPlayersInRange()) {
+					songPlayer.addPlayer(p);
+				}
+				tag.getLine(0).setLabel(ChatColor.GOLD + lastTrack.getName());
+				tag.getLine(1).setLabel(ChatColor.BLUE + lastTrack.getArtist());
+				tag.setLocation(getTagLocation());
+				tag.setVisible(tagVisible);
 			}
-			lastTrack = track;
-			isPlaying = true;
-			Song song = track.getSong();
-			songPlayer = new PositionSongPlayer(song);
-			((PositionSongPlayer) songPlayer).setTargetLocation(location);
-			songPlayer.setAutoDestroy(true);
-			songPlayer.setPlaying(true);
-			for (UUID uuid : songPlayer.getPlayerList()) {
-				songPlayer.removePlayer(Bukkit.getPlayer(uuid));
-			}
-			for (Player p : getPlayersInRange()) {
-				songPlayer.addPlayer(p);
-			}
-			tag.getLine(0).setLabel(ChatColor.GOLD + lastTrack.getName());
-			tag.getLine(1).setLabel(ChatColor.BLUE + lastTrack.getArtist());
-			tag.setLocation(getTagLocation());
-			tag.setVisible(tagVisible);
 		}
 	}
 
