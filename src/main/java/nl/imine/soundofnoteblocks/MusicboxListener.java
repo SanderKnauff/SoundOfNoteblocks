@@ -208,12 +208,15 @@ public class MusicboxListener implements Listener {
 			if (musicbox.getSongPlayer() != null && musicbox.getSongPlayer().equals(evt.getSongPlayer())) {
 				musicbox.setPlaying(false);
 				musicbox.setSongPlayer(null);
-				if (musicbox.getLocation().getChunk().isLoaded()) {
-					if (musicbox.isRadioMode()) {
-						Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin,
-							() -> musicbox.randomTrack(), 20L);
-					}
+				if (musicbox.isRadioMode()) {
+					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> {
+						if (musicbox.getLocation().getChunk().isLoaded()) {
+
+							musicbox.randomTrack();
+						}
+					} , 20L);
 				}
+
 				musicbox.getTag().setVisible(false);
 				musicbox.setLocked(false);
 			}
