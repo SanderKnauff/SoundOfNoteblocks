@@ -25,8 +25,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class MusicboxListener implements Listener {
 
@@ -208,12 +208,26 @@ public class MusicboxListener implements Listener {
 			if (musicbox.getSongPlayer() != null && musicbox.getSongPlayer().equals(evt.getSongPlayer())) {
 				musicbox.setPlaying(false);
 				musicbox.setSongPlayer(null);
+				if (musicbox.getLocation().getChunk().isLoaded()) {
+					if (musicbox.isRadioMode()) {
+						Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin,
+							() -> musicbox.randomTrack(), 20L);
+					}
+				}
+				musicbox.getTag().setVisible(false);
+				musicbox.setLocked(false);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onChunkLoad(ChunkLoadEvent evt) {
+		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
 				if (musicbox.isRadioMode()) {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin,
 						() -> musicbox.randomTrack(), 20L);
 				}
-				musicbox.getTag().setVisible(false);
-				musicbox.setLocked(false);
 			}
 		}
 	}
