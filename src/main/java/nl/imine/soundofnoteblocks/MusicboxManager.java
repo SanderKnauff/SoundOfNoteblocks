@@ -50,7 +50,8 @@ public class MusicboxManager {
 		String json = readFromFile(MUSICBOX_LIST);
 		Gson gson = new GsonBuilder().create();
 		JsonArray jsonArray = gson.fromJson(json, JsonArray.class);
-		if (!jsonArray.isJsonNull()) {
+		System.out.println(jsonArray.size());
+		if (jsonArray.size() > 0) {
 			jsonArray.getAsJsonArray().forEach(element -> {
 				JsonObject musicbox = element.getAsJsonObject();
 				JsonObject position = musicbox.getAsJsonObject("Position");
