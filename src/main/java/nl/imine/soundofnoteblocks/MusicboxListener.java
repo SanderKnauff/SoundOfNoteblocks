@@ -148,27 +148,29 @@ public class MusicboxListener implements Listener {
 
 	@EventHandler
 	public void onPlayerInventoryClick(InventoryClickEvent evt) {
-		if (evt.getClickedInventory().getType() != null) {
-			if (evt.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
-				if (evt.getSlotType().equals(SlotType.ARMOR)) {
-					Player player = (Player) evt.getWhoClicked();
-					if (player.hasPermission("imine.jukebox.play")) {
-						if (evt.getCurrentItem() == null) {
-							if (evt.getCursor() != null) {
-								if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
-									evt.setCurrentItem(evt.getCursor());
-									evt.setCursor(null);
-									evt.setResult(Event.Result.ALLOW);
-									player.closeInventory();
-									Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocks.getInstance(), () -> {
-										openWalkman(player, Walkman.findWalkman(player));
-									} , 1);
+		if (evt.getClickedInventory() != null) {
+			if (evt.getClickedInventory().getType() != null) {
+				if (evt.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+					if (evt.getSlotType().equals(SlotType.ARMOR)) {
+						Player player = (Player) evt.getWhoClicked();
+						if (player.hasPermission("imine.jukebox.play")) {
+							if (evt.getCurrentItem() == null) {
+								if (evt.getCursor() != null) {
+									if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
+										evt.setCurrentItem(evt.getCursor());
+										evt.setCursor(null);
+										evt.setResult(Event.Result.ALLOW);
+										player.closeInventory();
+										Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocks.getInstance(), () -> {
+											openWalkman(player, Walkman.findWalkman(player));
+										} , 1);
+									}
 								}
 							}
-						}
-					} else {
-						if (evt.getCurrentItem().getType().equals(Material.JUKEBOX)) {
-							Walkman.removeWalkman(Walkman.findWalkman(player));
+						} else {
+							if (evt.getCurrentItem().getType().equals(Material.JUKEBOX)) {
+								Walkman.removeWalkman(Walkman.findWalkman(player));
+							}
 						}
 					}
 				}
@@ -206,6 +208,7 @@ public class MusicboxListener implements Listener {
 	public void onSongStop(SongDestroyingEvent evt) {
 		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
 			if (musicbox.getSongPlayer() != null && musicbox.getSongPlayer().equals(evt.getSongPlayer())) {
+				System.out.println("Destroying song: " + musicbox.lastTrack.getName());
 				musicbox.setPlaying(false);
 				musicbox.setSongPlayer(null);
 				if (musicbox.isRadioMode()) {
@@ -222,6 +225,7 @@ public class MusicboxListener implements Listener {
 	@EventHandler
 	public void onChunkLoad(ChunkLoadEvent evt) {
 		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+			System.out.println("Loading Chunk at musicbox: " + musicbox.getLocation());
 			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
 				if (musicbox.isRadioMode()) {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin,
@@ -234,6 +238,7 @@ public class MusicboxListener implements Listener {
 	@EventHandler
 	public void onChunkUnload(ChunkUnloadEvent evt) {
 		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+			System.out.println("Unloading Chunk at musicbox: " + musicbox.getLocation());
 			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
 				if (musicbox.getSongPlayer() != null) {
 					musicbox.getSongPlayer().destroy();
