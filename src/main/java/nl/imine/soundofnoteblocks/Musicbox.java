@@ -3,7 +3,6 @@ package nl.imine.soundofnoteblocks;
 import com.xxmicloxx.NoteBlockAPI.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongPlayer;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,29 +21,27 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class Musicbox implements Serializable {
+public class Musicbox {
 
 	public static final double DISTANCE = Math.pow(35, 2);
 
-	private static final long serialVersionUID = 3971612771253959236L;
-	private static final Material[] RECORDS = new Material[]{Material.RECORD_10, Material.RECORD_12, Material.RECORD_3,
-			Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7, Material.RECORD_8,
-			Material.RECORD_9, Material.GOLD_RECORD, Material.GREEN_RECORD};
+	protected static final Material[] RECORDS = new Material[]{Material.RECORD_10, Material.RECORD_12,
+			Material.RECORD_3, Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7,
+			Material.RECORD_8, Material.RECORD_9, Material.GOLD_RECORD, Material.GREEN_RECORD};
 
-	private final Location location;
+	protected Location location;
 
-	private final Tag tag;
-	private boolean tagVisible = true;
-	private boolean radioMode = false;
+	protected final Tag tag;
+	protected boolean tagVisible = true;
+	protected boolean radioMode = false;
 
-	private transient Track lastTrack;
-	private transient boolean isPlaying, lock;
-	private transient PositionSongPlayer songPlayer;
+	protected transient Track lastTrack;
+	protected transient boolean isPlaying, lock;
+	protected transient SongPlayer songPlayer;
 
 	private static final ArrayList<Musicbox> jukeboxList = new ArrayList<>();
 
@@ -67,7 +64,12 @@ public class Musicbox implements Serializable {
 		jukeboxList.remove(musicbox);
 	}
 
-	private Musicbox(Location location) {
+	protected Musicbox() {
+		this.location = null;
+		tag = null;
+	}
+
+	protected Musicbox(Location location) {
 		this.location = location;
 		tag = TagAPI.createTag(getTagLocation());
 		tag.addLine(" ");
@@ -100,7 +102,7 @@ public class Musicbox implements Serializable {
 			isPlaying = true;
 			Song song = track.getSong();
 			songPlayer = new PositionSongPlayer(song);
-			songPlayer.setTargetLocation(location);
+			((PositionSongPlayer) songPlayer).setTargetLocation(location);
 			songPlayer.setAutoDestroy(true);
 			songPlayer.setPlaying(true);
 			for (UUID uuid : songPlayer.getPlayerList()) {

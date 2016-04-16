@@ -19,9 +19,14 @@ import nl.imine.api.gui.GuiManager;
 import nl.imine.api.holotag.ActionType;
 import nl.imine.api.util.ColorUtil;
 import org.bukkit.block.Jukebox;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class MusicboxListener implements Listener {
 
@@ -114,6 +119,56 @@ public class MusicboxListener implements Listener {
 				}
 				c.open(player);
 			}
+		}
+	}
+
+	private void openWalkman(Player player, Walkman jukebox) {
+		if (player.hasPermission("iMine.jukebox.play")) {
+			Container c;
+			if (jukebox.isRadioMode()) {
+				c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zRadio!"), 9, false, false);
+				c.addButton(jukebox.createRadioButton(4));
+			} else {
+				c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&dJukebox       &cChoose Track!"),
+					45, true, false);
+				for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
+					c.addButton(jukebox.createTrackButton(track, c.getButtons().size()));
+				}
+				c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
+				c.addStaticButton(jukebox.createSortButton(1));
+				c.addStaticButton(jukebox.createReplayButton(2));
+				c.addStaticButton(jukebox.createStopButton(3));
+				c.addStaticButton(jukebox.createRandomButton(4));
+				c.addStaticButton(jukebox.createRadioButton(7));
+				c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
+			}
+			c.open(player);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerInventoryClick(InventoryClickEvent evt) {
+		if (evt.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+			if (evt.getSlotType().equals(SlotType.ARMOR)) {
+				if (evt.getSlot() == 103) {
+					Player player = (Player) evt.getWhoClicked();
+
+					if (evt.getWhoClicked().hasPermission("imine.jukebox.play")) {
+						if (evt.getCursor() != null) {
+							if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
+								evt.setResult(Event.Result.ALLOW);
+								openWalkman(player, Walkman.findWalkman(player));
+							}
+						}
+					}
+					if (evt.getCurrentItem() != null) {
+						if (evt.getCurrentItem().getType().equals(Material.JUKEBOX)) {
+							Walkman.removeWalkman(Walkman.findWalkman(player));
+						}
+					}
+				}
+			}
+
 		}
 	}
 
