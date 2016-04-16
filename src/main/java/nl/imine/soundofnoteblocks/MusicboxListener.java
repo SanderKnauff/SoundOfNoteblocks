@@ -211,9 +211,8 @@ public class MusicboxListener implements Listener {
 				if (musicbox.isRadioMode()) {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> {
 						musicbox.randomTrack();
-					} , 20L);
+					} , 40L);
 				}
-
 				musicbox.getTag().setVisible(false);
 				musicbox.setLocked(false);
 			}
