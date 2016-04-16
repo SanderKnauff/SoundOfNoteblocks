@@ -225,7 +225,6 @@ public class MusicboxListener implements Listener {
 	@EventHandler
 	public void onChunkLoad(ChunkLoadEvent evt) {
 		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
-			System.out.println("Loading Chunk at musicbox: " + musicbox.getLocation());
 			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
 				if (musicbox.isRadioMode()) {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin,
@@ -238,7 +237,6 @@ public class MusicboxListener implements Listener {
 	@EventHandler
 	public void onChunkUnload(ChunkUnloadEvent evt) {
 		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
-			System.out.println("Unloading Chunk at musicbox: " + musicbox.getLocation());
 			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
 				if (musicbox.getSongPlayer() != null) {
 					musicbox.getSongPlayer().destroy();
