@@ -35,6 +35,9 @@ public class Util {
 	}
 
 	public static List<String> readFromFileSplitByLine(File in) {
+		if (!in.exists()) {
+			in.createNewFile();
+		}
 		List<String> ret = new ArrayList<>();
 		BufferedReader br = null;
 		try {
