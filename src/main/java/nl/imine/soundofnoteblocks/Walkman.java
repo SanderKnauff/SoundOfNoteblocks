@@ -58,9 +58,7 @@ public class Walkman extends Musicbox {
 		for (UUID uuid : songPlayer.getPlayerList()) {
 			songPlayer.removePlayer(Bukkit.getPlayer(uuid));
 		}
-		for (Player p : getPlayersInRange()) {
-			songPlayer.addPlayer(p);
-		}
+		songPlayer.addPlayer(player);
 
 	}
 
