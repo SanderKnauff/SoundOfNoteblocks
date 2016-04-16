@@ -67,6 +67,7 @@ public class MusicboxManager {
 				if (musicbox.has("LastTrack")) {
 					UUID.fromString(musicbox.get("LastTrack").getAsString());
 				}
+				System.out.println("add jukebox");
 				musicBoxes.add(new Musicbox(location.toLocation(), musicbox.get("TagVisible").getAsBoolean(),
 						musicbox.get("RadioMode").getAsBoolean(), lastTrack));
 			});
