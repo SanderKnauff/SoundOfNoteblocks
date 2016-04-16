@@ -35,12 +35,12 @@ public class Util {
 	}
 
 	public static List<String> readFromFileSplitByLine(File in) {
-		if (!in.exists()) {
-			in.createNewFile();
-		}
 		List<String> ret = new ArrayList<>();
 		BufferedReader br = null;
 		try {
+			if (!in.exists()) {
+				in.createNewFile();
+			}
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(in), "UTF-8"));
 			String line;
 			while ((line = br.readLine()) != null) {
