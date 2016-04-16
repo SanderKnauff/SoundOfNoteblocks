@@ -154,7 +154,7 @@ public class MusicboxListener implements Listener {
 					if (evt.getSlotType().equals(SlotType.ARMOR)) {
 						Player player = (Player) evt.getWhoClicked();
 						if (player.hasPermission("imine.jukebox.play")) {
-							if (evt.getCurrentItem() == null) {
+							if (evt.getCurrentItem().getType().equals(Material.AIR)) {
 								if (evt.getCursor() != null) {
 									if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
 										evt.setCurrentItem(evt.getCursor());
@@ -208,7 +208,6 @@ public class MusicboxListener implements Listener {
 	public void onSongStop(SongDestroyingEvent evt) {
 		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
 			if (musicbox.getSongPlayer() != null && musicbox.getSongPlayer().equals(evt.getSongPlayer())) {
-				System.out.println("Destroying song: " + musicbox.lastTrack.getName());
 				musicbox.setPlaying(false);
 				musicbox.setSongPlayer(null);
 				if (musicbox.isRadioMode()) {
