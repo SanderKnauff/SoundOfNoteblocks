@@ -196,10 +196,21 @@ public class MusicboxListener implements Listener {
 				if (musicbox.isRadioMode()) {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> {
 						musicbox.randomTrack();
-					} , 40L);
+					} , 20L);
 				}
 				musicbox.getTag().setVisible(false);
 				musicbox.setLocked(false);
+			}
+		}
+		for (Walkman walkman : Walkman.getWalkmans()) {
+			if (walkman.getSongPlayer() != null && walkman.getSongPlayer().equals(evt.getSongPlayer())) {
+				walkman.setPlaying(false);
+				walkman.setSongPlayer(null);
+				if (walkman.isRadioMode()) {
+					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.plugin, () -> {
+						walkman.randomTrack();
+					} , 20L);
+				}
 			}
 		}
 	}
