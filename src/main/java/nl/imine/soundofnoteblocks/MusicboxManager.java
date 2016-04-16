@@ -50,18 +50,21 @@ public class MusicboxManager {
 		String json = readFromFile(MUSICBOX_LIST);
 		Gson gson = new GsonBuilder().create();
 		JsonArray jsonArray = gson.fromJson(json, JsonArray.class);
-		jsonArray.getAsJsonArray().forEach(element -> {
-			JsonObject musicbox = element.getAsJsonObject();
-			JsonObject position = musicbox.getAsJsonObject("Position");
-			LocationUtil.Position location = new LocationUtil.Position(UUID.fromString(position.get("W").getAsString()),
-					position.get("X").getAsDouble(), position.get("Y").getAsDouble(), position.get("Z").getAsDouble());
-			UUID lastTrack = null;
-			if (musicbox.has("LastTrack")) {
-				UUID.fromString(musicbox.get("LastTrack").getAsString());
-			}
-			musicBoxes.add(new Musicbox(location.toLocation(), musicbox.get("TagVisible").getAsBoolean(),
-					musicbox.get("RadioMode").getAsBoolean(), lastTrack));
-		});
+		if (!jsonArray.isJsonNull()) {
+			jsonArray.getAsJsonArray().forEach(element -> {
+				JsonObject musicbox = element.getAsJsonObject();
+				JsonObject position = musicbox.getAsJsonObject("Position");
+				LocationUtil.Position location = new LocationUtil.Position(
+						UUID.fromString(position.get("W").getAsString()), position.get("X").getAsDouble(),
+						position.get("Y").getAsDouble(), position.get("Z").getAsDouble());
+				UUID lastTrack = null;
+				if (musicbox.has("LastTrack")) {
+					UUID.fromString(musicbox.get("LastTrack").getAsString());
+				}
+				musicBoxes.add(new Musicbox(location.toLocation(), musicbox.get("TagVisible").getAsBoolean(),
+						musicbox.get("RadioMode").getAsBoolean(), lastTrack));
+			});
+		}
 	}
 
 	public static void saveMusicboxToConfig() {
