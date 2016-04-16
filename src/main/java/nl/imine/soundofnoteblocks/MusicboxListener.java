@@ -222,7 +222,7 @@ public class MusicboxListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onChunkLoad(ChunkLoadEvent evt) {
 		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
 			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
@@ -234,15 +234,17 @@ public class MusicboxListener implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onChunkUnload(ChunkUnloadEvent evt) {
-		for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
-			if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
-				if (musicbox.getSongPlayer() != null) {
-					musicbox.getSongPlayer().destroy();
-				}
-				if (musicbox.getTag() != null) {
-					musicbox.getTag().remove();
+		if (!evt.isCancelled()) {
+			for (Musicbox musicbox : Musicbox.getMusicBoxes()) {
+				if (evt.getChunk().equals(musicbox.getLocation().getChunk())) {
+					if (musicbox.getSongPlayer() != null) {
+						musicbox.getSongPlayer().destroy();
+					}
+					if (musicbox.getTag() != null) {
+						musicbox.getTag().remove();
+					}
 				}
 			}
 		}
