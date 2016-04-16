@@ -148,13 +148,18 @@ public class MusicboxListener implements Listener {
 
 	@EventHandler
 	public void onPlayerInventoryClick(InventoryClickEvent evt) {
+		System.out.println(evt.getClickedInventory());
 		if (evt.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+			System.out.println(evt.getSlotType());
 			if (evt.getSlotType().equals(SlotType.ARMOR)) {
+				System.out.println(evt.getSlot());
 				if (evt.getSlot() == 103) {
 					Player player = (Player) evt.getWhoClicked();
-
-					if (evt.getWhoClicked().hasPermission("imine.jukebox.play")) {
+					System.out.println(player.hasPermission("imine.jukebox.play"));
+					if (player.hasPermission("imine.jukebox.play")) {
+						System.out.println(evt.getCursor());
 						if (evt.getCursor() != null) {
+							System.out.println(evt.getCursor().getType());
 							if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
 								evt.setResult(Event.Result.ALLOW);
 								openWalkman(player, Walkman.findWalkman(player));
