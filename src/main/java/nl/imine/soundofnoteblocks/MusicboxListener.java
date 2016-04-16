@@ -153,7 +153,7 @@ public class MusicboxListener implements Listener {
 			System.out.println(evt.getSlotType());
 			if (evt.getSlotType().equals(SlotType.ARMOR)) {
 				System.out.println(evt.getSlot());
-				if (evt.getSlot() == 103) {
+				if (evt.getSlot() == 39) {
 					Player player = (Player) evt.getWhoClicked();
 					System.out.println(player.hasPermission("imine.jukebox.play"));
 					if (player.hasPermission("imine.jukebox.play")) {
