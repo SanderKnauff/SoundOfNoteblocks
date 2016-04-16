@@ -29,7 +29,11 @@ public class MusicboxManager {
 
 	public static Musicbox findJukebox(Location location) {
 		for (Musicbox musicbox : musicBoxes) {
-			System.out.println(musicbox.getLastTrack().getId().toString());
+			if (musicbox.getLastTrack() != null) {
+				System.out.println(musicbox.getLastTrack().getId().toString());
+			} else {
+				System.out.println("null");
+			}
 			if (musicbox.getLocation().equals(location)) {
 				return musicbox;
 			}
