@@ -19,11 +19,8 @@ import nl.imine.api.gui.GuiManager;
 import nl.imine.api.holotag.ActionType;
 import nl.imine.api.util.ColorUtil;
 import org.bukkit.block.Jukebox;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -144,6 +141,13 @@ public class MusicboxListener implements Listener {
 				c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
 			}
 			c.open(player);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent evt) {
+		if (evt.getEntity().hasPermission("imine.jukebox.play")) {
+			Walkman.removeWalkman(Walkman.findWalkman(evt.getEntity()));
 		}
 	}
 
