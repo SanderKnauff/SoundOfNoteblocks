@@ -29,11 +29,12 @@ public class MusicboxManager {
 
 	public static Musicbox findJukebox(Location location) {
 		for (Musicbox musicbox : musicBoxes) {
-			System.out.println(musicbox.getLastTrack());
+			System.out.println(musicbox.getLocation());
 			if (musicbox.getLocation().equals(location)) {
 				return musicbox;
 			}
 		}
+		System.out.println("no boxes found at location: " + location);
 		Musicbox j = new Musicbox(location);
 		musicBoxes.add(j);
 		return j;
@@ -63,6 +64,7 @@ public class MusicboxManager {
 				if (musicbox.has("LastTrack")) {
 					lastTrack = UUID.fromString(musicbox.get("LastTrack").getAsString());
 				}
+				System.out.println(lastTrack);
 				musicBoxes.add(new Musicbox(location.toLocation(), musicbox.get("TagVisible").getAsBoolean(),
 						musicbox.get("RadioMode").getAsBoolean(), lastTrack));
 			});
