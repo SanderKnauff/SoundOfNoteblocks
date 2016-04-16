@@ -22,7 +22,7 @@ public class Walkman extends Musicbox {
 
 	public static Walkman findWalkman(Player player) {
 		for (Walkman w : walkmanList) {
-			if (w.getPlayer().equals(player)) {
+			if (w.getPlayer().getUniqueId().equals(player.getUniqueId())) {
 				return w;
 			}
 		}
