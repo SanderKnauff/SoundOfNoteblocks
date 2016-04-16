@@ -25,6 +25,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -147,33 +148,15 @@ public class MusicboxListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerInventoryClick(InventoryClickEvent evt) {
-		if (evt.getClickedInventory() != null) {
-			if (evt.getClickedInventory().getType() != null) {
-				if (evt.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
-					if (evt.getSlotType().equals(SlotType.ARMOR)) {
-						Player player = (Player) evt.getWhoClicked();
-						if (player.hasPermission("imine.jukebox.play")) {
-							if (evt.getCurrentItem().getType().equals(Material.AIR)) {
-								if (evt.getCursor() != null) {
-									if (evt.getCursor().getType().equals(Material.JUKEBOX)) {
-										evt.setCurrentItem(evt.getCursor());
-										evt.setCursor(null);
-										evt.setResult(Event.Result.ALLOW);
-										player.closeInventory();
-										Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocks.getInstance(), () -> {
-											openWalkman(player, Walkman.findWalkman(player));
-										} , 1);
-									}
-								}
-							}
-						} else {
-							if (evt.getCurrentItem().getType().equals(Material.JUKEBOX)) {
-								Walkman.removeWalkman(Walkman.findWalkman(player));
-							}
-						}
-					}
-				}
+	public void onPlayerItemHandSwitch(PlayerSwapHandItemsEvent evt) {
+		Player player = evt.getPlayer();
+		if (player.hasPermission("imine.jukebox.play")) {
+			if (evt.getOffHandItem().getType().equals(Material.JUKEBOX)) {
+				Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocks.getInstance(), () -> {
+					openWalkman(player, Walkman.findWalkman(player));
+				} , 1);
+			} else if (evt.getMainHandItem().getType().equals(Material.JUKEBOX)) {
+				Walkman.removeWalkman(Walkman.findWalkman(player));
 			}
 		}
 	}
