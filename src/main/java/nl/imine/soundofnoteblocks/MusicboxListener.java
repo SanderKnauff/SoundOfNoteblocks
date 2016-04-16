@@ -171,8 +171,6 @@ public class MusicboxListener implements Listener {
 		}
 	}
 
-	}
-
 	@EventHandler
 	public void onPlayerBlockBreak(BlockBreakEvent evt) {
 		if (evt.getBlock().getType().equals(Material.JUKEBOX)) {
