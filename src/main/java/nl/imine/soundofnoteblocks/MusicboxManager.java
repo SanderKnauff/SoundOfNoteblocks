@@ -31,12 +31,10 @@ public class MusicboxManager {
 		Musicbox j = null;
 		if (SoundOfNoteBlocks.isReady()) {
 			for (Musicbox musicbox : musicBoxes) {
-				System.out.println(musicbox.getLocation());
 				if (musicbox.getLocation().equals(location)) {
 					return musicbox;
 				}
 			}
-			System.out.println("no boxes found at location: " + location);
 			j = new Musicbox(location);
 			musicBoxes.add(j);
 		}
@@ -55,7 +53,6 @@ public class MusicboxManager {
 		String json = readFromFile(MUSICBOX_LIST);
 		Gson gson = new GsonBuilder().create();
 		JsonArray jsonArray = gson.fromJson(json, JsonArray.class);
-		System.out.println(jsonArray);
 		if (jsonArray != null) {
 			jsonArray.getAsJsonArray().forEach(element -> {
 				JsonObject musicbox = element.getAsJsonObject();
@@ -67,7 +64,6 @@ public class MusicboxManager {
 				if (musicbox.has("LastTrack")) {
 					lastTrack = UUID.fromString(musicbox.get("LastTrack").getAsString());
 				}
-				System.out.println(lastTrack);
 				musicBoxes.add(new Musicbox(location.toLocation(), musicbox.get("TagVisible").getAsBoolean(),
 						musicbox.get("RadioMode").getAsBoolean(), lastTrack));
 			});

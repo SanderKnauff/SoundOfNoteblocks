@@ -50,13 +50,6 @@ public class MusicboxListener implements Listener {
 		}
 	}
 
-	private void checkRedstoneRenew(Block bl) {
-		if (bl.getType() == Material.JUKEBOX) {
-			Musicbox mb = MusicboxManager.findJukebox(bl.getLocation());
-			mb.replayLastSong(false);
-		}
-	}
-
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent evt) {
 		if (!evt.isCancelled()) {

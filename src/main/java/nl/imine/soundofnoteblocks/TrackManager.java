@@ -69,6 +69,9 @@ public class TrackManager {
 	}
 
 	public static Track getTrack(UUID trackId) {
+		System.out.println("Search: " + trackId.toString());
+		trackList.forEach(t -> System.out.println(t.toString()));
+		System.out.println("Search end");
 		Optional<Track> oTrack = trackList.stream().filter(t -> t.getId().equals(trackId)).findFirst();
 		System.out.println(oTrack.isPresent());
 		if (oTrack.isPresent()) {
