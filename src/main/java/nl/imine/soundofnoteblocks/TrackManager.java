@@ -52,6 +52,7 @@ public class TrackManager {
 				ex.printStackTrace();
 			}
 		});
+		SoundOfNoteBlocks.setReady(true);
 		MusicboxManager.loadMusicboxesFromConfig();
 	}
 
