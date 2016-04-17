@@ -89,33 +89,37 @@ public class MusicboxListener implements Listener {
 	}
 
 	private void openJukebox(Player player, Musicbox jukebox) {
-		if (!(((org.bukkit.block.Jukebox) jukebox.getLocation().getBlock().getState()).isPlaying())) {
-			if (player.hasPermission("iMine.jukebox.play")) {
-				if (jukebox.isLocked() && !player.getPlayer().hasPermission("iMine.jukebox.lockbypass")) {
-					player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 1F);
-					return;
-				}
-				Container c;
-				if (jukebox.isRadioMode()) {
-					c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zRadio!"), 9, false, false);
-					c.addButton(jukebox.createRadioButton(4));
-				} else {
-					c = GuiManager.getInstance().createContainer(
-						ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);
-					for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
-						c.addButton(jukebox.createTrackButton(track, c.getButtons().size()));
+		if (SoundOfNoteBlocks.isReady()) {
+			if (!(((org.bukkit.block.Jukebox) jukebox.getLocation().getBlock().getState()).isPlaying())) {
+				if (player.hasPermission("iMine.jukebox.play")) {
+					if (jukebox.isLocked() && !player.getPlayer().hasPermission("iMine.jukebox.lockbypass")) {
+						player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1F,
+							1F);
+						return;
 					}
-					c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
-					c.addStaticButton(jukebox.createSortButton(1));
-					c.addStaticButton(jukebox.createReplayButton(2));
-					c.addStaticButton(jukebox.createStopButton(3));
-					c.addStaticButton(jukebox.createRandomButton(4));
-					c.addStaticButton(jukebox.createTogglenametagButton(5));
-					c.addStaticButton(jukebox.createLockButton(6));
-					c.addStaticButton(jukebox.createRadioButton(7));
-					c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
+					Container c;
+					if (jukebox.isRadioMode()) {
+						c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zRadio!"), 9, false,
+							false);
+						c.addButton(jukebox.createRadioButton(4));
+					} else {
+						c = GuiManager.getInstance().createContainer(
+							ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);
+						for (Track track : SoundOfNoteBlocks.getInstance().getTrackManager().getTracks()) {
+							c.addButton(jukebox.createTrackButton(track, c.getButtons().size()));
+						}
+						c.addStaticButton(Container.getDefaultPreviousButton(c).setSlot(0));
+						c.addStaticButton(jukebox.createSortButton(1));
+						c.addStaticButton(jukebox.createReplayButton(2));
+						c.addStaticButton(jukebox.createStopButton(3));
+						c.addStaticButton(jukebox.createRandomButton(4));
+						c.addStaticButton(jukebox.createTogglenametagButton(5));
+						c.addStaticButton(jukebox.createLockButton(6));
+						c.addStaticButton(jukebox.createRadioButton(7));
+						c.addStaticButton(Container.getDefaultNextButton(c).setSlot(8));
+					}
+					c.open(player);
 				}
-				c.open(player);
 			}
 		}
 	}
