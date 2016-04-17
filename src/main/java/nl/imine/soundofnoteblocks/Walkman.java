@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import nl.imine.api.holotag.Tag;
+import nl.imine.api.util.ColorUtil;
+import nl.imine.api.util.PlayerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,7 +15,6 @@ import org.bukkit.entity.Player;
 public class Walkman extends Musicbox {
 
 	private final Player player;
-
 
 	public Walkman(Player player) {
 		super();
@@ -37,6 +38,8 @@ public class Walkman extends Musicbox {
 		for (UUID uuid : songPlayer.getPlayerList()) {
 			songPlayer.removePlayer(Bukkit.getPlayer(uuid));
 		}
+		PlayerUtil.sendActionMessage(player,
+			ColorUtil.replaceColors("&7Now playing &6" + track.getName() + " &7by &6" + track.getArtist()));
 		songPlayer.addPlayer(player);
 
 	}
