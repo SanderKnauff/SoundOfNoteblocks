@@ -52,6 +52,7 @@ public class TrackManager {
 				ex.printStackTrace();
 			}
 		});
+		MusicboxManager.loadMusicboxesFromConfig();
 	}
 
 	public void setTracks(List<Track> trackList) {

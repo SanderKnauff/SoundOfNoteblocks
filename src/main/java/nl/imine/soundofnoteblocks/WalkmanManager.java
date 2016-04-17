@@ -8,17 +8,21 @@ public class WalkmanManager {
 	private static final ArrayList<Walkman> walkmanList = new ArrayList<>();
 
 	public static Walkman findWalkman(Player player) {
-		for (Walkman w : WalkmanManager.walkmanList) {
-			if (w.getPlayer().getUniqueId().equals(player.getUniqueId())) {
-				return w;
+		Walkman walkman = null;
+		if (SoundOfNoteBlocks.isReady()) {
+			for (Walkman w : WalkmanManager.walkmanList) {
+				if (w.getPlayer().getUniqueId().equals(player.getUniqueId())) {
+					return w;
+				}
 			}
+			walkman = new Walkman(player);
+			WalkmanManager.walkmanList.add(walkman);
 		}
-		Walkman w = new Walkman(player);
-		WalkmanManager.walkmanList.add(w);
-		return w;
+		return walkman;
 	}
 
 	public static void removeWalkman(Walkman walkman) {
+		walkman.setRadioMode(false);
 		walkman.stopPlaying();
 		WalkmanManager.walkmanList.remove(walkman);
 	}

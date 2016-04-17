@@ -13,6 +13,8 @@ import nl.imine.api.util.ConfigUtil;
 public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
 
 	public static SoundOfNoteBlocks plugin;
+
+	private static boolean ready;
 	private TrackManager trackManager;
 
 	private File tempFolder;
@@ -24,7 +26,6 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
 		tempFolder = new File(getDataFolder().getAbsolutePath(), "tmp");
 		tempFolder.mkdirs();
 		trackManager = new TrackManager();
-		MusicboxManager.loadMusicboxesFromConfig();
 		MusicboxListener.init();
 		getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
 	}
@@ -53,6 +54,14 @@ public class SoundOfNoteBlocks extends JavaPlugin implements Listener {
 				Arrays.asList(new String[]{"http://files.imine.nl/iMineNetwork/NBS/trackList.json"}));
 			saveConfig();
 		}
+	}
+
+	public static void setReady(boolean ready) {
+		SoundOfNoteBlocks.ready = ready;
+	}
+
+	public static boolean isReady() {
+		return SoundOfNoteBlocks.ready;
 	}
 
 	public File getTempFolder() {
