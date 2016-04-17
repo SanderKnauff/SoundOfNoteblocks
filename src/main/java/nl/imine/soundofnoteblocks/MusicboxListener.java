@@ -37,17 +37,23 @@ public class MusicboxListener implements Listener {
 
 	@EventHandler
 	public void onRedstoneEvent(BlockRedstoneEvent evt) {
-		MusicboxManager.getMusicboxes().stream().filter(m -> m.getLocation().equals(evt.getBlock().getLocation()))
-				.forEach(m -> {
-					if (evt.getOldCurrent() == 0 && evt.getNewCurrent() != 0) {
-						m.replayLastSong(false);
-					}
-				});
+		if (evt.getNewCurrent() > 2 && evt.getNewCurrent() > evt.getOldCurrent()) {
+			for (int i = -1; i < 2; i++) {
+				final int increment = i;
+				MusicboxManager.getMusicboxes().stream()
+						.filter(m -> (m.getLocation().equals(evt.getBlock().getLocation().clone().add(increment, 0, 0)))
+								|| m.getLocation().equals(evt.getBlock().getLocation().clone().add(0, 0, increment)))
+						.forEach(m -> {
+							m.replayLastSong(false);
+						});
+			}
+		}
 	}
 
 	private void checkRedstoneRenew(Block bl) {
 		if (bl.getType() == Material.JUKEBOX) {
-
+			Musicbox mb = MusicboxManager.findJukebox(bl.getLocation());
+			mb.replayLastSong(false);
 		}
 	}
 
