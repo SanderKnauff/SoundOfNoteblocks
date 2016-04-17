@@ -51,9 +51,9 @@ public class TrackManager {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			MusicboxManager.loadMusicboxesFromConfig();
+			SoundOfNoteBlocks.setReady(true);
 		});
-		SoundOfNoteBlocks.setReady(true);
-		MusicboxManager.loadMusicboxesFromConfig();
 	}
 
 	public void setTracks(List<Track> trackList) {
