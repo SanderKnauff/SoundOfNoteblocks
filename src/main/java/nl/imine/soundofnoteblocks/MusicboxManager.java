@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import nl.imine.api.util.LocationUtil;
 import static nl.imine.soundofnoteblocks.Util.readFromFile;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -55,8 +56,8 @@ public class MusicboxManager {
 		JsonArray jsonArray = gson.fromJson(json, JsonArray.class);
 		if (jsonArray != null) {
 			jsonArray.getAsJsonArray().forEach(element -> {
-				JsonObject musicbox = element.getAsJsonObject();
-				JsonObject position = musicbox.getAsJsonObject("Position");
+				final JsonObject musicbox = element.getAsJsonObject();
+				final JsonObject position = musicbox.getAsJsonObject("Position");
 				LocationUtil.Position location = new LocationUtil.Position(
 						UUID.fromString(position.get("W").getAsString()), position.get("X").getAsDouble(),
 						position.get("Y").getAsDouble(), position.get("Z").getAsDouble());
@@ -64,8 +65,11 @@ public class MusicboxManager {
 				if (musicbox.has("LastTrack")) {
 					lastTrack = UUID.fromString(musicbox.get("LastTrack").getAsString());
 				}
-				musicBoxes.add(new Musicbox(location.toLocation(), musicbox.get("TagVisible").getAsBoolean(),
-						musicbox.get("RadioMode").getAsBoolean(), lastTrack));
+				final UUID lastTrackFinal = lastTrack;
+				Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocks.getInstance(), () -> {
+					musicBoxes.add(new Musicbox(location.toLocation(), musicbox.get("TagVisible").getAsBoolean(),
+							musicbox.get("RadioMode").getAsBoolean(), lastTrackFinal));
+				});
 			});
 		}
 	}
