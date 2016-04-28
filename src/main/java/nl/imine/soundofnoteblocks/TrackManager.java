@@ -6,16 +6,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import com.google.gson.Gson;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.Optional;
 import java.util.UUID;
 
 import nl.imine.api.file.FileFilter;
+import nl.imine.api.util.FileUtil;
 import nl.imine.api.util.WebUtil;
 
 public class TrackManager {
@@ -92,10 +95,9 @@ public class TrackManager {
 		ret = new File(String.format("%s%s%s.nbs", SoundOfNoteBlocks.getInstance().getTempFolder().getAbsolutePath(),
 			File.separator, track.getId()));
 		try {
-			FileUtils.copyURLToFile(new URL(track.getUrl() + track.getId() + ".nbs"), ret);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			ret = null;
+			FileUtil.copyURLtoFile(new URL(track.getUrl() + track.getId() + ".nbs"), ret);
+		} catch (MalformedURLException mue) {
+			System.err.println("MalformedURLException: " + mue.getMessage());
 		}
 		return ret;
 	}
