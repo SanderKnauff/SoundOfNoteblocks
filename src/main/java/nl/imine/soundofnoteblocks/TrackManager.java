@@ -73,7 +73,6 @@ public class TrackManager {
 
 	public static Track getTrack(UUID trackId) {
 		Optional<Track> oTrack = trackList.stream().filter(t -> t.getId().equals(trackId)).findFirst();
-		System.out.println(oTrack.isPresent());
 		if (oTrack.isPresent()) {
 			return oTrack.get();
 		}
