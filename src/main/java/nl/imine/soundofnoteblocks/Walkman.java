@@ -39,7 +39,7 @@ public class Walkman extends Musicbox {
 			songPlayer.removePlayer(Bukkit.getPlayer(uuid));
 		}
 		PlayerUtil.sendActionMessage(player,
-			ColorUtil.replaceColors("&7Now playing &6" + track.getName() + " &7by &6" + track.getArtist()));
+			ColorUtil.replaceColors("&7Now playing &e" + track.getName() + " &7by &e" + track.getArtist()));
 		songPlayer.addPlayer(player);
 
 	}
