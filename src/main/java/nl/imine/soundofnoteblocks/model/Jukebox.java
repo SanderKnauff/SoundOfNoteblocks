@@ -24,7 +24,7 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 	public static final double DISTANCE = Math.pow(35, 2);
 
 	private Location location;
-	private ITag tag;
+	private transient ITag tag;
 	private boolean isLocked;
 
 	public Jukebox(Location loc) {
@@ -34,10 +34,7 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 	public Jukebox(Location loc, boolean radioMode, UUID lastTrackId) {
 		super(radioMode, lastTrackId);
 		location = loc;
-		tag = TagAPI.createTag(getTagLocation());
-		tag.addLine(" ");
-		tag.addLine(" ");
-		tag.setVisible(false);
+		getTag();
 	}
 
 	@Override
@@ -51,6 +48,12 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 
 	@Override
 	public ITag getTag() {
+		if (tag == null) {
+			tag = TagAPI.createTag(getTagLocation());
+			tag.addLine(" ");
+			tag.addLine(" ");
+			tag.setVisible(false);
+		}
 		return tag;
 	}
 
