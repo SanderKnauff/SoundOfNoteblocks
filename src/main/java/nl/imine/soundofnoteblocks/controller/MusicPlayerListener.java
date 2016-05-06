@@ -190,7 +190,7 @@ public class MusicPlayerListener implements Listener {
 				}
 				if (mp instanceof Tagable) {
 					Tagable tag = (Tagable) mp;
-					tag.setVisible(false);
+					tag.getTag().remove();
 				}
 				if (mp instanceof Lockable) {
 					Lockable lock = (Lockable) mp;
