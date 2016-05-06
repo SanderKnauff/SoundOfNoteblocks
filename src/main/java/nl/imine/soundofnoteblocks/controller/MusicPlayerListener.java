@@ -133,15 +133,18 @@ public class MusicPlayerListener implements Listener {
 	public void onPlayerInteractGettoblaster(PlayerInteractEvent pie) {
 		if (pie.getPlayer().getInventory().getHelmet() == null
 				|| pie.getPlayer().getInventory().getHelmet().getType() != Material.JUKEBOX) {
+			System.out.println("a");
 			return;
 		}
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || pie.isCancelled()) {
 			notLoadedMssg(pie.getPlayer());
+			System.out.println("b");
 			return;
 		}
 		Player player = pie.getPlayer();
 		if (player.hasPermission("imine.jukebox.play") && player.isSneaking()
-				&& player.getInventory().getItemInMainHand() == null) {
+				&& (player.getInventory().getItemInMainHand() == null
+						|| player.getInventory().getItemInMainHand().getType() == Material.AIR)) {
 			Gettoblaster gb = MusicPlayerManager.getGettoblaster(player);
 			if (gb.isRadioMode()) {
 				MusicPlayerView.getRadiomodeContainer(gb).open(player);
@@ -149,6 +152,7 @@ public class MusicPlayerListener implements Listener {
 				MusicPlayerView.getMusicPlayerConatainer(gb).open(player);
 			}
 		}
+		System.out.println("c");
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -173,9 +177,10 @@ public class MusicPlayerListener implements Listener {
 					helmet = helmet.clone();
 				}
 				player.getInventory().setHelmet(pdie.getItemDrop().getItemStack());
-				pdie.getItemDrop().setItemStack(helmet);
 				if (helmet == null) {
 					pdie.getItemDrop().remove();
+				} else {
+					pdie.getItemDrop().setItemStack(helmet);
 				}
 			}
 		}
