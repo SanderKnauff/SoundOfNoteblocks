@@ -21,6 +21,8 @@ import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
 
 import nl.imine.api.event.PlayerInteractTagEvent;
 import nl.imine.api.holotag.ActionType;
+import nl.imine.api.util.ColorUtil;
+import nl.imine.api.util.PlayerUtil;
 import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
 import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
@@ -52,6 +54,8 @@ public class MusicPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent pie) {
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || pie.isCancelled()) {
+			PlayerUtil.sendActionMessage(pie.getPlayer(),
+				ColorUtil.replaceColors("&cSoundOfNoteBlocks is loading... plz wait a second!"));
 			return;
 		}
 		if (pie.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
@@ -81,6 +85,9 @@ public class MusicPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerTagInteract(PlayerInteractTagEvent pite) {
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || pite.isCancelled()) {
+			PlayerUtil.sendActionMessage(pite.getPlayer(),
+				ColorUtil.replaceColors("&cSoundOfNoteBlocks is loading... plz wait a second!"));
+
 			return;
 		}
 		if (pite.getAction().equals(ActionType.RICHT_CLICK)) {
@@ -109,6 +116,8 @@ public class MusicPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerItemHandSwitch(PlayerSwapHandItemsEvent sphie) {
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || sphie.isCancelled()) {
+			PlayerUtil.sendActionMessage(sphie.getPlayer(),
+				ColorUtil.replaceColors("&cSoundOfNoteBlocks is loading... plz wait a second!"));
 			return;
 		}
 		Player player = sphie.getPlayer();
@@ -130,7 +139,7 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerBlockBreak(BlockBreakEvent bbe) {
-		if (!SoundOfNoteBlocksPlugin.isLoaded() || bbe.isCancelled()) {
+		if (bbe.isCancelled()) {
 			return;
 		}
 		if (bbe.getBlock().getType().equals(Material.JUKEBOX)) {
