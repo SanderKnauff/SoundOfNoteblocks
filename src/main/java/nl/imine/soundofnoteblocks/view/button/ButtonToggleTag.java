@@ -21,7 +21,7 @@ public class ButtonToggleTag extends ButtonMusicPlayer {
 	public void doAction(Player player, Container container, ClickType clickType) {
 		if (getMusicPlayer().isPlaying() && getMusicPlayer() instanceof Tagable) {
 			Tagable tagMP = (Tagable) getMusicPlayer();
-			tagMP.getTag().setVisible(!tagMP.getTag().isVisible());
+			tagMP.setVisible(!tagMP.isVisible());
 			tagMP.getTag().setLocation(tagMP.getTagLocation());
 		}
 	}

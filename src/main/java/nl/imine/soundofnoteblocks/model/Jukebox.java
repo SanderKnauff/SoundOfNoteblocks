@@ -25,14 +25,16 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 	private Location location;
 	private transient ITag tag;
 	private boolean isLocked;
+	private boolean isVisible;
 
 	public Jukebox(Location loc) {
-		this(loc, false, null);
+		this(loc, true, false, null);
 	}
 
-	public Jukebox(Location loc, boolean radioMode, UUID lastTrackId) {
+	public Jukebox(Location loc, boolean visible, boolean radioMode, UUID lastTrackId) {
 		super(radioMode, lastTrackId);
 		location = loc;
+		isVisible = visible;
 		getTag();
 	}
 
@@ -49,11 +51,20 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 	public ITag getTag() {
 		if (tag == null) {
 			tag = TagAPI.createTag(getTagLocation());
-			tag.addLine(" ");
-			tag.addLine(" ");
+			tag.addLine("Loading...");
+			tag.addLine("^,^");
 			tag.setVisible(false);
 		}
 		return tag;
+	}
+
+	@Override
+	public void setTagLines(String... lines) {
+		ITag tag = getTag();
+		for (int i = 0; i < lines.length; i++) {
+			tag.setLine(i, lines[i]);
+		}
+		tag.setVisible(isVisible());
 	}
 
 	@Override
@@ -61,7 +72,6 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 		if (getLocation().getChunk().isLoaded()) {
 			if (getLocation().getBlock().getType() == Material.JUKEBOX) {
 				super.playTrack(track);
-
 			}
 		}
 	}
@@ -69,7 +79,7 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 	@Override
 	public void stopPlaying() {
 		super.stopPlaying();
-		getTag().setVisible(false);
+		setVisible(false);
 	}
 
 	@Override
@@ -112,5 +122,16 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 			return this.getLocation().equals(other.getLocation());
 		}
 		return super.equals(obj);
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		isVisible = visible;
+		getTag().setVisible(visible);
+	}
+
+	@Override
+	public boolean isVisible() {
+		return isVisible;
 	}
 }

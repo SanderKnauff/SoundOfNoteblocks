@@ -10,4 +10,9 @@ public interface Tagable {
 
 	public ITag getTag();
 
+	public void setVisible(boolean visible);
+
+	public boolean isVisible();
+
+	public void setTagLines(String... lines);
 }
