@@ -53,31 +53,29 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent pie) {
+		if (!pie.getAction().equals(Action.RIGHT_CLICK_BLOCK)
+				|| !pie.getClickedBlock().getType().equals(Material.JUKEBOX)) {
+			return;
+		}
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || pie.isCancelled()) {
 			notLoadedMssg(pie.getPlayer());
 			return;
 		}
-		if (pie.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-			if (pie.getClickedBlock().getType().equals(Material.JUKEBOX)) {
-				Jukebox jukebox = MusicPlayerManager.getJukebox(pie.getClickedBlock().getLocation());
-				if (!pie.getPlayer().isSneaking()) {
-					if (((org.bukkit.block.Jukebox) pie.getClickedBlock().getState()).getPlaying()
-							.equals(Material.AIR)) {
-						if (pie.getItem() == null || !pie.getItem().getType().name().toLowerCase().contains("record")) {
-							if (jukebox.isRadioMode()) {
-								MusicPlayerView.getRadiomodeContainer(jukebox).open(pie.getPlayer());
-							} else {
-								MusicPlayerView.getMusicPlayerConatainer(jukebox).open(pie.getPlayer());
-							}
-							pie.setCancelled(true);
-						}
+		Jukebox jukebox = MusicPlayerManager.getJukebox(pie.getClickedBlock().getLocation());
+		if (!pie.getPlayer().isSneaking()) {
+			if (((org.bukkit.block.Jukebox) pie.getClickedBlock().getState()).getPlaying().equals(Material.AIR)) {
+				if (pie.getItem() == null || !pie.getItem().getType().name().toLowerCase().contains("record")) {
+					if (jukebox.isRadioMode()) {
+						MusicPlayerView.getRadiomodeContainer(jukebox).open(pie.getPlayer());
+					} else {
+						MusicPlayerView.getMusicPlayerConatainer(jukebox).open(pie.getPlayer());
 					}
-				}
-				if (jukebox.isPlaying()) {
 					pie.setCancelled(true);
-
 				}
 			}
+		}
+		if (jukebox.isPlaying()) {
+			pie.setCancelled(true);
 		}
 	}
 
