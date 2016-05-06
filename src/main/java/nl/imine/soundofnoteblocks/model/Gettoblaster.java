@@ -17,7 +17,7 @@ import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
 
 public class Gettoblaster extends MusicPlayer implements PlayerNotified {
 
-	public static final double DISTANCE = Math.pow(35, 2);
+	public static final double DISTANCE = Math.pow(6, 2);
 
 	private Entity entityCenter;
 
