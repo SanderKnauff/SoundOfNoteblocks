@@ -85,7 +85,7 @@ public class MusicPlayerManager {
 		Iterator<MusicPlayer> mpit = musicPlayers.iterator();
 		while (mpit.hasNext()) {
 			MusicPlayer mp = mpit.next();
-			if (mp instanceof Walkman && ((Walkman) mp).getPlayer().equals(pl)) {
+			if (mp instanceof Walkman && ((Walkman) mp).getPlayer() == pl) {
 				mp.setRadioMode(false);
 				mp.stopPlaying();
 				mpit.remove();
