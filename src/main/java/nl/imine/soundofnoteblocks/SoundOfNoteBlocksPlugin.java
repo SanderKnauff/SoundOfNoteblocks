@@ -50,6 +50,7 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 				tempFile.deleteOnExit();
 			}
 		}
+		MusicPlayerManager.safe();
 	}
 
 	private void setupConfig() {
