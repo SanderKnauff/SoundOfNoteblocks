@@ -104,7 +104,8 @@ public class MusicPlayerManager {
 	public static void safe() {
 		try {
 			FileWriter fw = new FileWriter(SAFE_FILE);
-			SoundOfNoteBlocksPlugin.getGson().toJson(musicPlayers, fw);
+			SoundOfNoteBlocksPlugin.getGson().toJson(musicPlayers.toArray(new MusicPlayer[musicPlayers.size()]),
+				MusicPlayer[].class, fw);
 			fw.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
