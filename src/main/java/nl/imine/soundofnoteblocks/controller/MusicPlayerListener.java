@@ -1,6 +1,7 @@
 package nl.imine.soundofnoteblocks.controller;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -159,7 +160,7 @@ public class MusicPlayerListener implements Listener {
 			return;
 		}
 		Player player = pdie.getPlayer();
-		if (player.hasPermission("imine.jukebox.play")) {
+		if (player.hasPermission("imine.jukebox.play") && player.getGameMode() != GameMode.ADVENTURE) {
 			if (player.isSneaking() && pdie.getItemDrop().getItemStack().getType() == Material.JUKEBOX) {
 				Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
 					Gettoblaster gb = MusicPlayerManager.getGettoblaster(player);
