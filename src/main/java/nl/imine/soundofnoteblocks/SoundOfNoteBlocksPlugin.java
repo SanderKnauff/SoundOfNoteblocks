@@ -47,9 +47,7 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 	@Override
 	public void onDisable() {
 		plugin = null;
-		for (MusicPlayer mp : MusicPlayerManager.getMusicPlayer()) {
-			mp.stopPlaying();
-		}
+		setReady(false);
 		for (File tempFile : tempFolder.listFiles()) {
 			if (!tempFile.delete()) {
 				tempFile.deleteOnExit();
@@ -69,6 +67,17 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 
 	public static void setReady(boolean ready) {
 		SoundOfNoteBlocksPlugin.ready = ready;
+		if (ready) {
+			for (MusicPlayer mp : MusicPlayerManager.getMusicPlayer()) {
+				if (mp.isRadioMode()) {
+					mp.replayForce();
+				}
+			}
+		} else {
+			for (MusicPlayer mp : MusicPlayerManager.getMusicPlayer()) {
+				mp.stopPlaying();
+			}
+		}
 	}
 
 	public static boolean isLoaded() {
