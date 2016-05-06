@@ -64,7 +64,9 @@ public class TrackManager {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			SoundOfNoteBlocksPlugin.setReady(true);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.plugin,
+				() -> SoundOfNoteBlocksPlugin.setReady(true));
+
 		});
 	}
 
