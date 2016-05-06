@@ -10,12 +10,16 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
 
@@ -24,6 +28,7 @@ import nl.imine.api.holotag.ActionType;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.PlayerUtil;
 import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
+import nl.imine.soundofnoteblocks.model.Gettoblaster;
 import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.Walkman;
@@ -110,6 +115,47 @@ public class MusicPlayerListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
+	public void onLeave(PlayerQuitEvent pqe) {
+		MusicPlayerManager.removeGettoblaster(pqe.getPlayer());
+		MusicPlayerManager.removeWalkman(pqe.getPlayer());
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerRemoveHelmet(InventoryClickEvent ice) {
+		if (ice.isCancelled()) {
+			return;
+		}
+		MusicPlayerManager.removeGettoblaster(ice.getWhoClicked());
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerDropItem(PlayerDropItemEvent pdie) {
+		if (!SoundOfNoteBlocksPlugin.isLoaded() || pdie.isCancelled()) {
+			notLoadedMssg(pdie.getPlayer());
+			return;
+		}
+		Player player = pdie.getPlayer();
+		if (player.hasPermission("imine.jukebox.play")) {
+			if (player.isSneaking() && pdie.getItemDrop().getItemStack().getType() == Material.JUKEBOX) {
+				Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
+					Gettoblaster gb = MusicPlayerManager.getGettoblaster(player);
+					if (gb.isRadioMode()) {
+						MusicPlayerView.getRadiomodeContainer(gb).open(player);
+					} else {
+						MusicPlayerView.getMusicPlayerConatainer(gb).open(player);
+					}
+				} , 1);
+				ItemStack helmet = player.getInventory().getHelmet();
+				if (helmet != null) {
+					helmet = helmet.clone();
+				}
+				player.getInventory().setHelmet(pdie.getItemDrop().getItemStack());
+				pdie.getItemDrop().setItemStack(helmet);
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerItemHandSwitch(PlayerSwapHandItemsEvent sphie) {
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || sphie.isCancelled()) {
 			notLoadedMssg(sphie.getPlayer());
@@ -153,6 +199,16 @@ public class MusicPlayerListener implements Listener {
 					jukebox.getSongPlayer().addPlayer(pme.getPlayer());
 				} else if (jukebox.getSongPlayer().getPlayerList().contains(pme.getPlayer().getUniqueId())) {
 					jukebox.getSongPlayer().removePlayer(pme.getPlayer());
+				}
+			}
+		}
+		for (Gettoblaster gettoblaster : MusicPlayerManager.getGettoblaster()) {
+			if (gettoblaster.isPlaying()
+					&& gettoblaster.getCenterdEntity().getLocation().getWorld() == pme.getTo().getWorld()) {
+				if (pme.getTo().distance(gettoblaster.getCenterdEntity().getLocation()) < Gettoblaster.DISTANCE) {
+					gettoblaster.getSongPlayer().addPlayer(pme.getPlayer());
+				} else if (gettoblaster.getSongPlayer().getPlayerList().contains(pme.getPlayer().getUniqueId())) {
+					gettoblaster.getSongPlayer().removePlayer(pme.getPlayer());
 				}
 			}
 		}

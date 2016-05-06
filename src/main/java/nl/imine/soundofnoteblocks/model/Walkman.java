@@ -43,19 +43,19 @@ public class Walkman extends MusicPlayer implements PlayerNotified {
 	}
 
 	@Override
+	public void notifyPlayers(Track track) {
+		for (Player pl : getListeners()) {
+			PlayerUtil.sendActionMessage(pl,
+				ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.getName(), track.getArtist()));
+		}
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Walkman) {
 			Walkman other = (Walkman) obj;
 			return this.getPlayer().equals(other.getPlayer());
 		}
 		return super.equals(obj);
-	}
-
-	@Override
-	public void notifyPlayers(Track track) {
-		for (Player pl : getListeners()) {
-			PlayerUtil.sendActionMessage(pl,
-				ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.getName(), track.getArtist()));
-		}
 	}
 }

@@ -30,7 +30,9 @@ public class MusicboxCommandExecutor implements TabExecutor {
 				if (args[0].equalsIgnoreCase("debug") && sender.hasPermission("iMine.jukebox.debug")) {
 					for (MusicPlayer mp : MusicPlayerManager.getAllMusicPlayers()) {
 						if (mp instanceof Tagable) {
-							System.out.println(SoundOfNoteBlocksPlugin.getGson().toJson(((Tagable) mp).getTag()));
+							String spam = SoundOfNoteBlocksPlugin.getGson().toJson(((Tagable) mp).getTag());
+							System.out.println(spam);
+							sender.sendMessage(spam);
 						}
 					}
 				}

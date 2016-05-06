@@ -10,10 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
+import nl.imine.soundofnoteblocks.model.Gettoblaster;
 import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.Walkman;
 
@@ -29,6 +31,13 @@ public class MusicPlayerManager {
 
 	public static List<MusicPlayer> getAllMusicPlayers() {
 		return musicPlayers;
+	}
+
+	public static Collection<Jukebox> getJukeboxes() {
+		List<Jukebox> ret = new ArrayList<>();
+		musicPlayers.stream().filter(player -> player instanceof Jukebox)
+				.forEach(jukebox -> ret.add((Jukebox) jukebox));
+		return ret;
 	}
 
 	public static Jukebox getJukebox(Location loc) {
@@ -69,7 +78,7 @@ public class MusicPlayerManager {
 	public static Walkman getWalkman(Player pl) {
 		Walkman wm = null;
 		for (MusicPlayer mp : musicPlayers) {
-			if (mp instanceof Walkman && ((Walkman) mp).getPlayer().equals(pl)) {
+			if (mp instanceof Walkman && ((Walkman) mp).getPlayer() == pl) {
 				wm = (Walkman) mp;
 				break;
 			}
@@ -94,11 +103,39 @@ public class MusicPlayerManager {
 		}
 	}
 
-	public static Collection<Jukebox> getJukeboxes() {
-		List<Jukebox> ret = new ArrayList<>();
-		musicPlayers.stream().filter(player -> player instanceof Jukebox)
-				.forEach(jukebox -> ret.add((Jukebox) jukebox));
+	public static Collection<Gettoblaster> getGettoblaster() {
+		List<Gettoblaster> ret = new ArrayList<>();
+		musicPlayers.stream().filter(player -> player instanceof Gettoblaster)
+				.forEach(gettoblaster -> ret.add((Gettoblaster) gettoblaster));
 		return ret;
+	}
+
+	public static Gettoblaster getGettoblaster(Entity entity) {
+		Gettoblaster gb = null;
+		for (MusicPlayer mp : musicPlayers) {
+			if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenterdEntity() == entity) {
+				gb = (Gettoblaster) mp;
+				break;
+			}
+		}
+		if (gb == null) {
+			gb = new Gettoblaster(entity);
+			musicPlayers.add(gb);
+		}
+		return gb;
+	}
+
+	public static void removeGettoblaster(Entity entity) {
+		Iterator<MusicPlayer> mpit = musicPlayers.iterator();
+		while (mpit.hasNext()) {
+			MusicPlayer mp = mpit.next();
+			if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenterdEntity() == entity) {
+				mp.setRadioMode(false);
+				mp.stopPlaying();
+				mpit.remove();
+				break;
+			}
+		}
 	}
 
 	public static void safe() {
