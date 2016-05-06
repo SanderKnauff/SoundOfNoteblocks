@@ -133,12 +133,10 @@ public class MusicPlayerListener implements Listener {
 	public void onPlayerInteractGettoblaster(PlayerInteractEvent pie) {
 		if (pie.getPlayer().getInventory().getHelmet() == null
 				|| pie.getPlayer().getInventory().getHelmet().getType() != Material.JUKEBOX) {
-			System.out.println("a");
 			return;
 		}
-		if (!SoundOfNoteBlocksPlugin.isLoaded() || pie.isCancelled()) {
+		if (!SoundOfNoteBlocksPlugin.isLoaded()) {
 			notLoadedMssg(pie.getPlayer());
-			System.out.println("b");
 			return;
 		}
 		Player player = pie.getPlayer();
@@ -152,7 +150,6 @@ public class MusicPlayerListener implements Listener {
 				MusicPlayerView.getMusicPlayerConatainer(gb).open(player);
 			}
 		}
-		System.out.println("c");
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
