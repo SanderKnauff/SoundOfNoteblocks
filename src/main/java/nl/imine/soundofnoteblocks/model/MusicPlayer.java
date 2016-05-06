@@ -8,10 +8,12 @@ import org.bukkit.entity.Player;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 
+import nl.imine.api.util.ColorUtil;
 import nl.imine.soundofnoteblocks.Track;
 import nl.imine.soundofnoteblocks.TrackManager;
 import nl.imine.soundofnoteblocks.model.design.Playable;
 import nl.imine.soundofnoteblocks.model.design.Radioable;
+import nl.imine.soundofnoteblocks.model.design.Tagable;
 
 public abstract class MusicPlayer implements Playable, Radioable {
 
@@ -78,7 +80,12 @@ public abstract class MusicPlayer implements Playable, Radioable {
 		for (Player pl : getListeners()) {
 			songplayer.addPlayer(pl);
 		}
-		// TODO: register jukebox to config file
+		if (this instanceof Tagable) {
+			Tagable tag = (Tagable) this;
+			tag.getTag().getLine(0).setLabel(ColorUtil.replaceColors("&e%s", lastTrack.getName()));
+			tag.getTag().getLine(1).setLabel(ColorUtil.replaceColors("&9%s", lastTrack.getArtist()));
+			tag.getTag().setLocation(tag.getTagLocation());
+		}
 	}
 
 	@Override

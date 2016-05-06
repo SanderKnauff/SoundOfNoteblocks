@@ -25,21 +25,19 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 
 	private Location location;
 	private ITag tag;
-	private boolean isTagVisible = true;
 	private boolean isLocked;
 
 	public Jukebox(Location loc) {
-		this(loc, true, false, null);
+		this(loc, false, null);
 	}
 
-	public Jukebox(Location loc, boolean tagVisible, boolean radioMode, UUID lastTrackId) {
+	public Jukebox(Location loc, boolean radioMode, UUID lastTrackId) {
 		super(radioMode, lastTrackId);
 		location = loc;
-		isTagVisible = tagVisible;
 		tag = TagAPI.createTag(getTagLocation());
 		tag.addLine(" ");
 		tag.addLine(" ");
-		tag.setVisible(isTagVisible);
+		tag.setVisible(false);
 	}
 
 	@Override
@@ -61,6 +59,7 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 		if (getLocation().getChunk().isLoaded()) {
 			if (getLocation().getBlock().getType() == Material.JUKEBOX) {
 				super.playTrack(track);
+
 			}
 		}
 	}
