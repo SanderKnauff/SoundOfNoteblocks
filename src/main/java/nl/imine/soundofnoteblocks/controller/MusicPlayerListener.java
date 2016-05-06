@@ -54,8 +54,7 @@ public class MusicPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent pie) {
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || pie.isCancelled()) {
-			PlayerUtil.sendActionMessage(pie.getPlayer(),
-				ColorUtil.replaceColors("&cSoundOfNoteBlocks is loading... plz wait a second!"));
+			notLoadedMssg(pie.getPlayer());
 			return;
 		}
 		if (pie.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
@@ -85,9 +84,7 @@ public class MusicPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerTagInteract(PlayerInteractTagEvent pite) {
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || pite.isCancelled()) {
-			PlayerUtil.sendActionMessage(pite.getPlayer(),
-				ColorUtil.replaceColors("&cSoundOfNoteBlocks is loading... plz wait a second!"));
-
+			notLoadedMssg(pite.getPlayer());
 			return;
 		}
 		if (pite.getAction().equals(ActionType.RICHT_CLICK)) {
@@ -105,9 +102,6 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent pde) {
-		if (!SoundOfNoteBlocksPlugin.isLoaded()) {
-			return;
-		}
 		if (pde.getEntity().hasPermission("imine.jukebox.play")) {
 			MusicPlayerManager.removeWalkman(pde.getEntity());
 		}
@@ -116,8 +110,7 @@ public class MusicPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerItemHandSwitch(PlayerSwapHandItemsEvent sphie) {
 		if (!SoundOfNoteBlocksPlugin.isLoaded() || sphie.isCancelled()) {
-			PlayerUtil.sendActionMessage(sphie.getPlayer(),
-				ColorUtil.replaceColors("&cSoundOfNoteBlocks is loading... plz wait a second!"));
+			notLoadedMssg(sphie.getPlayer());
 			return;
 		}
 		Player player = sphie.getPlayer();
@@ -226,6 +219,13 @@ public class MusicPlayerListener implements Listener {
 				jukebox.stopPlaying();
 				jukebox.getTag().remove();
 			}
+		}
+	}
+
+	private void notLoadedMssg(Player pl) {
+		if (!SoundOfNoteBlocksPlugin.isLoaded()) {
+			PlayerUtil.sendActionMessage(pl,
+				ColorUtil.replaceColors("&cSoundOfNoteBlocks is loading... plz wait a second!"));
 		}
 	}
 

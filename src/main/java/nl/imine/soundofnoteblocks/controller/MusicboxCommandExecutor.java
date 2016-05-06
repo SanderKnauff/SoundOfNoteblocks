@@ -13,17 +13,27 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 
 import nl.imine.api.util.ColorUtil;
+import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
+import nl.imine.soundofnoteblocks.model.MusicPlayer;
+import nl.imine.soundofnoteblocks.model.design.Tagable;
 
 public class MusicboxCommandExecutor implements TabExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (command.getName().equalsIgnoreCase("jukebox")) {
-			if (sender.hasPermission("iMine.jukebox.reload") && args.length == 1
-					&& args[0].equalsIgnoreCase("reload")) {
-				TrackManager.reloadTracks();
-				sender.sendMessage(
-					ColorUtil.replaceColors("&7Reloaded tracks from repo's.", TrackManager.getTracks().size()));
+			if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("iMine.jukebox.reload")) {
+					TrackManager.reloadTracks();
+					sender.sendMessage(ColorUtil.replaceColors("&7Reloaded tracks from repo's."));
+				}
+				if (args[0].equalsIgnoreCase("debug") && sender.hasPermission("iMine.jukebox.debug")) {
+					for (MusicPlayer mp : MusicPlayerManager.getAllMusicPlayers()) {
+						if (mp instanceof Tagable) {
+							System.out.println(SoundOfNoteBlocksPlugin.getGson().toJson(((Tagable) mp).getTag()));
+						}
+					}
+				}
 			}
 			return true;
 		}

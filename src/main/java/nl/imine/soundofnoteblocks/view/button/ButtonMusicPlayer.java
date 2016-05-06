@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import nl.imine.api.gui.Button;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 
-public class ButtonMusicPlayer extends Button {
+public abstract class ButtonMusicPlayer extends Button {
 
 	private MusicPlayer mp;
 
