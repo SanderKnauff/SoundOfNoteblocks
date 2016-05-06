@@ -11,7 +11,11 @@ import com.xxmicloxx.NoteBlockAPI.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 
-public class Walkman extends MusicPlayer {
+import nl.imine.api.util.ColorUtil;
+import nl.imine.api.util.PlayerUtil;
+import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
+
+public class Walkman extends MusicPlayer implements PlayerNotified {
 
 	private UUID playerId;
 
@@ -45,5 +49,13 @@ public class Walkman extends MusicPlayer {
 			return this.getPlayer().equals(other.getPlayer());
 		}
 		return super.equals(obj);
+	}
+
+	@Override
+	public void notifyPlayers(Track track) {
+		for (Player pl : getListeners()) {
+			PlayerUtil.sendActionMessage(pl,
+				ColorUtil.replaceColors("&e&s &7from &e%s&7.", track.getName(), track.getArtist()));
+		}
 	}
 }

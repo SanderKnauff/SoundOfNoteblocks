@@ -11,6 +11,7 @@ import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.design.Playable;
+import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
 import nl.imine.soundofnoteblocks.model.design.Radioable;
 import nl.imine.soundofnoteblocks.model.design.Tagable;
 
@@ -87,6 +88,9 @@ public abstract class MusicPlayer implements Playable, Radioable {
 			tag.setTagLines(ColorUtil.replaceColors("&e%s", track.getName()),
 				ColorUtil.replaceColors("&3%s", track.getArtist()));
 			tag.setVisible(tag.isVisible());
+		}
+		if (this instanceof PlayerNotified) {
+			((PlayerNotified) this).notifyPlayers(track);
 		}
 	}
 
