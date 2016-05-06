@@ -1,7 +1,10 @@
-package nl.imine.soundofnoteblocks;
+package nl.imine.soundofnoteblocks.model;
 
 import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
 import com.xxmicloxx.NoteBlockAPI.Song;
+
+import nl.imine.soundofnoteblocks.controller.TrackManager;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.UUID;

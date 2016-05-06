@@ -9,8 +9,7 @@ import com.xxmicloxx.NoteBlockAPI.Song;
 import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 
 import nl.imine.api.util.ColorUtil;
-import nl.imine.soundofnoteblocks.Track;
-import nl.imine.soundofnoteblocks.TrackManager;
+import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.design.Playable;
 import nl.imine.soundofnoteblocks.model.design.Radioable;
 import nl.imine.soundofnoteblocks.model.design.Tagable;
@@ -18,7 +17,7 @@ import nl.imine.soundofnoteblocks.model.design.Tagable;
 public abstract class MusicPlayer implements Playable, Radioable {
 
 	protected boolean inRadioMode;
-	protected transient Track lastTrack;
+	protected Track lastTrack;
 	protected transient SongPlayer songplayer;
 
 	public MusicPlayer(boolean radioMode, UUID lastTrackId) {

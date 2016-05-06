@@ -1,4 +1,4 @@
-package nl.imine.soundofnoteblocks;
+package nl.imine.soundofnoteblocks.controller;
 
 import java.io.File;
 import java.net.URL;
@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 import nl.imine.api.file.FileFilter;
 import nl.imine.api.util.FileUtil;
 import nl.imine.api.util.WebUtil;
+import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
+import nl.imine.soundofnoteblocks.model.Track;
 
 public class TrackManager {
 

@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.ClickType;
 import nl.imine.api.gui.Container;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
-import nl.imine.soundofnoteblocks.TrackManager;
+import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 
 public class ButtomRandomTrack extends ButtonMusicPlayer {

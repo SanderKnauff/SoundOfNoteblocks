@@ -9,11 +9,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
 
+import nl.imine.api.holotag.ITag;
 import nl.imine.api.util.ConfigUtil;
 import nl.imine.api.util.serilize.GsonBukkitBuilder;
 import nl.imine.api.util.serilize.InterfaceAdapter;
 import nl.imine.soundofnoteblocks.controller.MusicPlayerListener;
 import nl.imine.soundofnoteblocks.controller.MusicPlayerManager;
+import nl.imine.soundofnoteblocks.controller.MusicboxCommandExecutor;
+import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 
 public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
@@ -21,7 +24,8 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 	public static SoundOfNoteBlocksPlugin plugin;
 	private static boolean ready;
 	private static final Gson GSON = GsonBukkitBuilder.getBukkitBuilder()
-			.registerTypeAdapter(MusicPlayer.class, new InterfaceAdapter<MusicPlayer>()).create();
+			.registerTypeAdapter(MusicPlayer.class, new InterfaceAdapter<MusicPlayer>())
+			.registerTypeAdapter(ITag.class, new InterfaceAdapter<ITag>()).create();
 
 	private File tempFolder;
 

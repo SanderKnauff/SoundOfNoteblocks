@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 
-import nl.imine.soundofnoteblocks.Track;
+import nl.imine.soundofnoteblocks.model.Track;
 
 public interface Playable {
 

@@ -22,7 +22,6 @@ import com.xxmicloxx.NoteBlockAPI.SongDestroyingEvent;
 import nl.imine.api.event.PlayerInteractTagEvent;
 import nl.imine.api.holotag.ActionType;
 import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
-import nl.imine.soundofnoteblocks.TrackManager;
 import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.Walkman;

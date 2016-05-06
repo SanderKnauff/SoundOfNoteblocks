@@ -11,8 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import nl.imine.api.gui.Container;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
-import nl.imine.soundofnoteblocks.Track;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
+import nl.imine.soundofnoteblocks.model.Track;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
 import nl.imine.soundofnoteblocks.view.MusicPlayerView;
 
