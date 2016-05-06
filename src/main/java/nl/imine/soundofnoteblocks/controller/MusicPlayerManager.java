@@ -114,7 +114,8 @@ public class MusicPlayerManager {
 	public static void load() {
 		try {
 			FileReader fr = new FileReader(SAFE_FILE);
-			musicPlayers = Arrays.asList(SoundOfNoteBlocksPlugin.getGson().fromJson(fr, MusicPlayer[].class));
+			musicPlayers = new ArrayList<>(
+					Arrays.asList(SoundOfNoteBlocksPlugin.getGson().fromJson(fr, MusicPlayer[].class)));
 			fr.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
