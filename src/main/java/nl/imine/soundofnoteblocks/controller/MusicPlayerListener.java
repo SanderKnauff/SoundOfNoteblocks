@@ -62,20 +62,23 @@ public class MusicPlayerListener implements Listener {
 			return;
 		}
 		Jukebox jukebox = MusicPlayerManager.getJukebox(pie.getClickedBlock().getLocation());
-		if (!pie.getPlayer().isSneaking()) {
-			if (((org.bukkit.block.Jukebox) pie.getClickedBlock().getState()).getPlaying().equals(Material.AIR)) {
-				if (pie.getItem() == null || !pie.getItem().getType().name().toLowerCase().contains("record")) {
-					if (jukebox.isRadioMode()) {
-						MusicPlayerView.getRadiomodeContainer(jukebox).open(pie.getPlayer());
-					} else {
-						MusicPlayerView.getMusicPlayerConatainer(jukebox).open(pie.getPlayer());
+		Player player = pie.getPlayer();
+		if (player.hasPermission("imine.jukebox.play")) {
+			if (!player.isSneaking()) {
+				if (((org.bukkit.block.Jukebox) pie.getClickedBlock().getState()).getPlaying().equals(Material.AIR)) {
+					if (pie.getItem() == null || !pie.getItem().getType().name().toLowerCase().contains("record")) {
+						if (jukebox.isRadioMode()) {
+							MusicPlayerView.getRadiomodeContainer(jukebox).open(player);
+						} else {
+							MusicPlayerView.getMusicPlayerConatainer(jukebox).open(player);
+						}
+						pie.setCancelled(true);
 					}
-					pie.setCancelled(true);
 				}
 			}
-		}
-		if (jukebox.isPlaying()) {
-			pie.setCancelled(true);
+			if (jukebox.isPlaying()) {
+				pie.setCancelled(true);
+			}
 		}
 	}
 
@@ -85,13 +88,16 @@ public class MusicPlayerListener implements Listener {
 			notLoadedMssg(pite.getPlayer());
 			return;
 		}
-		if (pite.getAction().equals(ActionType.RICHT_CLICK)) {
-			for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
-				if (pite.getTag().equals(jukebox.getTag())) {
-					if (jukebox.isRadioMode()) {
-						MusicPlayerView.getRadiomodeContainer(jukebox).open(pite.getPlayer());
-					} else {
-						MusicPlayerView.getMusicPlayerConatainer(jukebox).open(pite.getPlayer());
+		Player player = pite.getPlayer();
+		if (player.hasPermission("imine.jukebox.play")) {
+			if (pite.getAction().equals(ActionType.RICHT_CLICK)) {
+				for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
+					if (pite.getTag().equals(jukebox.getTag())) {
+						if (jukebox.isRadioMode()) {
+							MusicPlayerView.getRadiomodeContainer(jukebox).open(player);
+						} else {
+							MusicPlayerView.getMusicPlayerConatainer(jukebox).open(player);
+						}
 					}
 				}
 			}
@@ -100,9 +106,7 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent pde) {
-		if (pde.getEntity().hasPermission("imine.jukebox.play")) {
-			MusicPlayerManager.removeWalkman(pde.getEntity());
-		}
+		MusicPlayerManager.removeWalkman(pde.getEntity());
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
