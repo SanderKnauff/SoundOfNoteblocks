@@ -55,7 +55,7 @@ public class Walkman extends MusicPlayer implements PlayerNotified {
 	public void notifyPlayers(Track track) {
 		for (Player pl : getListeners()) {
 			PlayerUtil.sendActionMessage(pl,
-				ColorUtil.replaceColors("&e&s &7from &e%s&7.", track.getName(), track.getArtist()));
+				ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.getName(), track.getArtist()));
 		}
 	}
 }
