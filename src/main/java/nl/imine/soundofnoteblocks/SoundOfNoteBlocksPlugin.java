@@ -29,6 +29,9 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 
 	private File tempFolder;
 
+	// TODO: show tag by default & safe tag showing in file
+	// FIXME: walkman is now broken
+
 	@Override
 	public void onEnable() {
 		plugin = this;
