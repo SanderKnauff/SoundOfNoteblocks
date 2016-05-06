@@ -33,14 +33,14 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 
 	public Jukebox(Location loc, boolean visible, boolean radioMode, UUID lastTrackId) {
 		super(radioMode, lastTrackId);
-		location = loc;
+		location = loc.clone();
 		isVisible = visible;
 		getTag();
 	}
 
 	@Override
 	public Location getTagLocation() {
-		Location loc = location.clone();
+		Location loc = getLocation();
 		if (loc.clone().add(0, 1, 0).getBlock().getType().isTransparent()) {
 			loc.add(0, -1, 0);
 		}
@@ -84,14 +84,14 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 
 	@Override
 	public Location getLocation() {
-		return location;
+		return location.clone();
 	}
 
 	@Override
 	public Collection<Player> getListeners() {
 		Collection<Player> ret = new ArrayList<>();
-		for (Player p : location.getWorld().getPlayers()) {
-			if (location.distance(p.getLocation()) < DISTANCE) {
+		for (Player p : getLocation().getWorld().getPlayers()) {
+			if (getLocation().distance(p.getLocation()) < DISTANCE) {
 				ret.add(p);
 			}
 		}
