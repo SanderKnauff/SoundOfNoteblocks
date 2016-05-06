@@ -123,7 +123,7 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerRemoveHelmet(InventoryClickEvent ice) {
-		if (ice.isCancelled() || ice.getSlotType() != SlotType.ARMOR || ice.getSlot() != 5) {
+		if (ice.getSlotType() != SlotType.ARMOR || ice.getSlot() != 5) {
 			return;
 		}
 		MusicPlayerManager.removeGettoblaster(ice.getWhoClicked());
