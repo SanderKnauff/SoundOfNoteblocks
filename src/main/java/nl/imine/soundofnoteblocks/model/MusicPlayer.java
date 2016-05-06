@@ -84,7 +84,7 @@ public abstract class MusicPlayer implements Playable, Radioable {
 		if (this instanceof Tagable) {
 			Tagable tag = (Tagable) this;
 			tag.setTagLines(ColorUtil.replaceColors("&e%s", track.getName()),
-				ColorUtil.replaceColors("&9%s", track.getArtist()));
+				ColorUtil.replaceColors("&3%s", track.getArtist()));
 			tag.getTag().setLocation(tag.getTagLocation());
 		}
 	}
