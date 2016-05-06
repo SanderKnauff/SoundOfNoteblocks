@@ -19,7 +19,7 @@ public abstract class MusicPlayer implements Playable, Radioable {
 
 	protected boolean inRadioMode;
 	protected Track lastTrack;
-	protected SongPlayer songplayer;
+	protected transient SongPlayer songplayer;
 
 	public MusicPlayer(boolean radioMode, UUID lastTrackId) {
 		inRadioMode = radioMode;
@@ -53,7 +53,9 @@ public abstract class MusicPlayer implements Playable, Radioable {
 
 	@Override
 	public void setPlaying(boolean playing) {
-		songplayer.setPlaying(playing);
+		if (songplayer != null) {
+			songplayer.setPlaying(playing);
+		}
 	}
 
 	@Override
