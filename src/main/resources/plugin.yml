@@ -1,5 +1,5 @@
 name: SoundOfNoteblocks
-main: nl.imine.soundofnoteblocks.SoundOfNoteBlocks
+main: nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin
 version: ${git.commit.id.abbrev}
 depend: [NoteBlockAPI, iMineAPI]
 commands:
