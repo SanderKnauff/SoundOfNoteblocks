@@ -113,16 +113,16 @@ public class MusicPlayerListener implements Listener {
 		}
 		Player player = sphie.getPlayer();
 		if (player.hasPermission("imine.jukebox.play")) {
-			if (sphie.getOffHandItem().getType().equals(Material.JUKEBOX)) {
+			if (sphie.getOffHandItem().getType() == Material.JUKEBOX) {
 				Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
 					Walkman wm = MusicPlayerManager.getWalkman(player);
 					if (wm.isRadioMode()) {
-						MusicPlayerView.getRadiomodeContainer(wm);
+						MusicPlayerView.getRadiomodeContainer(wm).open(player);
 					} else {
-						MusicPlayerView.getMusicPlayerConatainer(wm);
+						MusicPlayerView.getMusicPlayerConatainer(wm).open(player);
 					}
 				} , 1);
-			} else if (sphie.getMainHandItem().getType().equals(Material.JUKEBOX)) {
+			} else if (sphie.getMainHandItem().getType() == Material.JUKEBOX) {
 				MusicPlayerManager.removeWalkman(player);
 			}
 		}
