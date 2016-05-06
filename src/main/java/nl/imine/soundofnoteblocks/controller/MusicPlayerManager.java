@@ -69,7 +69,7 @@ public class MusicPlayerManager {
 	public static Walkman getWalkman(Player pl) {
 		Walkman wm = null;
 		for (MusicPlayer mp : musicPlayers) {
-			if (mp instanceof Jukebox && ((Walkman) mp).getPlayer().equals(pl)) {
+			if (mp instanceof Walkman && ((Walkman) mp).getPlayer().equals(pl)) {
 				wm = (Walkman) mp;
 				break;
 			}
