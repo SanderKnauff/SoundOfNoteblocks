@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -122,10 +123,32 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerRemoveHelmet(InventoryClickEvent ice) {
-		if (ice.isCancelled()) {
+		if (ice.isCancelled() || ice.getSlotType() != SlotType.ARMOR || ice.getSlot() != 5) {
 			return;
 		}
 		MusicPlayerManager.removeGettoblaster(ice.getWhoClicked());
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerInteractGettoblaster(PlayerInteractEvent pie) {
+		if (pie.getPlayer().getInventory().getHelmet() == null
+				|| pie.getPlayer().getInventory().getHelmet().getType() != Material.JUKEBOX) {
+			return;
+		}
+		if (!SoundOfNoteBlocksPlugin.isLoaded() || pie.isCancelled()) {
+			notLoadedMssg(pie.getPlayer());
+			return;
+		}
+		Player player = pie.getPlayer();
+		if (player.hasPermission("imine.jukebox.play") && player.isSneaking()
+				&& player.getInventory().getItemInMainHand() == null) {
+			Gettoblaster gb = MusicPlayerManager.getGettoblaster(player);
+			if (gb.isRadioMode()) {
+				MusicPlayerView.getRadiomodeContainer(gb).open(player);
+			} else {
+				MusicPlayerView.getMusicPlayerConatainer(gb).open(player);
+			}
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -151,6 +174,9 @@ public class MusicPlayerListener implements Listener {
 				}
 				player.getInventory().setHelmet(pdie.getItemDrop().getItemStack());
 				pdie.getItemDrop().setItemStack(helmet);
+				if (helmet == null) {
+					pdie.getItemDrop().remove();
+				}
 			}
 		}
 	}
