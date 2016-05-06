@@ -22,8 +22,8 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 	public static SoundOfNoteBlocksPlugin plugin;
 	private static boolean ready;
 	private static final Gson GSON = GsonBukkitBuilder.getBukkitBuilder()
-			.registerTypeHierarchyAdapter(MusicPlayer.class, new InterfaceAdapter<MusicPlayer>())
-			.registerTypeHierarchyAdapter(ITag.class, new InterfaceAdapter<ITag>()).create();
+			.registerTypeAdapter(MusicPlayer.class, new InterfaceAdapter<MusicPlayer>())
+			.registerTypeAdapter(ITag.class, new InterfaceAdapter<ITag>()).create();
 
 	private File tempFolder;
 
