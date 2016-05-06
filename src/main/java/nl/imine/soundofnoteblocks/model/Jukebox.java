@@ -69,7 +69,7 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 	@Override
 	public void stopPlaying() {
 		super.stopPlaying();
-		tag.setVisible(false);
+		getTag().setVisible(false);
 	}
 
 	@Override
