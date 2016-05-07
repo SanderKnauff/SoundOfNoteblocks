@@ -251,6 +251,9 @@ public class MusicPlayerListener implements Listener {
 			return;
 		}
 		for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
+			if (jukebox.getSongPlayer() == null || jukebox.getSongPlayer().getPlayerList() == null) {
+				continue;
+			}
 			if (jukebox.getSongPlayer().getPlayerList().contains(pcwe.getPlayer().getUniqueId())) {
 				jukebox.getSongPlayer().removePlayer(pcwe.getPlayer());
 			}
