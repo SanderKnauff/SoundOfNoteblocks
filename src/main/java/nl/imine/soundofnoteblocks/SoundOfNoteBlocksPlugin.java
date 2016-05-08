@@ -35,7 +35,7 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 		setupConfig();
 		tempFolder = new File(getDataFolder().getAbsolutePath(), "tmp");
 		tempFolder.mkdirs();
-		TrackManager.getTracks();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> TrackManager.getTracks());
 		MusicPlayerManager.load();
 		getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
 		Bukkit.getPluginManager().registerEvents(new MusicPlayerListener(), this);
