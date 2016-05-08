@@ -113,6 +113,7 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent pde) {
+		MusicPlayerManager.removeGettoblaster(pde.getEntity());
 		MusicPlayerManager.removeWalkman(pde.getEntity());
 	}
 
