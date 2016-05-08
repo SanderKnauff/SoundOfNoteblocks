@@ -35,8 +35,8 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 		setupConfig();
 		tempFolder = new File(getDataFolder().getAbsolutePath(), "tmp");
 		tempFolder.mkdirs();
-		Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> TrackManager.getTracks());
-		MusicPlayerManager.load();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> MusicPlayerManager.load());
+		TrackManager.getTracks();
 		getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
 		Bukkit.getPluginManager().registerEvents(new MusicPlayerListener(), this);
 	}
@@ -65,13 +65,13 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 	public static void setReady(boolean ready) {
 		SoundOfNoteBlocksPlugin.ready = ready;
 		if (ready) {
-			for (MusicPlayer mp : MusicPlayerManager.getMusicPlayer()) {
+			for (MusicPlayer mp : MusicPlayerManager.getAllMusicPlayers()) {
 				if (mp.isRadioMode()) {
 					mp.replayForce();
 				}
 			}
 		} else {
-			for (MusicPlayer mp : MusicPlayerManager.getMusicPlayer()) {
+			for (MusicPlayer mp : MusicPlayerManager.getAllMusicPlayers()) {
 				mp.stopPlaying();
 			}
 		}

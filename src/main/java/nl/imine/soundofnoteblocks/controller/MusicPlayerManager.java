@@ -25,10 +25,6 @@ public class MusicPlayerManager {
 	private static final File SAFE_FILE = new File(SoundOfNoteBlocksPlugin.getInstance().getDataFolder(),
 			"musicplayers.json");
 
-	public static List<MusicPlayer> getMusicPlayer() {
-		return musicPlayers;
-	}
-
 	public static List<MusicPlayer> getAllMusicPlayers() {
 		return musicPlayers;
 	}
