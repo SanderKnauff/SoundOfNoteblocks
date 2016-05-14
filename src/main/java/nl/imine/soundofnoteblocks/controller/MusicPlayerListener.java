@@ -64,16 +64,16 @@ public class MusicPlayerListener implements Listener {
 				|| !pie.getClickedBlock().getType().equals(Material.JUKEBOX)) {
 			return;
 		}
-		if (!SoundOfNoteBlocksPlugin.isLoaded() || pie.isCancelled()) {
-			notLoadedMssg(pie.getPlayer());
-			return;
-		}
 		Jukebox jukebox = MusicPlayerManager.getJukebox(pie.getClickedBlock().getLocation());
 		Player player = pie.getPlayer();
 		if (player.hasPermission("imine.jukebox.play")) {
 			if (!player.isSneaking()) {
 				if (((org.bukkit.block.Jukebox) pie.getClickedBlock().getState()).getPlaying().equals(Material.AIR)) {
 					if (pie.getItem() == null || !pie.getItem().getType().name().toLowerCase().contains("record")) {
+						if (!SoundOfNoteBlocksPlugin.isLoaded() || pie.isCancelled()) {
+							notLoadedMssg(pie.getPlayer());
+							return;
+						}
 						if (jukebox.isRadioMode()) {
 							MusicPlayerView.getRadiomodeContainer(jukebox).open(player);
 						} else {
@@ -91,15 +91,15 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerTagInteract(PlayerInteractTagEvent pite) {
-		if (!SoundOfNoteBlocksPlugin.isLoaded() || pite.isCancelled()) {
-			notLoadedMssg(pite.getPlayer());
-			return;
-		}
 		Player player = pite.getPlayer();
 		if (player.hasPermission("imine.jukebox.play")) {
 			if (pite.getAction().equals(ActionType.RICHT_CLICK)) {
 				for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
 					if (pite.getTag().equals(jukebox.getTag())) {
+						if (!SoundOfNoteBlocksPlugin.isLoaded() || pite.isCancelled()) {
+							notLoadedMssg(pite.getPlayer());
+							return;
+						}
 						if (jukebox.isRadioMode()) {
 							MusicPlayerView.getRadiomodeContainer(jukebox).open(player);
 						} else {
@@ -139,14 +139,15 @@ public class MusicPlayerListener implements Listener {
 				|| pie.getPlayer().getInventory().getHelmet().getType() != Material.JUKEBOX) {
 			return;
 		}
-		if (!SoundOfNoteBlocksPlugin.isLoaded()) {
-			notLoadedMssg(pie.getPlayer());
-			return;
-		}
+
 		Player player = pie.getPlayer();
 		if (player.hasPermission("imine.jukebox.play") && player.isSneaking()
 				&& (player.getInventory().getItemInMainHand() == null
 						|| player.getInventory().getItemInMainHand().getType() == Material.AIR)) {
+			if (!SoundOfNoteBlocksPlugin.isLoaded()) {
+				notLoadedMssg(pie.getPlayer());
+				return;
+			}
 			Gettoblaster gb = MusicPlayerManager.getGettoblaster(player);
 			if (gb.isRadioMode()) {
 				MusicPlayerView.getRadiomodeContainer(gb).open(player);
@@ -158,13 +159,14 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDropItem(PlayerDropItemEvent pdie) {
-		if (!SoundOfNoteBlocksPlugin.isLoaded() || pdie.isCancelled()) {
-			notLoadedMssg(pdie.getPlayer());
-			return;
-		}
+
 		Player player = pdie.getPlayer();
 		if (player.hasPermission("imine.jukebox.play")) {
 			if (player.isSneaking() && pdie.getItemDrop().getItemStack().getType() == Material.JUKEBOX) {
+				if (!SoundOfNoteBlocksPlugin.isLoaded() || pdie.isCancelled()) {
+					notLoadedMssg(pdie.getPlayer());
+					return;
+				}
 				Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
 					Gettoblaster gb = MusicPlayerManager.getGettoblaster(player);
 					if (gb.isRadioMode()) {
@@ -189,12 +191,12 @@ public class MusicPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerItemHandSwitch(PlayerSwapHandItemsEvent sphie) {
-		if (!SoundOfNoteBlocksPlugin.isLoaded() || sphie.isCancelled()) {
-			notLoadedMssg(sphie.getPlayer());
-			return;
-		}
 		Player player = sphie.getPlayer();
 		if (player.hasPermission("imine.jukebox.play")) {
+			if (!SoundOfNoteBlocksPlugin.isLoaded() || sphie.isCancelled()) {
+				notLoadedMssg(sphie.getPlayer());
+				return;
+			}
 			if (sphie.getOffHandItem().getType() == Material.JUKEBOX) {
 				Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
 					Walkman wm = MusicPlayerManager.getWalkman(player);
