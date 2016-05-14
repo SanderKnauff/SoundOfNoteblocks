@@ -12,7 +12,7 @@ import nl.imine.soundofnoteblocks.model.MusicPlayer;
 public class ButtonStop extends ButtonMusicPlayer {
 	public ButtonStop(MusicPlayer mp, int slot) {
 		super(ItemUtil.getBuilder(Material.APPLE).setName(ColorUtil.replaceColors("&4Stop"))
-				.setLore("Stop current song").build(), mp, slot);
+				.setLore(ColorUtil.replaceColors("&7Stop current song")).build(), mp, slot);
 	}
 
 	@Override
