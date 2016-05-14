@@ -48,9 +48,10 @@ public class MusicPlayerView {
 	}
 
 	public static Container getRadiomodeContainer(MusicPlayer mp) {
-		Container c = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zRadio!"), 9, false, false);
-		c.addButton(new ButtonRadiomode(mp, 4));
-		return c;
+		Container ret = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zRadio!"), 9, false, false);
+		ret.addButton(new ButtonRadiomode(mp, 4));
+		ret.addStaticButton(new ButtonStop(mp, 8));
+		return ret;
 	}
 
 }
