@@ -13,7 +13,12 @@ import nl.imine.soundofnoteblocks.model.MusicPlayer;
 public class ButtomRandomTrack extends ButtonMusicPlayer {
 
 	public ButtomRandomTrack(MusicPlayer mp, int slot) {
-		super(ItemUtil.getBuilder(Material.RECORD_11).setName(ColorUtil.replaceColors("&zRandom")).build(), mp, slot);
+		super(ItemUtil.getBuilder(Material.RECORD_11).setName(ColorUtil.replaceColors("&zRandom"))
+				.addLore("", ColorUtil.replaceColors("&bDid you know?"),
+					ColorUtil.replaceColors("&3Shift dropping a jukebox, becomes a Getto Blaster"),
+					ColorUtil.replaceColors("&9Switching it to your offhand, becomes a Walkman"),
+					ColorUtil.replaceColors("&3Radio mode automaticly plays the next song"))
+				.build(), mp, slot);
 	}
 
 	@Override
