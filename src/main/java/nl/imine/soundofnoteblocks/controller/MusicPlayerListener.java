@@ -294,7 +294,7 @@ public class MusicPlayerListener implements Listener {
 			return;
 		}
 		for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
-			if (jukebox.getLocation().getWorld().isChunkLoaded(jukebox.getLocation().getChunk())) {
+			if (jukebox.getLocation().getWorld() != null) {
 				if (cle.getChunk().equals(jukebox.getLocation().getChunk())) {
 					if (jukebox.isRadioMode()) {
 						Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.plugin, () -> {
