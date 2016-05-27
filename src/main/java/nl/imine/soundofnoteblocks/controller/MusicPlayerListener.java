@@ -294,11 +294,13 @@ public class MusicPlayerListener implements Listener {
 			return;
 		}
 		for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
-			if (cle.getChunk() == jukebox.getLocation().getChunk()) {
-				if (jukebox.isRadioMode()) {
-					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.plugin, () -> {
-						jukebox.playRandomTrack(TrackManager.getTrackArray());
-					} , 20L);
+			if (jukebox.getLocation().getWorld().isChunkLoaded(jukebox.getLocation().getChunk())) {
+				if (cle.getChunk().equals(jukebox.getLocation().getChunk())) {
+					if (jukebox.isRadioMode()) {
+						Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.plugin, () -> {
+							jukebox.playRandomTrack(TrackManager.getTrackArray());
+						} , 20L);
+					}
 				}
 			}
 		}
@@ -320,7 +322,7 @@ public class MusicPlayerListener implements Listener {
 	private void notLoadedMssg(Player pl) {
 		if (!SoundOfNoteBlocksPlugin.isLoaded()) {
 			PlayerUtil.sendActionMessage(pl,
-				ColorUtil.replaceColors("&cSoundOfNoteBlocks is loading... plz wait a second!"));
+				ColorUtil.replaceColors("&cSoundOfNoteBlocks is still loading... please wait a second!"));
 		}
 	}
 
