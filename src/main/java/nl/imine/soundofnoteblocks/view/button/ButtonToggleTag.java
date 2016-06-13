@@ -8,6 +8,7 @@ import nl.imine.api.gui.Container;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
+import nl.imine.soundofnoteblocks.model.design.Lockable;
 import nl.imine.soundofnoteblocks.model.design.Tagable;
 
 public class ButtonToggleTag extends ButtonMusicPlayer {
@@ -20,9 +21,12 @@ public class ButtonToggleTag extends ButtonMusicPlayer {
 	@Override
 	public void doAction(Player player, Container container, ClickType clickType) {
 		if (getMusicPlayer().isPlaying() && getMusicPlayer() instanceof Tagable) {
-			Tagable tagMP = (Tagable) getMusicPlayer();
-			tagMP.setVisible(!tagMP.isVisible());
-			tagMP.getTag().setLocation(tagMP.getTagLocation());
+			if (!(getMusicPlayer() instanceof Lockable && ((Lockable) getMusicPlayer()).isLocked())
+					|| player.hasPermission("iMine.jukebox.lockbypass")) {
+				Tagable tagMP = (Tagable) getMusicPlayer();
+				tagMP.setVisible(!tagMP.isVisible());
+				tagMP.getTag().setLocation(tagMP.getTagLocation());
+			}
 		}
 	}
 

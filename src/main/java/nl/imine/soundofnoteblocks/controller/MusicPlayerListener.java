@@ -74,12 +74,14 @@ public class MusicPlayerListener implements Listener {
 							notLoadedMssg(pie.getPlayer());
 							return;
 						}
-						if (jukebox.isRadioMode()) {
-							MusicPlayerView.getRadiomodeContainer(jukebox).open(player);
-						} else {
-							MusicPlayerView.getMusicPlayerConatainer(jukebox).open(player);
+						if (!jukebox.isLocked() || player.hasPermission("iMine.jukebox.lockbypass")) {
+							if (jukebox.isRadioMode()) {
+								MusicPlayerView.getRadiomodeContainer(jukebox).open(player);
+							} else {
+								MusicPlayerView.getMusicPlayerConatainer(jukebox).open(player);
+							}
+							pie.setCancelled(true);
 						}
-						pie.setCancelled(true);
 					}
 				}
 			}
@@ -174,7 +176,7 @@ public class MusicPlayerListener implements Listener {
 					} else {
 						MusicPlayerView.getMusicPlayerConatainer(gb).open(player);
 					}
-				} , 1);
+				}, 1);
 				ItemStack helmet = player.getInventory().getHelmet();
 				if (helmet != null) {
 					helmet = helmet.clone();
@@ -205,7 +207,7 @@ public class MusicPlayerListener implements Listener {
 					} else {
 						MusicPlayerView.getMusicPlayerConatainer(wm).open(player);
 					}
-				} , 1);
+				}, 1);
 			} else if (sphie.getMainHandItem().getType() == Material.JUKEBOX) {
 				MusicPlayerManager.removeWalkman(player);
 			}
@@ -274,7 +276,7 @@ public class MusicPlayerListener implements Listener {
 				if (mp.isRadioMode()) {
 					Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.plugin, () -> {
 						mp.playRandomTrack(TrackManager.getTrackArray());
-					} , 20L);
+					}, 20L);
 				}
 				if (mp instanceof Tagable) {
 					Tagable tag = (Tagable) mp;
@@ -299,7 +301,7 @@ public class MusicPlayerListener implements Listener {
 					if (jukebox.isRadioMode()) {
 						Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.plugin, () -> {
 							jukebox.playRandomTrack(TrackManager.getTrackArray());
-						} , 20L);
+						}, 20L);
 					}
 				}
 			}

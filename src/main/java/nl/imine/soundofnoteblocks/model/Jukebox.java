@@ -24,7 +24,7 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 
 	private Location location;
 	private transient ITag tag;
-	private boolean isLocked;
+	private boolean locked;
 	private boolean isVisible;
 
 	public Jukebox(Location loc) {
@@ -100,12 +100,12 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 
 	@Override
 	public void setLocked(boolean locked) {
-		isLocked = locked;
+		locked = locked;
 	}
 
 	@Override
 	public boolean isLocked() {
-		return isLocked;
+		return locked;
 	}
 
 	@Override

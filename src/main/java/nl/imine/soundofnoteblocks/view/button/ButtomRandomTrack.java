@@ -9,6 +9,7 @@ import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
 import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
+import nl.imine.soundofnoteblocks.model.design.Lockable;
 
 public class ButtomRandomTrack extends ButtonMusicPlayer {
 
@@ -23,8 +24,11 @@ public class ButtomRandomTrack extends ButtonMusicPlayer {
 
 	@Override
 	public void doAction(Player player, Container container, ClickType clickType) {
-		getMusicPlayer().playRandomTrack(TrackManager.getTrackArray());
-		player.closeInventory();
+		if (!(getMusicPlayer() instanceof Lockable && ((Lockable) getMusicPlayer()).isLocked())
+				|| player.hasPermission("iMine.jukebox.lockbypass")) {
+			getMusicPlayer().playRandomTrack(TrackManager.getTrackArray());
+			player.closeInventory();
+		}
 	}
 
 }

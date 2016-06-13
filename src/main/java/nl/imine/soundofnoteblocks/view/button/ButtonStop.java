@@ -8,6 +8,7 @@ import nl.imine.api.gui.Container;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
+import nl.imine.soundofnoteblocks.model.design.Lockable;
 
 public class ButtonStop extends ButtonMusicPlayer {
 	public ButtonStop(MusicPlayer mp, int slot) {
@@ -17,6 +18,9 @@ public class ButtonStop extends ButtonMusicPlayer {
 
 	@Override
 	public void doAction(Player player, Container container, ClickType clickType) {
-		getMusicPlayer().stopPlaying();
+		if (!(getMusicPlayer() instanceof Lockable && ((Lockable) getMusicPlayer()).isLocked())
+				|| player.hasPermission("iMine.jukebox.lockbypass")) {
+			getMusicPlayer().stopPlaying();
+		}
 	}
 }
