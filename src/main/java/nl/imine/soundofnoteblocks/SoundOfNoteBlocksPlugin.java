@@ -57,7 +57,7 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 		if (getConfig().getDouble("version", 0) <= 0.0D) {
 			getConfig().set("version", 0.1D);
 			ConfigUtil.configSetIfNotSet(this, "repositories",
-				Arrays.asList(new String[]{"http://files.imine.nl/iMineNetwork/NBS/trackList.json"}));
+				Arrays.asList(new String[]{"https://files.imine.nl/iMine/NBS/trackList.json"}));
 			saveConfig();
 		}
 	}
