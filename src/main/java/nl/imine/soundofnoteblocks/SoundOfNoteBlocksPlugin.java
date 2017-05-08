@@ -1,6 +1,9 @@
 package nl.imine.soundofnoteblocks;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
@@ -27,14 +30,18 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 			.registerTypeAdapter(MusicPlayer.class, new InterfaceAdapter<MusicPlayer>())
 			.registerTypeAdapter(ITag.class, new InterfaceAdapter<ITag>()).create();
 
-	private File tempFolder;
+	private Path tempFolder;
 
 	@Override
 	public void onEnable() {
 		plugin = this;
 		setupConfig();
-		tempFolder = new File(getDataFolder().getAbsolutePath(), "tmp");
-		tempFolder.mkdirs();
+		tempFolder = Paths.get(getDataFolder().getAbsolutePath(), "tmp");
+		try {
+			Files.createDirectories(tempFolder);
+		} catch (IOException ioe){
+			ioe.printStackTrace();
+		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> MusicPlayerManager.load());
 		TrackManager.getTracks();
 		getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
@@ -44,13 +51,7 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 	@Override
 	public void onDisable() {
 		plugin = null;
-		setReady(false);
-		for (File tempFile : tempFolder.listFiles()) {
-			if (!tempFile.delete()) {
-				tempFile.deleteOnExit();
-			}
-		}
-		MusicPlayerManager.safe();
+		MusicPlayerManager.save();
 	}
 
 	private void setupConfig() {
@@ -81,7 +82,7 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 		return SoundOfNoteBlocksPlugin.ready;
 	}
 
-	public File getTempFolder() {
+	public Path getTempFolder() {
 		return tempFolder;
 	}
 

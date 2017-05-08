@@ -1,8 +1,8 @@
 package nl.imine.soundofnoteblocks.controller;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import nl.imine.soundofnoteblocks.model.Walkman;
 public class MusicPlayerManager {
 
 	private static List<MusicPlayer> musicPlayers = new ArrayList<>();
-	private static final File SAFE_FILE = new File(SoundOfNoteBlocksPlugin.getInstance().getDataFolder(),
+	private static final Path SAVE_FILE = Paths.get(SoundOfNoteBlocksPlugin.getInstance().getDataFolder().getPath(),
 			"musicplayers.json");
 
 	public static List<MusicPlayer> getAllMusicPlayers() {
@@ -134,12 +134,10 @@ public class MusicPlayerManager {
 		}
 	}
 
-	public static void safe() {
+	public static void save() {
 		try {
-			FileWriter fw = new FileWriter(SAFE_FILE);
 			SoundOfNoteBlocksPlugin.getGson().toJson(musicPlayers.toArray(new MusicPlayer[musicPlayers.size()]),
-				MusicPlayer[].class, fw);
-			fw.close();
+				MusicPlayer[].class, Files.newBufferedWriter(SAVE_FILE));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -147,10 +145,8 @@ public class MusicPlayerManager {
 
 	public static void load() {
 		try {
-			FileReader fr = new FileReader(SAFE_FILE);
 			musicPlayers = new ArrayList<>(
-					Arrays.asList(SoundOfNoteBlocksPlugin.getGson().fromJson(fr, MusicPlayer[].class)));
-			fr.close();
+					Arrays.asList(SoundOfNoteBlocksPlugin.getGson().fromJson(Files.newBufferedReader(SAVE_FILE), MusicPlayer[].class)));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -5,8 +5,8 @@ import com.xxmicloxx.NoteBlockAPI.Song;
 
 import nl.imine.soundofnoteblocks.controller.TrackManager;
 
-import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class Track implements Serializable {
@@ -47,13 +47,13 @@ public class Track implements Serializable {
 
 	public Song getSong() {
 		if (song == null) {
-			song = NBSDecoder.parse(getFile());
+			song = NBSDecoder.parse(getPath().toFile());
 		}
 		return song;
 	}
 
-	public File getFile() {
-		return TrackManager.getFile(this);
+	public Path getPath() {
+		return TrackManager.getPath(this);
 	}
 
 	public void setUrlIfNotSet(String url) {

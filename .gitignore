@@ -18,6 +18,11 @@ nb-configuration.xml
 # Class Files #
 *.class
 
+# Intellij Specific
+.idea/
+*.idea
+*.iml
+
 # Package Files #
 *.jar
 *.war

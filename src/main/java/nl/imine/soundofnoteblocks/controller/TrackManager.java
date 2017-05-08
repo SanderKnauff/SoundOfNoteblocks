@@ -1,7 +1,8 @@
 package nl.imine.soundofnoteblocks.controller;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +15,6 @@ import org.bukkit.plugin.Plugin;
 
 import com.google.gson.Gson;
 
-import nl.imine.api.file.FileFilter;
-import nl.imine.api.util.FileUtil;
 import nl.imine.api.util.WebUtil;
 import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
 import nl.imine.soundofnoteblocks.model.Track;
@@ -90,22 +89,22 @@ public class TrackManager {
 		return null;
 	}
 
-	public static File getFile(Track track) {
-		File ret = null;
-		File[] tempFolder = SoundOfNoteBlocksPlugin.getInstance().getTempFolder().listFiles(new FileFilter(".nbs"));
-		for (File tempFile : tempFolder) {
-			if (tempFile.getName().startsWith(track.getId().toString())) {
-				ret = tempFile;
-				break;
-			}
+	public static Path getPath(Track track) {
+		Path ret = null;
+		try {
+			ret = Files.list(SoundOfNoteBlocksPlugin.getInstance().getTempFolder())
+					.filter(tempFile -> tempFile.toString().endsWith(".nbs"))
+					.filter(tempFile -> tempFile.getFileName().startsWith(track.getId().toString()))
+					.findFirst().orElse(null);
+		} catch (IOException ioe){
+			ioe.printStackTrace();
 		}
 		if (ret != null) {
 			return ret;
 		}
-		ret = new File(String.format("%s%s%s.nbs",
-			SoundOfNoteBlocksPlugin.getInstance().getTempFolder().getAbsolutePath(), File.separator, track.getId()));
+		ret = SoundOfNoteBlocksPlugin.getInstance().getTempFolder().resolve(String.format("%s.nbs",track.getId()));
 		try {
-			FileUtil.copyURLtoFile(new URL(track.getUrl() + track.getId() + ".nbs"), ret);
+			Files.copy(new URL(track.getUrl() + track.getId() + ".nbs").openStream(), ret, StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception ex) {
 			System.err.println(ex);
 		}
