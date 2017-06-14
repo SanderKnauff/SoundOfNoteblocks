@@ -240,8 +240,8 @@ public class MusicPlayerListener implements Listener {
 		}
 		for (Gettoblaster gettoblaster : MusicPlayerManager.getGettoblaster()) {
 			if (gettoblaster.isPlaying()
-					&& gettoblaster.getCenterdEntity().getLocation().getWorld() == pme.getTo().getWorld()) {
-				if (pme.getTo().distance(gettoblaster.getCenterdEntity().getLocation()) < Gettoblaster.DISTANCE) {
+					&& gettoblaster.getCenteredEntity().getLocation().getWorld() == pme.getTo().getWorld()) {
+				if (pme.getTo().distance(gettoblaster.getCenteredEntity().getLocation()) < Gettoblaster.DISTANCE) {
 					gettoblaster.getSongPlayer().addPlayer(pme.getPlayer());
 				} else if (gettoblaster.getSongPlayer().getPlayerList().contains(pme.getPlayer().getUniqueId())) {
 					gettoblaster.getSongPlayer().removePlayer(pme.getPlayer());

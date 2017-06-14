@@ -30,15 +30,15 @@ public class Gettoblaster extends MusicPlayer implements PlayerNotified {
 		entityCenter = entity;
 	}
 
-	public Entity getCenterdEntity() {
+	public Entity getCenteredEntity() {
 		return entityCenter;
 	}
 
 	@Override
 	public Collection<Player> getListeners() {
 		Collection<Player> ret = new ArrayList<>();
-		for (Player p : getCenterdEntity().getLocation().getWorld().getPlayers()) {
-			if (getCenterdEntity().getLocation().distance(p.getLocation()) < DISTANCE) {
+		for (Player p : getCenteredEntity().getLocation().getWorld().getPlayers()) {
+			if (getCenteredEntity().getLocation().distance(p.getLocation()) < DISTANCE) {
 				ret.add(p);
 			}
 		}
@@ -64,7 +64,7 @@ public class Gettoblaster extends MusicPlayer implements PlayerNotified {
 	public boolean equals(Object obj) {
 		if (obj instanceof Walkman) {
 			Gettoblaster other = (Gettoblaster) obj;
-			return this.getCenterdEntity().equals(other.getCenterdEntity());
+			return this.getCenteredEntity().equals(other.getCenteredEntity());
 		}
 		return super.equals(obj);
 	}

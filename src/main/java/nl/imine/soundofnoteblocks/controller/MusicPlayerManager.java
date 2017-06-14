@@ -109,7 +109,7 @@ public class MusicPlayerManager {
 	public static Gettoblaster getGettoblaster(Entity entity) {
 		Gettoblaster gb = null;
 		for (MusicPlayer mp : musicPlayers) {
-			if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenterdEntity() == entity) {
+			if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenteredEntity() == entity) {
 				gb = (Gettoblaster) mp;
 				break;
 			}
@@ -125,7 +125,7 @@ public class MusicPlayerManager {
 		Iterator<MusicPlayer> mpit = musicPlayers.iterator();
 		while (mpit.hasNext()) {
 			MusicPlayer mp = mpit.next();
-			if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenterdEntity() == entity) {
+			if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenteredEntity() == entity) {
 				mp.setRadioMode(false);
 				mp.stopPlaying();
 				mpit.remove();
