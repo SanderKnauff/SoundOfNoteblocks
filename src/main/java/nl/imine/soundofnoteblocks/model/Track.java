@@ -1,9 +1,7 @@
 package nl.imine.soundofnoteblocks.model;
 
-import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
-import com.xxmicloxx.NoteBlockAPI.Song;
-
-import nl.imine.soundofnoteblocks.controller.TrackManager;
+import com.xxmicloxx.NoteBlockAPI.model.Song;
+import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 
 import java.io.Serializable;
 import java.nio.file.Path;
@@ -13,24 +11,17 @@ public class Track implements Serializable {
 
 	private static final long serialVersionUID = -6901663374788956944L;
 
-	private UUID id;
-	private String name;
-	private String artist;
-	private String url;
+	private final UUID id;
+	private final String name;
+	private final String artist;
+	private final Path path;
 	private transient Song song;
 
-	public Track() {
-	}
-
-	public Track(String id, String name, String artist, String url) {
+	public Track(String id, String name, String artist, Path path) {
 		this.id = UUID.fromString(id);
 		this.name = name;
 		this.artist = artist;
-		this.url = url;
-	}
-
-	public String getUrl() {
-		return url;
+		this.path = path;
 	}
 
 	public UUID getId() {
@@ -53,21 +44,6 @@ public class Track implements Serializable {
 	}
 
 	public Path getPath() {
-		return TrackManager.getPath(this);
-	}
-
-	public void setUrlIfNotSet(String url) {
-		if (this.url == null || this.url.isEmpty() || this.url.equalsIgnoreCase("null")) {
-			setUrl(url);
-		}
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	@Override
-	public String toString() {
-		return "Track{id:" + this.getId() + ",name:" + this.getName() + ",artist:" + this.getArtist() + "}";
+		return path;
 	}
 }

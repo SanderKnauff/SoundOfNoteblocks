@@ -21,37 +21,37 @@ import nl.imine.soundofnoteblocks.view.button.ButtonTrack;
 
 public class MusicPlayerView {
 
-	public static final Material[] RECORDS = new Material[]{Material.GOLD_RECORD, Material.GREEN_RECORD,
-			Material.RECORD_3, Material.RECORD_4, Material.RECORD_5, Material.RECORD_6, Material.RECORD_7,
-			Material.RECORD_8, Material.RECORD_9, Material.RECORD_10, Material.RECORD_12};
+    public static final Material[] RECORDS = new Material[]{Material.MUSIC_DISC_11, Material.MUSIC_DISC_13,
+            Material.MUSIC_DISC_BLOCKS, Material.MUSIC_DISC_CAT, Material.MUSIC_DISC_CHIRP, Material.MUSIC_DISC_FAR, Material.MUSIC_DISC_MALL,
+            Material.MUSIC_DISC_MELLOHI, Material.MUSIC_DISC_STAL, Material.MUSIC_DISC_STRAD, Material.MUSIC_DISC_WAIT};
 
-	public static Container getMusicPlayerConatainer(MusicPlayer mp) {
-		Container ret = GuiManager.getInstance()
-				.createContainer(ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);
-		for (Track track : TrackManager.getTracks()) {
-			ret.addButton(new ButtonTrack(track, mp, ret.getButtons().size()));
-		}
-		ret.addStaticButton(Container.getDefaultPreviousButton(ret).setSlot(0));
-		ret.addStaticButton(new ButtonMusicSort(1));
-		ret.addStaticButton(new ButtonReplay(mp, 2));
-		ret.addStaticButton(new ButtonStop(mp, 3));
-		ret.addStaticButton(new ButtomRandomTrack(mp, 4));
-		if (mp instanceof Tagable) {
-			ret.addStaticButton(new ButtonToggleTag(mp, 5));
-		}
-		if (mp instanceof Lockable) {
-			ret.addStaticButton(new ButtonLock(mp, 6));
-		}
-		ret.addStaticButton(new ButtonRadiomode(mp, 7));
-		ret.addStaticButton(Container.getDefaultNextButton(ret).setSlot(8));
-		return ret;
-	}
+    public static Container getMusicPlayerContainer(MusicPlayer musicPlayer) {
+        Container container = GuiManager.getInstance()
+                .createContainer(ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);
+        for (Track track : TrackManager.getTracks()) {
+            container.addButton(new ButtonTrack(track, musicPlayer, container.getButtons().size()), false);
+        }
+        container.addStaticButton(Container.getDefaultPreviousButton(container).setSlot(0), false);
+        container.addStaticButton(new ButtonMusicSort(1), false);
+        container.addStaticButton(new ButtonReplay(musicPlayer, 2), false);
+        container.addStaticButton(new ButtonStop(musicPlayer, 3), false);
+        container.addStaticButton(new ButtomRandomTrack(musicPlayer, 4), false);
+        if (musicPlayer instanceof Tagable) {
+            container.addStaticButton(new ButtonToggleTag(musicPlayer, 5), false);
+        }
+        if (musicPlayer instanceof Lockable) {
+            container.addStaticButton(new ButtonLock(musicPlayer, 6), false);
+        }
+        container.addStaticButton(new ButtonRadiomode(musicPlayer, 7), false);
+        container.addStaticButton(Container.getDefaultNextButton(container).setSlot(8), true);
+        return container;
+    }
 
-	public static Container getRadiomodeContainer(MusicPlayer mp) {
-		Container ret = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("&zRadio!"), 9, false, false);
-		ret.addButton(new ButtonRadiomode(mp, 4));
-		ret.addButton(new ButtonStop(mp, 8));
-		return ret;
-	}
+    public static Container getRadioModeContainer(MusicPlayer mp) {
+        Container container = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("Radio!"), 9, false, false);
+        container.addButton(new ButtonRadiomode(mp, 4), false);
+        container.addButton(new ButtonStop(mp, 8), true);
+        return container;
+    }
 
 }

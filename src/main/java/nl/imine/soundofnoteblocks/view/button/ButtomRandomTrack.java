@@ -14,7 +14,7 @@ import nl.imine.soundofnoteblocks.model.design.Lockable;
 public class ButtomRandomTrack extends ButtonMusicPlayer {
 
 	public ButtomRandomTrack(MusicPlayer mp, int slot) {
-		super(ItemUtil.getBuilder(Material.RECORD_11).setName(ColorUtil.replaceColors("&zRandom"))
+		super(ItemUtil.getBuilder(Material.MUSIC_DISC_11).setName(ColorUtil.replaceColors("Random"))
 				.addLore("", ColorUtil.replaceColors("&bDid you know?"),
 					ColorUtil.replaceColors("&3Shift dropping a jukebox, becomes a Getto Blaster"),
 					ColorUtil.replaceColors("&9Switching it to your offhand, becomes a Walkman"),
@@ -26,7 +26,7 @@ public class ButtomRandomTrack extends ButtonMusicPlayer {
 	public void doAction(Player player, Container container, ClickType clickType) {
 		if (!(getMusicPlayer() instanceof Lockable && ((Lockable) getMusicPlayer()).isLocked())
 				|| player.hasPermission("iMine.jukebox.lockbypass")) {
-			getMusicPlayer().playRandomTrack(TrackManager.getTrackArray());
+			getMusicPlayer().playRandomTrack(TrackManager.getTracks());
 			player.closeInventory();
 		}
 	}

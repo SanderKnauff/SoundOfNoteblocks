@@ -1,47 +1,61 @@
 package nl.imine.soundofnoteblocks.controller;
 
+import com.xxmicloxx.NoteBlockAPI.NoteBlockAPI;
+import com.xxmicloxx.NoteBlockAPI.model.*;
+import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
+import com.xxmicloxx.NoteBlockAPI.utils.CompatibilityUtils;
+import com.xxmicloxx.NoteBlockAPI.utils.InstrumentUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.xxmicloxx.NoteBlockAPI.Instrument;
-import com.xxmicloxx.NoteBlockAPI.Layer;
-import com.xxmicloxx.NoteBlockAPI.Note;
-import com.xxmicloxx.NoteBlockAPI.NoteBlockPlayerMain;
-import com.xxmicloxx.NoteBlockAPI.NotePitch;
-import com.xxmicloxx.NoteBlockAPI.Song;
-import com.xxmicloxx.NoteBlockAPI.SongPlayer;
-
 public class EntitySongPlayer extends SongPlayer {
 
-	private Entity targetEntity;
+    private Entity targetEntity;
 
-	public EntitySongPlayer(Song song) {
-		super(song);
-	}
+    public EntitySongPlayer(Song song) {
+        super(song);
+    }
 
-	public Entity getTargetEntity() {
-		return targetEntity;
-	}
+    public Entity getTargetEntity() {
+        return targetEntity;
+    }
 
-	public void setTargetEntity(Entity targetEntity) {
-		this.targetEntity = targetEntity;
-	}
+    public void setTargetEntity(Entity targetEntity) {
+        this.targetEntity = targetEntity;
+    }
 
-	@Override
-	public void playTick(Player p, int tick) {
-		if (targetEntity == null || !p.getWorld().getName().equals(targetEntity.getWorld().getName())) {
-			// not in same world
-			return;
-		}
-		byte playerVolume = NoteBlockPlayerMain.getPlayerVolume(p);
+    @Override
+    public void playTick(Player player, int tick) {
+        if (targetEntity == null || !player.getWorld().getName().equals(targetEntity.getWorld().getName())) {
+            // not in same world
+            return;
+        }
+        byte playerVolume = NoteBlockAPI.getPlayerVolume(player);
 
-		for (Layer l : song.getLayerHashMap().values()) {
-			Note note = l.getNote(tick);
-			if (note == null) {
-				continue;
-			}
-			p.playSound(targetEntity.getLocation(), Instrument.getInstrument(note.getInstrument()),
-				(l.getVolume() * (int) volume * (int) playerVolume) / 1000000f, NotePitch.getPitch(note.getKey() - 33));
-		}
-	}
+        for (Layer l : song.getLayerHashMap().values()) {
+            Note note = l.getNote(tick);
+            if (note == null) {
+                continue;
+            }
+
+            float pitch = NotePitch.getPitch(note.getKey() - 33);
+
+            if (InstrumentUtils.isCustomInstrument(note.getInstrument())) {
+                CustomInstrument instrument = song.getCustomInstruments()
+                        [note.getInstrument() - InstrumentUtils.getCustomInstrumentFirstIndex()];
+
+                if (instrument.getSound() != null) {
+                    CompatibilityUtils.playSound(player, player.getLocation(), instrument.getSound(),
+                            this.soundCategory, playerVolume, pitch, false);
+                } else {
+                    CompatibilityUtils.playSound(player, player.getLocation(), instrument.getSoundFileName(),
+                            this.soundCategory, playerVolume, pitch, false);
+                }
+            } else {
+                CompatibilityUtils.playSound(player, player.getLocation(),
+                        InstrumentUtils.getInstrument(note.getInstrument()), this.soundCategory,
+                        playerVolume, pitch, false);
+            }
+        }
+    }
 }

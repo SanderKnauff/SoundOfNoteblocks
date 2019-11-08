@@ -20,14 +20,12 @@
 
     <repositories>
         <repository>
-            <id>iMine-Repository</id>
-            <name>iMine Network Release Repository</name>
-            <url>https://mvn.iMine.nl</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>spigot-hub-snapshots</id>
-            <name>SpigotMC Snapshot Maven Repository</name>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -37,14 +35,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>nl.imine</groupId>
-            <artifactId>iMineAPI</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.13-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.xxmicloxx</groupId>
+            <groupId>com.github.koca2000</groupId>
             <artifactId>NoteBlockAPI</artifactId>
-            <version>1.8.7</version>
+            <version>1.2.5</version>
         </dependency>
     </dependencies>
 
@@ -65,46 +63,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.1.13</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                    <prefix>git</prefix>
-                    <dateFormat>dd.MM.yyyy '@' HH:mm:ss z</dateFormat>
-                    <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
-                    <verbose>false</verbose>
-                    <skipPoms>true</skipPoms>
-                    <injectAllReactorProjects>false</injectAllReactorProjects>
-                    <failOnNoGitDirectory>true</failOnNoGitDirectory>
-                    <failOnUnableToExtractRepoInfo>true</failOnUnableToExtractRepoInfo>
-                    <skip>false</skip>
-                    <runOnlyOnce>false</runOnlyOnce>
-                    <excludeProperties>
-                    </excludeProperties>
-                    <includeOnlyProperties>
-                    </includeOnlyProperties>
-                    <useNativeGit>false</useNativeGit>
-                    <abbrevLength>7</abbrevLength>
-                    <commitIdGenerationMode>flat</commitIdGenerationMode>
-                    <gitDescribe>
-                        <skip>true</skip>
-                        <always>false</always>
-                        <abbrev>7</abbrev>
-                        <dirty>-dirty</dirty>
-                        <match>*</match>
-                        <forceLongFormat>false</forceLongFormat>
-                    </gitDescribe>
                 </configuration>
             </plugin>
         </plugins>

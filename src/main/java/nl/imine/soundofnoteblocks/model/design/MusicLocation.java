@@ -4,5 +4,5 @@ import org.bukkit.Location;
 
 public interface MusicLocation {
 
-	public Location getLocation();
+	Location getLocation();
 }

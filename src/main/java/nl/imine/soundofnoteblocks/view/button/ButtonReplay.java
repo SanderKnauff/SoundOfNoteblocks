@@ -12,7 +12,7 @@ import nl.imine.soundofnoteblocks.model.MusicPlayer;
 public class ButtonReplay extends ButtonMusicPlayer {
 
 	public ButtonReplay(MusicPlayer mp, int slot) {
-		super(ItemUtil.getBuilder(Material.FIREWORK_CHARGE).setName(ColorUtil.replaceColors("&3Replay")).build(), mp,
+		super(ItemUtil.getBuilder(Material.FIRE_CHARGE).setName(ColorUtil.replaceColors("&3Replay")).build(), mp,
 				slot);
 	}
 

@@ -1,7 +1,8 @@
 name: SoundOfNoteblocks
 main: nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin
-version: ${git.commit.id.abbrev}
-depend: [NoteBlockAPI, iMineAPI]
+version: 1.0.0
+depend: [NoteBlockAPI]
+api-version: 1.13
 commands:
   jukebox:
     description: Main command for musicboxes

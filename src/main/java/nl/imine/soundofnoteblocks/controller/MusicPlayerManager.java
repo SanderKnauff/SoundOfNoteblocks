@@ -1,154 +1,132 @@
 package nl.imine.soundofnoteblocks.controller;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
+import nl.imine.soundofnoteblocks.model.Gettoblaster;
+import nl.imine.soundofnoteblocks.model.Jukebox;
+import nl.imine.soundofnoteblocks.model.MusicPlayer;
+import nl.imine.soundofnoteblocks.model.Walkman;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
-import nl.imine.soundofnoteblocks.model.MusicPlayer;
-import nl.imine.soundofnoteblocks.model.Gettoblaster;
-import nl.imine.soundofnoteblocks.model.Jukebox;
-import nl.imine.soundofnoteblocks.model.Walkman;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MusicPlayerManager {
 
-	private static List<MusicPlayer> musicPlayers = new ArrayList<>();
-	private static final Path SAVE_FILE = Paths.get(SoundOfNoteBlocksPlugin.getInstance().getDataFolder().getPath(),
-			"musicplayers.json");
+    private static Set<MusicPlayer> musicPlayers = new HashSet<>();
 
-	public static List<MusicPlayer> getAllMusicPlayers() {
-		return musicPlayers;
-	}
+    public static Collection<MusicPlayer> getAllMusicPlayers() {
+        return musicPlayers;
+    }
 
-	public static Collection<Jukebox> getJukeboxes() {
-		List<Jukebox> ret = new ArrayList<>();
-		musicPlayers.stream().filter(player -> player instanceof Jukebox)
-				.forEach(jukebox -> ret.add((Jukebox) jukebox));
-		return ret;
-	}
+    public static Collection<Jukebox> getJukeboxes() {
+        return musicPlayers.stream()
+                .filter(Jukebox.class::isInstance)
+                .map(Jukebox.class::cast)
+                .collect(Collectors.toSet());
+    }
 
-	public static Jukebox getJukebox(Location loc) {
-		Jukebox jb = null;
-		for (MusicPlayer mp : musicPlayers) {
-			if (mp instanceof Jukebox && ((Jukebox) mp).getLocation().equals(loc)) {
-				jb = (Jukebox) mp;
-				break;
-			}
-		}
-		if (jb == null) {
-			jb = new Jukebox(loc);
-			musicPlayers.add(jb);
-		}
-		return jb;
-	}
+    public static Jukebox getOrCreateJukebox(Location location) {
+        return musicPlayers.stream()
+                .filter(Jukebox.class::isInstance)
+                .map(Jukebox.class::cast)
+                .filter(jukebox -> jukebox.getLocation().equals(location))
+                .findAny()
+                .orElseGet(() -> {
+                    Jukebox jukebox = new Jukebox(location);
+                    musicPlayers.add(jukebox);
+                    return jukebox;
+                });
+    }
 
-	public static void removeJukebox(Location loc) {
-		Iterator<MusicPlayer> mpit = musicPlayers.iterator();
-		while (mpit.hasNext()) {
-			MusicPlayer mp = mpit.next();
-			if (mp instanceof Jukebox && ((Jukebox) mp).getLocation().equals(loc)) {
-				mp.setRadioMode(false);
-				mp.stopPlaying();
-				mpit.remove();
-				break;
-			}
-		}
-	}
+    public static void removeJukebox(Location location) {
+        Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
+        while (musicPlayerIterator.hasNext()) {
+            MusicPlayer musicPlayer = musicPlayerIterator.next();
+            if (musicPlayer instanceof Jukebox && ((Jukebox) musicPlayer).getLocation().equals(location)) {
+                musicPlayer.setRadioMode(false);
+                musicPlayer.stopPlaying();
+                musicPlayerIterator.remove();
+                break;
+            }
+        }
+    }
 
-	public static Collection<Walkman> getWalkmans() {
-		List<Walkman> ret = new ArrayList<>();
-		musicPlayers.stream().filter(player -> player instanceof Walkman)
-				.forEach(walkman -> ret.add((Walkman) walkman));
-		return ret;
-	}
+    public static Collection<Walkman> getWalkmans() {
+        return musicPlayers.stream()
+                .filter(Walkman.class::isInstance)
+                .map(Walkman.class::cast)
+                .collect(Collectors.toSet());
+    }
 
-	public static Walkman getWalkman(Player pl) {
-		Walkman wm = null;
-		for (MusicPlayer mp : musicPlayers) {
-			if (mp instanceof Walkman && ((Walkman) mp).getPlayer() == pl) {
-				wm = (Walkman) mp;
-				break;
-			}
-		}
-		if (wm == null) {
-			wm = new Walkman(pl);
-			musicPlayers.add(wm);
-		}
-		return wm;
-	}
+    public static Walkman getOrCreateWalkman(Player player) {
+        return musicPlayers.stream()
+                .filter(Walkman.class::isInstance)
+                .map(Walkman.class::cast)
+                .filter(walkman -> walkman.getPlayer().equals(player))
+                .findAny()
+                .orElseGet(() -> {
+                    Walkman walkman = new Walkman(player);
+                    musicPlayers.add(walkman);
+                    return walkman;
+                });
+    }
 
-	public static void removeWalkman(Player pl) {
-		Iterator<MusicPlayer> mpit = musicPlayers.iterator();
-		while (mpit.hasNext()) {
-			MusicPlayer mp = mpit.next();
-			if (mp instanceof Walkman && ((Walkman) mp).getPlayer() == pl) {
-				mp.setRadioMode(false);
-				mp.stopPlaying();
-				mpit.remove();
-				break;
-			}
-		}
-	}
+    public static void removeWalkman(Player player) {
+        Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
+        while (musicPlayerIterator.hasNext()) {
+            MusicPlayer musicPlayer = musicPlayerIterator.next();
+            if (musicPlayer instanceof Walkman && ((Walkman) musicPlayer).getPlayer() == player) {
+                musicPlayer.setRadioMode(false);
+                musicPlayer.stopPlaying();
+                musicPlayerIterator.remove();
+                break;
+            }
+        }
+    }
 
-	public static Collection<Gettoblaster> getGettoblaster() {
-		List<Gettoblaster> ret = new ArrayList<>();
-		musicPlayers.stream().filter(player -> player instanceof Gettoblaster)
-				.forEach(gettoblaster -> ret.add((Gettoblaster) gettoblaster));
-		return ret;
-	}
+    public static Collection<Gettoblaster> getGettoblasters() {
+        return musicPlayers.stream()
+                .filter(Gettoblaster.class::isInstance)
+                .map(Gettoblaster.class::cast)
+                .collect(Collectors.toSet());
+    }
 
-	public static Gettoblaster getGettoblaster(Entity entity) {
-		Gettoblaster gb = null;
-		for (MusicPlayer mp : musicPlayers) {
-			if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenteredEntity() == entity) {
-				gb = (Gettoblaster) mp;
-				break;
-			}
-		}
-		if (gb == null) {
-			gb = new Gettoblaster(entity);
-			musicPlayers.add(gb);
-		}
-		return gb;
-	}
+    public static Gettoblaster getGettoblaster(Entity entity) {
+        return musicPlayers.stream()
+                .filter(Gettoblaster.class::isInstance)
+                .map(Gettoblaster.class::cast)
+                .filter(gettoblaster -> gettoblaster.getCenteredEntity().equals(entity))
+                .findFirst()
+                .orElse(null);
+    }
 
-	public static void removeGettoblaster(Entity entity) {
-		Iterator<MusicPlayer> mpit = musicPlayers.iterator();
-		while (mpit.hasNext()) {
-			MusicPlayer mp = mpit.next();
-			if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenteredEntity() == entity) {
-				mp.setRadioMode(false);
-				mp.stopPlaying();
-				mpit.remove();
-				break;
-			}
-		}
-	}
+    public static Gettoblaster getOrCreateGettoblaster(Entity entity) {
+        return musicPlayers.stream()
+                .filter(Gettoblaster.class::isInstance)
+                .map(Gettoblaster.class::cast)
+                .filter(gettoblaster -> gettoblaster.getCenteredEntity().equals(entity))
+                .findAny()
+                .orElseGet(() -> {
+                    Gettoblaster gettoblaster = new Gettoblaster(entity);
+                    musicPlayers.add(gettoblaster);
+                    return gettoblaster;
+                });
+    }
 
-	public static void save() {
-		try {
-			SoundOfNoteBlocksPlugin.getGson().toJson(musicPlayers.toArray(new MusicPlayer[musicPlayers.size()]),
-				MusicPlayer[].class, Files.newBufferedWriter(SAVE_FILE));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	public static void load() {
-		try {
-			musicPlayers = new ArrayList<>(
-					Arrays.asList(SoundOfNoteBlocksPlugin.getGson().fromJson(Files.newBufferedReader(SAVE_FILE), MusicPlayer[].class)));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+    public static void removeGettoblaster(Entity entity) {
+        Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
+        while (musicPlayerIterator.hasNext()) {
+            MusicPlayer mp = musicPlayerIterator.next();
+            if (mp instanceof Gettoblaster && ((Gettoblaster) mp).getCenteredEntity() == entity) {
+                mp.setRadioMode(false);
+                mp.stopPlaying();
+                musicPlayerIterator.remove();
+                break;
+            }
+        }
+    }
 }

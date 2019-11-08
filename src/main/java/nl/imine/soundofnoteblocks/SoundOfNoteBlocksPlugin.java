@@ -1,96 +1,43 @@
 package nl.imine.soundofnoteblocks;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import nl.imine.api.gui.Container;
+import nl.imine.api.gui.GuiManager;
+import nl.imine.api.holotag.TagAPI;
+import nl.imine.soundofnoteblocks.controller.MusicPlayerListener;
+import nl.imine.soundofnoteblocks.controller.MusicboxCommandExecutor;
+import nl.imine.soundofnoteblocks.controller.TrackManager;
+import nl.imine.soundofnoteblocks.model.Track;
+import nl.imine.soundofnoteblocks.serialize.TrackTypeAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.google.gson.Gson;
-
-import nl.imine.api.holotag.ITag;
-import nl.imine.api.util.ConfigUtil;
-import nl.imine.api.util.serilize.GsonBukkitBuilder;
-import nl.imine.api.util.serilize.InterfaceAdapter;
-import nl.imine.soundofnoteblocks.controller.MusicPlayerListener;
-import nl.imine.soundofnoteblocks.controller.MusicPlayerManager;
-import nl.imine.soundofnoteblocks.controller.MusicboxCommandExecutor;
-import nl.imine.soundofnoteblocks.controller.TrackManager;
-import nl.imine.soundofnoteblocks.model.MusicPlayer;
-
 public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 
-	public static SoundOfNoteBlocksPlugin plugin;
-	private static boolean ready;
-	private static final Gson GSON = GsonBukkitBuilder.getBukkitBuilder()
-			.registerTypeAdapter(MusicPlayer.class, new InterfaceAdapter<MusicPlayer>())
-			.registerTypeAdapter(ITag.class, new InterfaceAdapter<ITag>()).create();
+    private static SoundOfNoteBlocksPlugin plugin;
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(Track.class, new TrackTypeAdapter()).create();
 
-	private Path tempFolder;
+    @Override
+    public void onEnable() {
+        plugin = this;
+        GuiManager.init(this);
+        TagAPI.init();
+        TrackManager.reloadTracks();
+        getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
+        Bukkit.getPluginManager().registerEvents(new MusicPlayerListener(), this);
+    }
 
-	@Override
-	public void onEnable() {
-		plugin = this;
-		setupConfig();
-		tempFolder = Paths.get(getDataFolder().getAbsolutePath(), "tmp");
-		try {
-			Files.createDirectories(tempFolder);
-		} catch (IOException ioe){
-			ioe.printStackTrace();
-		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> MusicPlayerManager.load());
-		TrackManager.getTracks();
-		getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
-		Bukkit.getPluginManager().registerEvents(new MusicPlayerListener(), this);
-	}
+    @Override
+    public void onDisable() {
+        plugin = null;
+        for (Container container : GuiManager.getInstance().getContainers()) {
+            container.close();
+        }
+    }
 
-	@Override
-	public void onDisable() {
-		plugin = null;
-		MusicPlayerManager.save();
-	}
-
-	private void setupConfig() {
-		if (getConfig().getDouble("version", 0) <= 0.0D) {
-			getConfig().set("version", 0.1D);
-			ConfigUtil.configSetIfNotSet(this, "repositories",
-				Arrays.asList(new String[]{"https://radio.imine.nl/radio"}));
-			saveConfig();
-		}
-	}
-
-	public static void setReady(boolean ready) {
-		SoundOfNoteBlocksPlugin.ready = ready;
-		if (ready) {
-			for (MusicPlayer mp : MusicPlayerManager.getAllMusicPlayers()) {
-				if (mp.isRadioMode()) {
-					mp.replayForce();
-				}
-			}
-		} else {
-			for (MusicPlayer mp : MusicPlayerManager.getAllMusicPlayers()) {
-				mp.stopPlaying();
-			}
-		}
-	}
-
-	public static boolean isLoaded() {
-		return SoundOfNoteBlocksPlugin.ready;
-	}
-
-	public Path getTempFolder() {
-		return tempFolder;
-	}
-
-	public static SoundOfNoteBlocksPlugin getInstance() {
-		return plugin;
-	}
-
-	public static Gson getGson() {
-		return GSON;
-	}
+    public static SoundOfNoteBlocksPlugin getInstance() {
+        return plugin;
+    }
 }

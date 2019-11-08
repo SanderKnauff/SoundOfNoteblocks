@@ -21,9 +21,9 @@ public class ButtonTrack extends ButtonMusicPlayer {
 	private final Track track;
 
 	public ButtonTrack(Track track, MusicPlayer mp, int slot) {
-		super(ItemUtil.getBuilder(MusicPlayerView.RECORDS[track.getName().length() % MusicPlayerView.RECORDS.length])
-				.build(), mp, slot);
-		this.track = track;
+			super(ItemUtil.getBuilder(MusicPlayerView.RECORDS[track.getName().length() % MusicPlayerView.RECORDS.length])
+					.build(), mp, slot);
+			this.track = track;
 	}
 
 	public Track getTrack() {
@@ -36,8 +36,8 @@ public class ButtonTrack extends ButtonMusicPlayer {
 		ItemMeta im = is.getItemMeta();
 		im.setDisplayName(ColorUtil.replaceColors("&b" + track.getName()));
 		int duratio = (int) (track.getSong().getLength() / track.getSong().getSpeed());
-		im.setLore(Arrays.asList(new String[]{ColorUtil.replaceColors("&eArtist: " + track.getArtist()),
-				ColorUtil.replaceColors("&cLength: %d:%02d", duratio / 60, duratio % 60)}));
+		im.setLore(Arrays.asList(ColorUtil.replaceColors("&eArtist: " + track.getArtist()),
+				ColorUtil.replaceColors("&cLength: %d:%02d", duratio / 60, duratio % 60)));
 		is.setItemMeta(im);
 		return is;
 	}

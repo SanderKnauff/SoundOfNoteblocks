@@ -1,18 +1,18 @@
 package nl.imine.soundofnoteblocks.model;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
+import com.xxmicloxx.NoteBlockAPI.model.Song;
+import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
+import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import nl.imine.api.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.xxmicloxx.NoteBlockAPI.RadioSongPlayer;
-import com.xxmicloxx.NoteBlockAPI.Song;
-import com.xxmicloxx.NoteBlockAPI.SongPlayer;
-
-import nl.imine.api.util.ColorUtil;
-import nl.imine.api.util.PlayerUtil;
 import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
 
 public class Walkman extends MusicPlayer implements PlayerNotified {
@@ -34,7 +34,7 @@ public class Walkman extends MusicPlayer implements PlayerNotified {
 
 	@Override
 	public Collection<Player> getListeners() {
-		return Arrays.asList(getPlayer());
+		return Collections.singletonList(getPlayer());
 	}
 
 	@Override
@@ -45,8 +45,7 @@ public class Walkman extends MusicPlayer implements PlayerNotified {
 	@Override
 	public void notifyPlayers(Track track) {
 		for (Player pl : getListeners()) {
-			PlayerUtil.sendActionMessage(pl,
-				ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.getName(), track.getArtist()));
+			pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.getName(), track.getArtist())));
 		}
 	}
 

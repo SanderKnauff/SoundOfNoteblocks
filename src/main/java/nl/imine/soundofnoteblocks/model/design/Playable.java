@@ -1,37 +1,38 @@
 package nl.imine.soundofnoteblocks.model.design;
 
 import java.util.Collection;
+import java.util.List;
 
+import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import org.bukkit.entity.Player;
 
-import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 
 import nl.imine.soundofnoteblocks.model.Track;
 
 public interface Playable {
 
-	public void playRandomTrack(Track[] repo);
+    void playRandomTrack(List<Track> repo);
 
-	public void playTrack(Track track);
+    void playTrack(Track track);
 
-	public boolean isPlaying();
+    boolean isPlaying();
 
-	public void setPlaying(boolean playing);
+    void setPlaying(boolean playing);
 
-	public void stopPlaying();
+    void stopPlaying();
 
-	public void replay();
+    void replay();
 
-	public void replayForce();
+    void replayForce();
 
-	public Track getLastTrack();
+    Track getLastTrack();
 
-	void setLastTrack(Track track);
+    void setLastTrack(Track track);
 
-	public SongPlayer getSongPlayer();
+    SongPlayer getSongPlayer();
 
-	public void setSongPlayer(SongPlayer songPlayer);
+    void setSongPlayer(SongPlayer songPlayer);
 
-	public Collection<Player> getListeners();
+    Collection<Player> getListeners();
 
 }

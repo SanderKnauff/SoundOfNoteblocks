@@ -6,13 +6,13 @@ import nl.imine.api.holotag.ITag;
 
 public interface Tagable {
 
-	public Location getTagLocation();
+	Location getTagLocation();
 
-	public ITag getTag();
+	ITag getTag();
 
-	public void setVisible(boolean visible);
+	void setVisible(boolean visible);
 
-	public boolean isVisible();
+	boolean isVisible();
 
-	public void setTagLines(String... lines);
+	void setTagLines(String... lines);
 }

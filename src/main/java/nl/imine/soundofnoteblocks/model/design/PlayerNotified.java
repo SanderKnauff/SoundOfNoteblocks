@@ -8,7 +8,7 @@ import nl.imine.soundofnoteblocks.model.Track;
 
 public interface PlayerNotified {
 
-	public void notifyPlayers(Track track);
+	void notifyPlayers(Track track);
 
-	public Collection<Player> getListeners();
+	Collection<Player> getListeners();
 }
