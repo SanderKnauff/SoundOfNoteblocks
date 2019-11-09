@@ -4,6 +4,7 @@ import nl.imine.soundofnoteblocks.model.Gettoblaster;
 import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.Walkman;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -42,6 +43,29 @@ public class MusicPlayerManager {
                 });
     }
 
+    public static void removeJukeboxesFromChunk(Chunk chunk) {
+        Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
+        while (musicPlayerIterator.hasNext()) {
+            MusicPlayer musicPlayer = musicPlayerIterator.next();
+            if (!(musicPlayer instanceof Jukebox)) {
+                continue;
+            }
+            Jukebox jukebox = (Jukebox) musicPlayer;
+            if (!isChunkAtLocation(chunk, ((Jukebox) musicPlayer).getLocation())) {
+                continue;
+            }
+            jukebox.stopPlaying();
+            jukebox.getTag().remove();
+            if (!jukebox.isRadioMode()) {
+                musicPlayerIterator.remove();
+            }
+        }
+    }
+
+    private static boolean isChunkAtLocation(Chunk chunk, Location location) {
+        return chunk.getX() == location.getBlockX() >> 4 && chunk.getZ() == location.getBlockZ() >> 4;
+    }
+
     public static void removeJukebox(Location location) {
         Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
         while (musicPlayerIterator.hasNext()) {
@@ -49,6 +73,7 @@ public class MusicPlayerManager {
             if (musicPlayer instanceof Jukebox && ((Jukebox) musicPlayer).getLocation().equals(location)) {
                 musicPlayer.setRadioMode(false);
                 musicPlayer.stopPlaying();
+                ((Jukebox) musicPlayer).getTag().remove();
                 musicPlayerIterator.remove();
                 break;
             }
@@ -93,15 +118,6 @@ public class MusicPlayerManager {
                 .filter(Gettoblaster.class::isInstance)
                 .map(Gettoblaster.class::cast)
                 .collect(Collectors.toSet());
-    }
-
-    public static Gettoblaster getGettoblaster(Entity entity) {
-        return musicPlayers.stream()
-                .filter(Gettoblaster.class::isInstance)
-                .map(Gettoblaster.class::cast)
-                .filter(gettoblaster -> gettoblaster.getCenteredEntity().equals(entity))
-                .findFirst()
-                .orElse(null);
     }
 
     public static Gettoblaster getOrCreateGettoblaster(Entity entity) {

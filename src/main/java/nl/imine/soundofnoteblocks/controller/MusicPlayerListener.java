@@ -11,9 +11,7 @@ import nl.imine.soundofnoteblocks.model.Walkman;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
 import nl.imine.soundofnoteblocks.model.design.Tagable;
 import nl.imine.soundofnoteblocks.view.MusicPlayerView;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -123,7 +121,7 @@ public class MusicPlayerListener implements Listener {
         if (player.hasPermission("imine.jukebox.play") && player.isSneaking()
                 && (player.getInventory().getItemInMainHand() == null
                 || player.getInventory().getItemInMainHand().getType() == Material.AIR)) {
-            Gettoblaster gb = MusicPlayerManager.getGettoblaster(player);
+            Gettoblaster gb = MusicPlayerManager.getOrCreateGettoblaster(player);
             if (gb.isRadioMode()) {
                 MusicPlayerView.getRadioModeContainer(gb).open(player);
             } else {
@@ -138,7 +136,7 @@ public class MusicPlayerListener implements Listener {
         if (player.hasPermission("imine.jukebox.play")) {
             if (player.isSneaking() && event.getItemDrop().getItemStack().getType() == Material.JUKEBOX) {
                 Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
-                    Gettoblaster gb = MusicPlayerManager.getGettoblaster(player);
+                    Gettoblaster gb = MusicPlayerManager.getOrCreateGettoblaster(player);
                     if (gb.isRadioMode()) {
                         MusicPlayerView.getRadioModeContainer(gb).open(player);
                     } else {
@@ -264,12 +262,7 @@ public class MusicPlayerListener implements Listener {
 
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent event) {
-        for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
-            if (event.getChunk().equals(jukebox.getLocation().getChunk())) {
-                jukebox.stopPlaying();
-                jukebox.getTag().remove();
-            }
-        }
+        MusicPlayerManager.removeJukeboxesFromChunk(event.getChunk());
     }
 
 }
