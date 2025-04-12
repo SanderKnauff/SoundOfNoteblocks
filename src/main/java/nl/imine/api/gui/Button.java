@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import nl.imine.api.event.ContainerBuildInventoryEvent;
 
 public class Button {
-
 	protected ItemStack itemStack;
 	protected int slot;
 
@@ -21,11 +20,13 @@ public class Button {
 	}
 
 	public ItemStack getItemStack() {
-		ItemStack is = itemStack;
-		ItemMeta ism = is.getItemMeta();
-		ism.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
-		is.setItemMeta(ism);
-		return is;
+		ItemMeta meta = itemStack.getItemMeta();
+		if (meta == null) {
+			return itemStack;
+		}
+		meta.addItemFlags(ItemFlag.HIDE_POTION_CONTENTS, ItemFlag.HIDE_POTION_DURATION_SCALE, ItemFlag.HIDE_ATTRIBUTES);
+		itemStack.setItemMeta(meta);
+		return itemStack;
 	}
 
 	/**
