@@ -13,7 +13,26 @@ import nl.imine.soundofnoteblocks.serialize.TrackTypeAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.annotation.command.Command;
+import org.bukkit.plugin.java.annotation.command.Commands;
+import org.bukkit.plugin.java.annotation.dependency.Dependency;
+import org.bukkit.plugin.java.annotation.dependency.DependsOn;
+import org.bukkit.plugin.java.annotation.plugin.ApiVersion;
+import org.bukkit.plugin.java.annotation.plugin.Plugin;
 
+import static java.util.Objects.requireNonNull;
+
+@Plugin(name = "SoundOfNoteblocks", version = "1.1.0-SNAPSHOT")
+@DependsOn(@Dependency("NoteBlockAPI"))
+@ApiVersion("1.21.5")
+@Commands(
+        @Command(
+                name = "jukebox",
+                desc = "Main command for musicboxes",
+                usage = "/jukebox reload to reload the track list",
+                aliases = { "musicbox", "tracklist" }
+        )
+)
 public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
 
     private static SoundOfNoteBlocksPlugin plugin;
@@ -25,7 +44,7 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
         GuiManager.init(this);
         TagAPI.init();
         TrackManager.reloadTracks();
-        getCommand("jukebox").setExecutor(new MusicboxCommandExecutor());
+        requireNonNull(getCommand("jukebox")).setExecutor(new MusicboxCommandExecutor());
         Bukkit.getPluginManager().registerEvents(new MusicPlayerListener(), this);
     }
 

@@ -12,15 +12,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLocation {
 
     public static final double DISTANCE = Math.pow(6, 2);
 
-    private Location location;
+    private final Location location;
     private transient ITag tag;
     private boolean locked;
     private boolean isVisible;
@@ -39,7 +39,7 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
     @Override
     public Location getTagLocation() {
         Location loc = getLocation();
-        if (loc.clone().add(0, 1, 0).getBlock().getType().isTransparent()) {
+        if (loc.clone().add(0, 1, 0).getBlock().getType().isOccluding()) {
             loc.add(0, -1, 0);
         }
         return loc.add(0.5, 0.5, 0.5);
@@ -87,13 +87,16 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 
     @Override
     public Collection<Player> getListeners() {
-        Collection<Player> ret = new ArrayList<>();
-        for (Player p : getLocation().getWorld().getPlayers()) {
-            if (getLocation().distance(p.getLocation()) < DISTANCE) {
-                ret.add(p);
-            }
+        final var world = getLocation().getWorld();
+        if (world == null) {
+            return List.of();
         }
-        return ret;
+
+        return world
+                .getPlayers()
+                .stream()
+                .filter(player -> getLocation().distance(player.getLocation()) <= DISTANCE)
+                .toList();
     }
 
     @Override
@@ -114,8 +117,7 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Jukebox) {
-            Jukebox other = (Jukebox) obj;
+        if (obj instanceof Jukebox other) {
             return this.getLocation().equals(other.getLocation());
         }
         return super.equals(obj);

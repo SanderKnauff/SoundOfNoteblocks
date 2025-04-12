@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +32,7 @@ public class TagAPI {
 	private static final UUID sessionId = UUID.randomUUID();
 	private static final List<String> currentTags = new ArrayList<>();
 
-	private static Collection<ITag> tags = new HashSet<>();
+	private static final Collection<ITag> tags = new HashSet<>();
 
 	public static void init() {
 		Bukkit.getServer().getPluginManager().registerEvents(new TagAPIListener(), SoundOfNoteBlocksPlugin.getInstance());
@@ -46,17 +45,17 @@ public class TagAPI {
 		}
 	}
 
-	private static ITag registerdTag(ITag tag) {
+	private static ITag registerTag(ITag tag) {
 		tags.add(tag);
 		return tag;
 	}
 
 	public static ITag createTag(Location location) {
-		return registerdTag(new GenericTag(location));
+		return registerTag(new GenericTag(location));
 	}
 
 	public static ITag createTag(Location location, double lineDistance) {
-		return registerdTag(new GenericTag(location, lineDistance));
+		return registerTag(new GenericTag(location, lineDistance));
 	}
 
 	public static boolean needsRemoval(UUID id) {

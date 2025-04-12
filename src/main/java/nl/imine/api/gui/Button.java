@@ -24,7 +24,7 @@ public class Button {
 		if (meta == null) {
 			return itemStack;
 		}
-		meta.addItemFlags(ItemFlag.HIDE_POTION_CONTENTS, ItemFlag.HIDE_POTION_DURATION_SCALE, ItemFlag.HIDE_ATTRIBUTES);
+		meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP, ItemFlag.HIDE_ATTRIBUTES);
 		itemStack.setItemMeta(meta);
 		return itemStack;
 	}

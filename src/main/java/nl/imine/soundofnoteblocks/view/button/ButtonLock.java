@@ -24,7 +24,7 @@ public class ButtonLock extends ButtonMusicPlayer {
 		ItemStack is = super.getItemStack();
 		SongPlayer songPlayer = getMusicPlayer().getSongPlayer();
 		is.setType(
-			(songPlayer != null && songPlayer.isPlaying()) ? Material.REDSTONE_TORCH : Material.REDSTONE_TORCH);
+			(songPlayer != null && songPlayer.isPlaying()) ? Material.GREEN_CONCRETE : Material.RED_CONCRETE);
 		return is;
 	}
 
@@ -32,9 +32,8 @@ public class ButtonLock extends ButtonMusicPlayer {
 	public void doAction(Player player, Container container, ClickType clickType) {
 		SongPlayer songPlayer = getMusicPlayer().getSongPlayer();
 		if (songPlayer != null && songPlayer.isPlaying()) {
-			if (getMusicPlayer() instanceof Lockable) {
-				Lockable lock = (Lockable) getMusicPlayer();
-				lock.setLocked(true);
+			if (getMusicPlayer() instanceof Lockable lock) {
+                lock.setLocked(true);
 			}
 			player.closeInventory();
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1F, 1F);

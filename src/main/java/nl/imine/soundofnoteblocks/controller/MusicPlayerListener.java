@@ -45,7 +45,7 @@ public class MusicPlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || !event.getClickedBlock().getType().equals(Material.JUKEBOX)) {
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getClickedBlock() == null || !event.getClickedBlock().getType().equals(Material.JUKEBOX)) {
             return;
         }
         Jukebox jukebox = MusicPlayerManager.getOrCreateJukebox(event.getClickedBlock().getLocation());
@@ -119,8 +119,7 @@ public class MusicPlayerListener implements Listener {
 
         Player player = event.getPlayer();
         if (player.hasPermission("imine.jukebox.play") && player.isSneaking()
-                && (player.getInventory().getItemInMainHand() == null
-                || player.getInventory().getItemInMainHand().getType() == Material.AIR)) {
+                && player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             Gettoblaster gb = MusicPlayerManager.getOrCreateGettoblaster(player);
             if (gb.isRadioMode()) {
                 MusicPlayerView.getRadioModeContainer(gb).open(player);
@@ -161,7 +160,7 @@ public class MusicPlayerListener implements Listener {
     public void onPlayerItemHandSwitch(PlayerSwapHandItemsEvent event) {
         Player player = event.getPlayer();
         if (player.hasPermission("imine.jukebox.play")) {
-            if (event.getOffHandItem().getType() == Material.JUKEBOX) {
+            if (event.getOffHandItem() != null && event.getOffHandItem().getType() == Material.JUKEBOX) {
                 Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
                     Walkman walkman = MusicPlayerManager.getOrCreateWalkman(player);
                     if (walkman.isRadioMode()) {
@@ -170,7 +169,7 @@ public class MusicPlayerListener implements Listener {
                         MusicPlayerView.getMusicPlayerContainer(walkman).open(player);
                     }
                 }, 1);
-            } else if (event.getMainHandItem().getType() == Material.JUKEBOX) {
+            } else if (event.getMainHandItem() != null && event.getMainHandItem().getType() == Material.JUKEBOX) {
                 MusicPlayerManager.removeWalkman(player);
             }
         }
@@ -189,7 +188,7 @@ public class MusicPlayerListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
-            if (jukebox.isPlaying() && jukebox.getLocation().getWorld() == event.getTo().getWorld()) {
+            if (jukebox.isPlaying() && event.getTo() != null && jukebox.getLocation().getWorld() == event.getTo().getWorld()) {
                 if (event.getTo().distance(jukebox.getLocation()) < Jukebox.DISTANCE) {
                     jukebox.getSongPlayer().addPlayer(event.getPlayer());
                 } else if (jukebox.getSongPlayer().getPlayerUUIDs().contains(event.getPlayer().getUniqueId())) {
@@ -198,7 +197,7 @@ public class MusicPlayerListener implements Listener {
             }
         }
         for (Gettoblaster gettoblaster : MusicPlayerManager.getGettoblasters()) {
-            if (gettoblaster.isPlaying() && gettoblaster.getCenteredEntity().getLocation().getWorld() == event.getTo().getWorld()) {
+            if (gettoblaster.isPlaying() && event.getTo() != null && gettoblaster.getCenteredEntity().getLocation().getWorld() == event.getTo().getWorld()) {
                 if (event.getTo().distance(gettoblaster.getCenteredEntity().getLocation()) < Gettoblaster.DISTANCE) {
                     gettoblaster.getSongPlayer().addPlayer(event.getPlayer());
                 } else if (gettoblaster.getSongPlayer().getPlayerUUIDs().contains(event.getPlayer().getUniqueId())) {
@@ -226,16 +225,12 @@ public class MusicPlayerListener implements Listener {
             if (musicPlayer.getSongPlayer() == sde.getSongPlayer()) {
                 musicPlayer.setPlaying(false);
                 if (musicPlayer.isRadioMode()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.getInstance(), () -> {
-                        musicPlayer.playRandomTrack(TrackManager.getTracks());
-                    }, 20L);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.getInstance(), () -> musicPlayer.playRandomTrack(TrackManager.getTracks()), 20L);
                 }
-                if (musicPlayer instanceof Tagable) {
-                    Tagable tag = (Tagable) musicPlayer;
+                if (musicPlayer instanceof Tagable tag) {
                     tag.getTag().setVisible(false);
                 }
-                if (musicPlayer instanceof Lockable) {
-                    Lockable lock = (Lockable) musicPlayer;
+                if (musicPlayer instanceof Lockable lock) {
                     lock.setLocked(false);
                 }
             }

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class MusicPlayerManager {
 
-    private static Set<MusicPlayer> musicPlayers = new HashSet<>();
+    private static final Set<MusicPlayer> musicPlayers = new HashSet<>();
 
     public static Collection<MusicPlayer> getAllMusicPlayers() {
         return musicPlayers;
@@ -47,11 +47,10 @@ public class MusicPlayerManager {
         Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
         while (musicPlayerIterator.hasNext()) {
             MusicPlayer musicPlayer = musicPlayerIterator.next();
-            if (!(musicPlayer instanceof Jukebox)) {
+            if (!(musicPlayer instanceof Jukebox jukebox)) {
                 continue;
             }
-            Jukebox jukebox = (Jukebox) musicPlayer;
-            if (!isChunkAtLocation(chunk, ((Jukebox) musicPlayer).getLocation())) {
+            if (!isChunkAtLocation(chunk, jukebox.getLocation())) {
                 continue;
             }
             jukebox.stopPlaying();
@@ -78,13 +77,6 @@ public class MusicPlayerManager {
                 break;
             }
         }
-    }
-
-    public static Collection<Walkman> getWalkmans() {
-        return musicPlayers.stream()
-                .filter(Walkman.class::isInstance)
-                .map(Walkman.class::cast)
-                .collect(Collectors.toSet());
     }
 
     public static Walkman getOrCreateWalkman(Player player) {

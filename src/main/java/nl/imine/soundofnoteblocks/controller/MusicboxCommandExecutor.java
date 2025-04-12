@@ -5,7 +5,6 @@
  */
 package nl.imine.soundofnoteblocks.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -17,22 +16,25 @@ public class MusicboxCommandExecutor implements TabExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equalsIgnoreCase("jukebox")) {
-			if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("iMine.jukebox.reload")) {
-					TrackManager.reloadTracks();
-					sender.sendMessage(ChatColor.GRAY + "Reloaded tracks from repo's.");
-				}
-			}
-			return true;
-		}
-		return false;
-	}
+        if (!command.getName().equalsIgnoreCase("jukebox")) {
+            return false;
+        }
+
+        if (args.length != 1) {
+            return true;
+        }
+
+		if (!args[0].equalsIgnoreCase("reload") || !sender.hasPermission("iMine.jukebox.reload")) {
+            return true;
+        }
+
+        TrackManager.reloadTracks();
+        sender.sendMessage(ChatColor.GRAY + "Reloaded tracks from repos.");
+        return true;
+    }
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		List<String> ret = new ArrayList<>();
-		ret.add("reload");
-		return ret;
+		return List.of("reload");
 	}
 }

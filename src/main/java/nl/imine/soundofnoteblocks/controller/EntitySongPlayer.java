@@ -5,6 +5,7 @@ import com.xxmicloxx.NoteBlockAPI.model.*;
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.CompatibilityUtils;
 import com.xxmicloxx.NoteBlockAPI.utils.InstrumentUtils;
+import com.xxmicloxx.NoteBlockAPI.utils.NoteUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -38,23 +39,18 @@ public class EntitySongPlayer extends SongPlayer {
                 continue;
             }
 
-            float pitch = NotePitch.getPitch(note.getKey() - 33);
+            float pitch = NoteUtils.getPitchInOctave(note);
 
             if (InstrumentUtils.isCustomInstrument(note.getInstrument())) {
-                CustomInstrument instrument = song.getCustomInstruments()
-                        [note.getInstrument() - InstrumentUtils.getCustomInstrumentFirstIndex()];
+                CustomInstrument instrument = song.getCustomInstruments()[note.getInstrument() - InstrumentUtils.getCustomInstrumentFirstIndex()];
 
                 if (instrument.getSound() != null) {
-                    CompatibilityUtils.playSound(player, player.getLocation(), instrument.getSound(),
-                            this.soundCategory, playerVolume, pitch, false);
+                    CompatibilityUtils.playSound(player, player.getLocation(), instrument.getSound(), this.soundCategory, playerVolume, pitch, 0);
                 } else {
-                    CompatibilityUtils.playSound(player, player.getLocation(), instrument.getSoundFileName(),
-                            this.soundCategory, playerVolume, pitch, false);
+                    CompatibilityUtils.playSound(player, player.getLocation(), instrument.getSoundFileName(), this.soundCategory, playerVolume, pitch, 0);
                 }
             } else {
-                CompatibilityUtils.playSound(player, player.getLocation(),
-                        InstrumentUtils.getInstrument(note.getInstrument()), this.soundCategory,
-                        playerVolume, pitch, false);
+                CompatibilityUtils.playSound(player, player.getLocation(), InstrumentUtils.getInstrument(note.getInstrument()), this.soundCategory, playerVolume, pitch, 0);
             }
         }
     }

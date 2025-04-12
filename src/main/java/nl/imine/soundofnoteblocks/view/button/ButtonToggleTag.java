@@ -20,11 +20,10 @@ public class ButtonToggleTag extends ButtonMusicPlayer {
 
 	@Override
 	public void doAction(Player player, Container container, ClickType clickType) {
-		if (getMusicPlayer().isPlaying() && getMusicPlayer() instanceof Tagable) {
+		if (getMusicPlayer().isPlaying() && getMusicPlayer() instanceof Tagable tagMP) {
 			if (!(getMusicPlayer() instanceof Lockable && ((Lockable) getMusicPlayer()).isLocked())
 					|| player.hasPermission("iMine.jukebox.lockbypass")) {
-				Tagable tagMP = (Tagable) getMusicPlayer();
-				tagMP.setVisible(!tagMP.isVisible());
+                tagMP.setVisible(!tagMP.isVisible());
 				tagMP.getTag().setLocation(tagMP.getTagLocation());
 			}
 		}
