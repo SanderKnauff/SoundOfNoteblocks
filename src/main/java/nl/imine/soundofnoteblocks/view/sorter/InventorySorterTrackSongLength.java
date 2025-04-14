@@ -8,15 +8,15 @@ import nl.imine.soundofnoteblocks.view.button.ButtonTrack;
 public class InventorySorterTrackSongLength extends InventorySorter {
 
 	public InventorySorterTrackSongLength() {
-		super("By length");
+		super("Length");
 	}
 
 	@Override
 	public int compare(Button o1, Button o2) {
-		if (o1 instanceof ButtonTrack && o2 instanceof ButtonTrack) {
-			Song s1 = ((ButtonTrack) o1).getTrack().song();
+		if (o1 instanceof ButtonTrack firstTrack && o2 instanceof ButtonTrack secondTrack) {
+			Song s1 = firstTrack.getTrack().song();
 			int ds1 = (int) (s1.getLength() / s1.getSpeed());
-			Song s2 = ((ButtonTrack) o2).getTrack().song();
+			Song s2 = secondTrack.getTrack().song();
 			int ds2 = (int) (s2.getLength() / s2.getSpeed());
 			return ds1 - ds2;
 		}

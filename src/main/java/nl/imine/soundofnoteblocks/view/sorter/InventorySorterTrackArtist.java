@@ -7,7 +7,7 @@ import nl.imine.soundofnoteblocks.view.button.ButtonTrack;
 
 public class InventorySorterTrackArtist extends InventorySorter {
 	public InventorySorterTrackArtist() {
-		super("By artist");
+		super("Artist");
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package nl.imine.soundofnoteblocks.view.button;
 
 import org.bukkit.Material;
 
-import nl.imine.api.gui.InventorySorter;
 import nl.imine.api.gui.button.ButtonSort;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
@@ -16,7 +15,7 @@ public class ButtonMusicSort extends ButtonSort {
         super(
                 ItemUtil
                         .getBuilder(Material.OAK_SIGN)
-                        .setName(ColorUtil.replaceColors("&6Sort by"))
+                        .setName(ColorUtil.replaceColors("&6Sort by:"))
                         .build(),
                 slot,
                 new InventorySorterTrackName(),

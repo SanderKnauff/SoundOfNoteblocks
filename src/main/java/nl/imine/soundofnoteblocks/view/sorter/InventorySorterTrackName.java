@@ -7,7 +7,7 @@ import nl.imine.soundofnoteblocks.view.button.ButtonTrack;
 
 public class InventorySorterTrackName extends InventorySorter {
 	public InventorySorterTrackName() {
-		super("By name");
+		super("Name");
 	}
 
 	@Override
