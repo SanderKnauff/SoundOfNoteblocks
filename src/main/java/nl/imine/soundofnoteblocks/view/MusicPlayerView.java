@@ -1,5 +1,6 @@
 package nl.imine.soundofnoteblocks.view;
 
+import nl.imine.soundofnoteblocks.model.Jukebox;
 import org.bukkit.Material;
 
 import nl.imine.api.gui.Container;
@@ -9,7 +10,6 @@ import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.Track;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
-import nl.imine.soundofnoteblocks.model.design.Tagable;
 import nl.imine.soundofnoteblocks.view.button.ButtomRandomTrack;
 import nl.imine.soundofnoteblocks.view.button.ButtonLock;
 import nl.imine.soundofnoteblocks.view.button.ButtonMusicSort;
@@ -19,24 +19,41 @@ import nl.imine.soundofnoteblocks.view.button.ButtonStop;
 import nl.imine.soundofnoteblocks.view.button.ButtonToggleTag;
 import nl.imine.soundofnoteblocks.view.button.ButtonTrack;
 
+import java.util.List;
+
 public class MusicPlayerView {
+    public static final List<Material> RECORDS = List.of(
+            Material.MUSIC_DISC_5,
+            Material.MUSIC_DISC_13,
+            Material.MUSIC_DISC_BLOCKS,
+            Material.MUSIC_DISC_CAT,
+            Material.MUSIC_DISC_CHIRP,
+            Material.MUSIC_DISC_CREATOR,
+            Material.MUSIC_DISC_CREATOR_MUSIC_BOX,
+            Material.MUSIC_DISC_FAR,
+            Material.MUSIC_DISC_MALL,
+            Material.MUSIC_DISC_MELLOHI,
+            Material.MUSIC_DISC_OTHERSIDE,
+            Material.MUSIC_DISC_PIGSTEP,
+            Material.MUSIC_DISC_PRECIPICE,
+            Material.MUSIC_DISC_RELIC,
+            Material.MUSIC_DISC_STAL,
+            Material.MUSIC_DISC_STRAD,
+            Material.MUSIC_DISC_WAIT
+    );
 
-    public static final Material[] RECORDS = new Material[]{Material.MUSIC_DISC_11, Material.MUSIC_DISC_13,
-            Material.MUSIC_DISC_BLOCKS, Material.MUSIC_DISC_CAT, Material.MUSIC_DISC_CHIRP, Material.MUSIC_DISC_FAR, Material.MUSIC_DISC_MALL,
-            Material.MUSIC_DISC_MELLOHI, Material.MUSIC_DISC_STAL, Material.MUSIC_DISC_STRAD, Material.MUSIC_DISC_WAIT};
-
-    public static Container getMusicPlayerContainer(MusicPlayer musicPlayer) {
+    public static Container getMusicPlayerContainer(MusicPlayer musicPlayer, TrackManager trackManager) {
         Container container = GuiManager.getInstance()
                 .createContainer(ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);
-        for (Track track : TrackManager.getTracks()) {
+        for (Track track : trackManager.getTracks()) {
             container.addButton(new ButtonTrack(track, musicPlayer, container.getButtons().size()), false);
         }
         container.addStaticButton(Container.getDefaultPreviousButton(container).setSlot(0), false);
         container.addStaticButton(new ButtonMusicSort(1), false);
         container.addStaticButton(new ButtonReplay(musicPlayer, 2), false);
         container.addStaticButton(new ButtonStop(musicPlayer, 3), false);
-        container.addStaticButton(new ButtomRandomTrack(musicPlayer, 4), false);
-        if (musicPlayer instanceof Tagable) {
+        container.addStaticButton(new ButtomRandomTrack(trackManager, musicPlayer, 4), false);
+        if (musicPlayer instanceof Jukebox) {
             container.addStaticButton(new ButtonToggleTag(musicPlayer, 5), false);
         }
         if (musicPlayer instanceof Lockable) {

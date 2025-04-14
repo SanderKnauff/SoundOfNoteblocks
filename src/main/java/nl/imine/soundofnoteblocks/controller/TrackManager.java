@@ -17,10 +17,10 @@ public class TrackManager {
     private static final String TRACK_LIST_FILE_NAME = "trackList.json";
     private static List<Track> trackList = new ArrayList<>();
 
-    private TrackManager() {
+    public TrackManager() {
     }
 
-    private static void loadTracks() {
+    private void loadTracks() {
         trackList.clear();
         try {
             Path resolve = SoundOfNoteBlocksPlugin.getInstance().getDataFolder().toPath().resolve(TRACK_LIST_FILE_NAME);
@@ -33,15 +33,15 @@ public class TrackManager {
         }
     }
 
-    public static List<Track> getTracks() {
+    public List<Track> getTracks() {
         return trackList;
     }
 
-    public static void reloadTracks() {
+    public void reloadTracks() {
         loadTracks();
     }
 
-    public static Track getTrack(UUID trackId) {
-        return trackList.stream().filter(t -> t.getId().equals(trackId)).findFirst().orElse(null);
+    public Track getTrack(UUID trackId) {
+        return trackList.stream().filter(t -> t.id().equals(trackId)).findFirst().orElse(null);
     }
 }

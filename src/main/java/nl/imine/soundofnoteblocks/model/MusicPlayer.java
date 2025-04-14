@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import com.xxmicloxx.NoteBlockAPI.model.Song;
@@ -14,19 +13,19 @@ import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.design.Playable;
 import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
 import nl.imine.soundofnoteblocks.model.design.Radioable;
-import nl.imine.soundofnoteblocks.model.design.Tagable;
 
 public abstract class MusicPlayer implements Playable, Radioable {
-
+    private final TrackManager trackManager;
     private boolean inRadioMode;
-    private Track lastTrack;
-    private transient SongPlayer songplayer;
+    private Track currentTrack;
+    private SongPlayer songplayer;
 
-    public MusicPlayer(boolean radioMode, UUID lastTrackId) {
-        inRadioMode = radioMode;
+    public MusicPlayer(boolean radioMode, UUID lastTrackId, TrackManager trackManager) {
+        this.inRadioMode = radioMode;
         if (lastTrackId != null) {
-            lastTrack = TrackManager.getTrack(lastTrackId);
+            this.currentTrack = trackManager.getTrack(lastTrackId);
         }
+        this.trackManager = trackManager;
     }
 
     public abstract SongPlayer generateSongPlayer(Song song);
@@ -35,7 +34,7 @@ public abstract class MusicPlayer implements Playable, Radioable {
     public void setRadioMode(boolean isRadioMode) {
         inRadioMode = isRadioMode;
         if (inRadioMode && !isPlaying()) {
-            playRandomTrack(TrackManager.getTracks());
+            playRandomTrack(trackManager.getTracks());
         }
     }
 
@@ -67,13 +66,10 @@ public abstract class MusicPlayer implements Playable, Radioable {
     @Override
     public void playTrack(Track track) {
         if (isPlaying()) {
-            if (isRadioMode()) {
-                return;
-            }
             stopPlaying();
         }
-        lastTrack = track;
-        Song song = track.getSong();
+        currentTrack = track;
+        Song song = track.song();
         setSongPlayer(generateSongPlayer(song));
         songplayer.setAutoDestroy(true);
         songplayer.setPlaying(true);
@@ -82,12 +78,6 @@ public abstract class MusicPlayer implements Playable, Radioable {
         }
         for (Player pl : getListeners()) {
             songplayer.addPlayer(pl);
-        }
-        if (this instanceof Tagable) {
-            Tagable tag = (Tagable) this;
-            tag.getTag().setLocation(tag.getTagLocation());
-            tag.setTagLines(ChatColor.YELLOW + track.getName(), ChatColor.DARK_AQUA + track.getArtist());
-            tag.setVisible(tag.isVisible());
         }
         if (this instanceof PlayerNotified) {
             ((PlayerNotified) this).notifyPlayers(track);
@@ -106,7 +96,7 @@ public abstract class MusicPlayer implements Playable, Radioable {
 
     @Override
     public void replay() {
-        Track lasttrack = getLastTrack();
+        Track lasttrack = currentTrack;
         if (!isPlaying() && lasttrack != null) {
             playTrack(lasttrack);
         }
@@ -119,13 +109,8 @@ public abstract class MusicPlayer implements Playable, Radioable {
     }
 
     @Override
-    public Track getLastTrack() {
-        return lastTrack;
-    }
-
-    @Override
-    public void setLastTrack(Track track) {
-        lastTrack = track;
+    public Track getCurrentTrack() {
+        return currentTrack;
     }
 
     @Override

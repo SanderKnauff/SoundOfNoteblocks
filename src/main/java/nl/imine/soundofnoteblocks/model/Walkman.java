@@ -10,51 +10,47 @@ import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import nl.imine.api.util.ColorUtil;
+import nl.imine.soundofnoteblocks.controller.TrackManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
 
 public class Walkman extends MusicPlayer implements PlayerNotified {
+    private final UUID playerId;
 
-	private UUID playerId;
+    public Walkman(Player player, TrackManager trackManager) {
+        super(false, null, trackManager);
+        this.playerId = player.getUniqueId();
+    }
 
-	public Walkman(Player player) {
-		this(player, false, null);
-	}
+    public Player getPlayer() {
+        return Bukkit.getPlayer(playerId);
+    }
 
-	public Walkman(Player player, boolean radioMode, UUID lastTrackId) {
-		super(radioMode, lastTrackId);
-		playerId = player.getUniqueId();
-	}
+    @Override
+    public Collection<Player> getListeners() {
+        return Collections.singletonList(getPlayer());
+    }
 
-	public Player getPlayer() {
-		return Bukkit.getPlayer(playerId);
-	}
+    @Override
+    public SongPlayer generateSongPlayer(Song song) {
+        return new RadioSongPlayer(song);
+    }
 
-	@Override
-	public Collection<Player> getListeners() {
-		return Collections.singletonList(getPlayer());
-	}
+    @Override
+    public void notifyPlayers(Track track) {
+        for (Player pl : getListeners()) {
+            pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.name(), track.artist())));
+        }
+    }
 
-	@Override
-	public SongPlayer generateSongPlayer(Song song) {
-		return new RadioSongPlayer(song);
-	}
-
-	@Override
-	public void notifyPlayers(Track track) {
-		for (Player pl : getListeners()) {
-			pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.getName(), track.getArtist())));
-		}
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Walkman) {
-			Walkman other = (Walkman) obj;
-			return this.getPlayer().equals(other.getPlayer());
-		}
-		return super.equals(obj);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Walkman) {
+            Walkman other = (Walkman) obj;
+            return this.getPlayer().equals(other.getPlayer());
+        }
+        return super.equals(obj);
+    }
 }

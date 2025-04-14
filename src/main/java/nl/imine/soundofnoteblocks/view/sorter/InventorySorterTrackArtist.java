@@ -15,7 +15,7 @@ public class InventorySorterTrackArtist extends InventorySorter {
 		if (o1 instanceof ButtonTrack && o2 instanceof ButtonTrack) {
 			Track t1 = ((ButtonTrack) o1).getTrack();
 			Track t2 = ((ButtonTrack) o2).getTrack();
-			return t1.getArtist().compareTo(t2.getArtist());
+			return t1.artist().compareTo(t2.artist());
 		}
 		return 1000;
 	}

@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.soundofnoteblocks.controller.EntitySongPlayer;
+import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -21,13 +22,9 @@ public class Gettoblaster extends MusicPlayer implements PlayerNotified {
 
 	private Entity entityCenter;
 
-	public Gettoblaster(Entity entity) {
-		this(entity, false, null);
-	}
-
-	public Gettoblaster(Entity entity, boolean radioMode, UUID lastTrackId) {
-		super(radioMode, lastTrackId);
-		entityCenter = entity;
+	public Gettoblaster(Entity entity, TrackManager trackManager) {
+		super(false, null, trackManager);
+		this.entityCenter = entity;
 	}
 
 	public Entity getCenteredEntity() {
@@ -56,7 +53,7 @@ public class Gettoblaster extends MusicPlayer implements PlayerNotified {
 	@Override
 	public void notifyPlayers(Track track) {
 		for (Player pl : getListeners()) {
-			pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.getName(), track.getArtist())));
+			pl.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ColorUtil.replaceColors("&e%s &7from &e%s&7.", track.name(), track.artist())));
 		}
 	}
 

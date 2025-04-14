@@ -33,8 +33,8 @@ public class EntitySongPlayer extends SongPlayer {
         }
         byte playerVolume = NoteBlockAPI.getPlayerVolume(player);
 
-        for (Layer l : song.getLayerHashMap().values()) {
-            Note note = l.getNote(tick);
+        for (Layer layer : song.getLayerHashMap().values()) {
+            Note note = layer.getNote(tick);
             if (note == null) {
                 continue;
             }

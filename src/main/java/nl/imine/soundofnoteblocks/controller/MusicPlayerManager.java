@@ -1,5 +1,6 @@
 package nl.imine.soundofnoteblocks.controller;
 
+import nl.imine.api.holotag.TagAPI;
 import nl.imine.soundofnoteblocks.model.Gettoblaster;
 import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
@@ -16,34 +17,37 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MusicPlayerManager {
+    private final Set<MusicPlayer> musicPlayers;
+    private final TagAPI tagAPI;
+    private final TrackManager trackManager;
 
-    private static final Set<MusicPlayer> musicPlayers = new HashSet<>();
-
-    public static Collection<MusicPlayer> getAllMusicPlayers() {
-        return musicPlayers;
+    public MusicPlayerManager(TagAPI tagAPI, TrackManager trackManager) {
+        this.tagAPI = tagAPI;
+        this.trackManager = trackManager;
+        this.musicPlayers = new HashSet<>();
     }
 
-    public static Collection<Jukebox> getJukeboxes() {
+    public Collection<Jukebox> getJukeboxes() {
         return musicPlayers.stream()
                 .filter(Jukebox.class::isInstance)
                 .map(Jukebox.class::cast)
                 .collect(Collectors.toSet());
     }
 
-    public static Jukebox getOrCreateJukebox(Location location) {
+    public Jukebox getOrCreateJukebox(Location location) {
         return musicPlayers.stream()
                 .filter(Jukebox.class::isInstance)
                 .map(Jukebox.class::cast)
                 .filter(jukebox -> jukebox.getLocation().equals(location))
                 .findAny()
                 .orElseGet(() -> {
-                    Jukebox jukebox = new Jukebox(location);
+                    Jukebox jukebox = new Jukebox(location, tagAPI, trackManager);
                     musicPlayers.add(jukebox);
                     return jukebox;
                 });
     }
 
-    public static void removeJukeboxesFromChunk(Chunk chunk) {
+    public void removeJukeboxesFromChunk(Chunk chunk) {
         Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
         while (musicPlayerIterator.hasNext()) {
             MusicPlayer musicPlayer = musicPlayerIterator.next();
@@ -54,45 +58,43 @@ public class MusicPlayerManager {
                 continue;
             }
             jukebox.stopPlaying();
-            jukebox.getTag().remove();
             if (!jukebox.isRadioMode()) {
                 musicPlayerIterator.remove();
             }
         }
     }
 
-    private static boolean isChunkAtLocation(Chunk chunk, Location location) {
+    private boolean isChunkAtLocation(Chunk chunk, Location location) {
         return chunk.getX() == location.getBlockX() >> 4 && chunk.getZ() == location.getBlockZ() >> 4;
     }
 
-    public static void removeJukebox(Location location) {
+    public void removeJukebox(Location location) {
         Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
         while (musicPlayerIterator.hasNext()) {
             MusicPlayer musicPlayer = musicPlayerIterator.next();
             if (musicPlayer instanceof Jukebox && ((Jukebox) musicPlayer).getLocation().equals(location)) {
                 musicPlayer.setRadioMode(false);
                 musicPlayer.stopPlaying();
-                ((Jukebox) musicPlayer).getTag().remove();
                 musicPlayerIterator.remove();
                 break;
             }
         }
     }
 
-    public static Walkman getOrCreateWalkman(Player player) {
+    public Walkman getOrCreateWalkman(Player player) {
         return musicPlayers.stream()
                 .filter(Walkman.class::isInstance)
                 .map(Walkman.class::cast)
                 .filter(walkman -> walkman.getPlayer().equals(player))
                 .findAny()
                 .orElseGet(() -> {
-                    Walkman walkman = new Walkman(player);
+                    Walkman walkman = new Walkman(player, trackManager);
                     musicPlayers.add(walkman);
                     return walkman;
                 });
     }
 
-    public static void removeWalkman(Player player) {
+    public void removeWalkman(Player player) {
         Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
         while (musicPlayerIterator.hasNext()) {
             MusicPlayer musicPlayer = musicPlayerIterator.next();
@@ -105,27 +107,27 @@ public class MusicPlayerManager {
         }
     }
 
-    public static Collection<Gettoblaster> getGettoblasters() {
+    public Collection<Gettoblaster> getGettoblasters() {
         return musicPlayers.stream()
                 .filter(Gettoblaster.class::isInstance)
                 .map(Gettoblaster.class::cast)
                 .collect(Collectors.toSet());
     }
 
-    public static Gettoblaster getOrCreateGettoblaster(Entity entity) {
+    public Gettoblaster getOrCreateGettoblaster(Entity entity) {
         return musicPlayers.stream()
                 .filter(Gettoblaster.class::isInstance)
                 .map(Gettoblaster.class::cast)
                 .filter(gettoblaster -> gettoblaster.getCenteredEntity().equals(entity))
                 .findAny()
                 .orElseGet(() -> {
-                    Gettoblaster gettoblaster = new Gettoblaster(entity);
+                    Gettoblaster gettoblaster = new Gettoblaster(entity, trackManager);
                     musicPlayers.add(gettoblaster);
                     return gettoblaster;
                 });
     }
 
-    public static void removeGettoblaster(Entity entity) {
+    public void removeGettoblaster(Entity entity) {
         Iterator<MusicPlayer> musicPlayerIterator = musicPlayers.iterator();
         while (musicPlayerIterator.hasNext()) {
             MusicPlayer mp = musicPlayerIterator.next();
@@ -136,5 +138,9 @@ public class MusicPlayerManager {
                 break;
             }
         }
+    }
+
+    public Collection<MusicPlayer> getAllMusicPlayers() {
+        return musicPlayers;
     }
 }

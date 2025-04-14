@@ -21,7 +21,7 @@ public class ButtonTrack extends ButtonMusicPlayer {
 	private final Track track;
 
 	public ButtonTrack(Track track, MusicPlayer mp, int slot) {
-			super(ItemUtil.getBuilder(MusicPlayerView.RECORDS[track.getName().length() % MusicPlayerView.RECORDS.length])
+			super(ItemUtil.getBuilder(MusicPlayerView.RECORDS.get(track.name().length() % MusicPlayerView.RECORDS.size()))
 					.build(), mp, slot);
 			this.track = track;
 	}
@@ -32,14 +32,17 @@ public class ButtonTrack extends ButtonMusicPlayer {
 
 	@Override
 	public ItemStack getItemStack() {
-		ItemStack is = super.getItemStack();
-		ItemMeta im = is.getItemMeta();
-		im.setDisplayName(ColorUtil.replaceColors("&b" + track.getName()));
-		int duratio = (int) (track.getSong().getLength() / track.getSong().getSpeed());
-		im.setLore(Arrays.asList(ColorUtil.replaceColors("&eArtist: " + track.getArtist()),
-				ColorUtil.replaceColors("&cLength: %d:%02d", duratio / 60, duratio % 60)));
-		is.setItemMeta(im);
-		return is;
+		ItemStack stack = super.getItemStack();
+		ItemMeta meta = stack.getItemMeta();
+		if (meta == null) {
+			return stack;
+		}
+		meta.setDisplayName(ColorUtil.replaceColors("&b" + track.name()));
+		int duration = (int) (track.song().getLength() / track.song().getSpeed());
+		meta.setLore(Arrays.asList(ColorUtil.replaceColors("&eArtist: " + track.artist()),
+				ColorUtil.replaceColors("&cLength: %d:%02d", duration / 60, duration % 60)));
+		stack.setItemMeta(meta);
+		return stack;
 	}
 
 	@Override

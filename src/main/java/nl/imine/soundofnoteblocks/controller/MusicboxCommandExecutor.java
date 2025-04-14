@@ -14,7 +14,13 @@ import org.bukkit.command.TabExecutor;
 
 public class MusicboxCommandExecutor implements TabExecutor {
 
-	@Override
+    private final TrackManager trackManager;
+
+    public MusicboxCommandExecutor(TrackManager trackManager) {
+        this.trackManager = trackManager;
+    }
+
+    @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!command.getName().equalsIgnoreCase("jukebox")) {
             return false;
@@ -28,7 +34,7 @@ public class MusicboxCommandExecutor implements TabExecutor {
             return true;
         }
 
-        TrackManager.reloadTracks();
+        trackManager.reloadTracks();
         sender.sendMessage(ChatColor.GRAY + "Reloaded tracks from repos.");
         return true;
     }

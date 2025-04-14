@@ -6,6 +6,7 @@ import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
 import nl.imine.api.holotag.TagAPI;
 import nl.imine.soundofnoteblocks.controller.MusicPlayerListener;
+import nl.imine.soundofnoteblocks.controller.MusicPlayerManager;
 import nl.imine.soundofnoteblocks.controller.MusicboxCommandExecutor;
 import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.Track;
@@ -30,7 +31,7 @@ import static java.util.Objects.requireNonNull;
                 name = "jukebox",
                 desc = "Main command for musicboxes",
                 usage = "/jukebox reload to reload the track list",
-                aliases = { "musicbox", "tracklist" }
+                aliases = {"musicbox", "tracklist"}
         )
 )
 public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
@@ -42,10 +43,15 @@ public class SoundOfNoteBlocksPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         plugin = this;
         GuiManager.init(this);
-        TagAPI.init();
-        TrackManager.reloadTracks();
-        requireNonNull(getCommand("jukebox")).setExecutor(new MusicboxCommandExecutor());
-        Bukkit.getPluginManager().registerEvents(new MusicPlayerListener(), this);
+
+        final var tagApi = new TagAPI();
+        tagApi.init(this);
+        final var trackManager = new TrackManager();
+        final var musicPlayerManager = new MusicPlayerManager(tagApi, trackManager);
+        trackManager.reloadTracks();
+
+        requireNonNull(getCommand("jukebox")).setExecutor(new MusicboxCommandExecutor(trackManager));
+        Bukkit.getPluginManager().registerEvents(new MusicPlayerListener(musicPlayerManager, trackManager), this);
     }
 
     @Override

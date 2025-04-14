@@ -25,9 +25,7 @@ public interface Playable {
 
     void replayForce();
 
-    Track getLastTrack();
-
-    void setLastTrack(Track track);
+    Track getCurrentTrack();
 
     SongPlayer getSongPlayer();
 

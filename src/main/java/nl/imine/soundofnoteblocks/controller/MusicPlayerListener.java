@@ -1,15 +1,13 @@
 package nl.imine.soundofnoteblocks.controller;
 
 import com.xxmicloxx.NoteBlockAPI.event.SongDestroyingEvent;
-import nl.imine.api.event.PlayerInteractTagEvent;
-import nl.imine.api.holotag.ActionType;
+import nl.imine.api.holotag.TagAPI;
 import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
 import nl.imine.soundofnoteblocks.model.Gettoblaster;
 import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.Walkman;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
-import nl.imine.soundofnoteblocks.model.design.Tagable;
 import nl.imine.soundofnoteblocks.view.MusicPlayerView;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -30,12 +28,23 @@ public class MusicPlayerListener implements Listener {
     private static final int CREATIVE_MODE_HELMET_SLOT_ID = 5;
     private static final int SURVIVAL_MODE_HELMET_SLOT_ID = 39;
 
+    private final MusicPlayerManager musicPlayerManager;
+    private final TrackManager trackManager;
+
+    public MusicPlayerListener(
+            MusicPlayerManager musicPlayerManager,
+            TrackManager trackManager
+    ) {
+        this.musicPlayerManager = musicPlayerManager;
+        this.trackManager = trackManager;
+    }
+
     @EventHandler
     public void onRedstoneEvent(BlockRedstoneEvent event) {
         if (event.getNewCurrent() > 2 && event.getNewCurrent() > event.getOldCurrent()) {
             for (int i = -1; i < 2; i++) {
                 final int increment = i;
-                MusicPlayerManager.getJukeboxes().stream()
+                musicPlayerManager.getJukeboxes().stream()
                         .filter(m -> (m.getLocation().equals(event.getBlock().getLocation().clone().add(increment, 0, 0)))
                                 || m.getLocation().equals(event.getBlock().getLocation().clone().add(0, 0, increment)))
                         .forEach(MusicPlayer::replay);
@@ -48,7 +57,7 @@ public class MusicPlayerListener implements Listener {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getClickedBlock() == null || !event.getClickedBlock().getType().equals(Material.JUKEBOX)) {
             return;
         }
-        Jukebox jukebox = MusicPlayerManager.getOrCreateJukebox(event.getClickedBlock().getLocation());
+        Jukebox jukebox = musicPlayerManager.getOrCreateJukebox(event.getClickedBlock().getLocation());
         Player player = event.getPlayer();
         if (player.hasPermission("imine.jukebox.play")) {
             if (!player.isSneaking()) {
@@ -58,7 +67,7 @@ public class MusicPlayerListener implements Listener {
                             if (jukebox.isRadioMode()) {
                                 MusicPlayerView.getRadioModeContainer(jukebox).open(player);
                             } else {
-                                MusicPlayerView.getMusicPlayerContainer(jukebox).open(player);
+                                MusicPlayerView.getMusicPlayerContainer(jukebox, trackManager).open(player);
                             }
                             event.setCancelled(true);
                         }
@@ -72,33 +81,15 @@ public class MusicPlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerTagInteract(PlayerInteractTagEvent pite) {
-        Player player = pite.getPlayer();
-        if (player.hasPermission("imine.jukebox.play")) {
-            if (pite.getAction().equals(ActionType.RICHT_CLICK)) {
-                for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
-                    if (pite.getTag().equals(jukebox.getTag())) {
-                        if (jukebox.isRadioMode()) {
-                            MusicPlayerView.getRadioModeContainer(jukebox).open(player);
-                        } else {
-                            MusicPlayerView.getMusicPlayerContainer(jukebox).open(player);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler
     public void onPlayerDeath(PlayerDeathEvent pde) {
-        MusicPlayerManager.removeGettoblaster(pde.getEntity());
-        MusicPlayerManager.removeWalkman(pde.getEntity());
+        musicPlayerManager.removeGettoblaster(pde.getEntity());
+        musicPlayerManager.removeWalkman(pde.getEntity());
     }
 
     @EventHandler
     public void onLeave(PlayerQuitEvent pqe) {
-        MusicPlayerManager.removeGettoblaster(pqe.getPlayer());
-        MusicPlayerManager.removeWalkman(pqe.getPlayer());
+        musicPlayerManager.removeGettoblaster(pqe.getPlayer());
+        musicPlayerManager.removeWalkman(pqe.getPlayer());
     }
 
     @EventHandler
@@ -108,7 +99,7 @@ public class MusicPlayerListener implements Listener {
                 || (event.getSlot() != SURVIVAL_MODE_HELMET_SLOT_ID && event.getWhoClicked().getGameMode().equals(GameMode.CREATIVE))) {
             return;
         }
-        MusicPlayerManager.removeGettoblaster(event.getWhoClicked());
+        musicPlayerManager.removeGettoblaster(event.getWhoClicked());
     }
 
     @EventHandler
@@ -120,11 +111,11 @@ public class MusicPlayerListener implements Listener {
         Player player = event.getPlayer();
         if (player.hasPermission("imine.jukebox.play") && player.isSneaking()
                 && player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-            Gettoblaster gb = MusicPlayerManager.getOrCreateGettoblaster(player);
+            Gettoblaster gb = musicPlayerManager.getOrCreateGettoblaster(player);
             if (gb.isRadioMode()) {
                 MusicPlayerView.getRadioModeContainer(gb).open(player);
             } else {
-                MusicPlayerView.getMusicPlayerContainer(gb).open(player);
+                MusicPlayerView.getMusicPlayerContainer(gb, trackManager).open(player);
             }
         }
     }
@@ -135,11 +126,11 @@ public class MusicPlayerListener implements Listener {
         if (player.hasPermission("imine.jukebox.play")) {
             if (player.isSneaking() && event.getItemDrop().getItemStack().getType() == Material.JUKEBOX) {
                 Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
-                    Gettoblaster gb = MusicPlayerManager.getOrCreateGettoblaster(player);
+                    Gettoblaster gb = musicPlayerManager.getOrCreateGettoblaster(player);
                     if (gb.isRadioMode()) {
                         MusicPlayerView.getRadioModeContainer(gb).open(player);
                     } else {
-                        MusicPlayerView.getMusicPlayerContainer(gb).open(player);
+                        MusicPlayerView.getMusicPlayerContainer(gb, trackManager).open(player);
                     }
                 }, 0);
                 ItemStack helmet = player.getInventory().getHelmet();
@@ -162,15 +153,15 @@ public class MusicPlayerListener implements Listener {
         if (player.hasPermission("imine.jukebox.play")) {
             if (event.getOffHandItem() != null && event.getOffHandItem().getType() == Material.JUKEBOX) {
                 Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
-                    Walkman walkman = MusicPlayerManager.getOrCreateWalkman(player);
+                    Walkman walkman = musicPlayerManager.getOrCreateWalkman(player);
                     if (walkman.isRadioMode()) {
                         MusicPlayerView.getRadioModeContainer(walkman).open(player);
                     } else {
-                        MusicPlayerView.getMusicPlayerContainer(walkman).open(player);
+                        MusicPlayerView.getMusicPlayerContainer(walkman, trackManager).open(player);
                     }
                 }, 1);
             } else if (event.getMainHandItem() != null && event.getMainHandItem().getType() == Material.JUKEBOX) {
-                MusicPlayerManager.removeWalkman(player);
+                musicPlayerManager.removeWalkman(player);
             }
         }
     }
@@ -181,13 +172,13 @@ public class MusicPlayerListener implements Listener {
             return;
         }
         if (bbe.getBlock().getType().equals(Material.JUKEBOX)) {
-            MusicPlayerManager.removeJukebox(bbe.getBlock().getLocation());
+            musicPlayerManager.removeJukebox(bbe.getBlock().getLocation());
         }
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
+        for (Jukebox jukebox : musicPlayerManager.getJukeboxes()) {
             if (jukebox.isPlaying() && event.getTo() != null && jukebox.getLocation().getWorld() == event.getTo().getWorld()) {
                 if (event.getTo().distance(jukebox.getLocation()) < Jukebox.DISTANCE) {
                     jukebox.getSongPlayer().addPlayer(event.getPlayer());
@@ -196,7 +187,7 @@ public class MusicPlayerListener implements Listener {
                 }
             }
         }
-        for (Gettoblaster gettoblaster : MusicPlayerManager.getGettoblasters()) {
+        for (Gettoblaster gettoblaster : musicPlayerManager.getGettoblasters()) {
             if (gettoblaster.isPlaying() && event.getTo() != null && gettoblaster.getCenteredEntity().getLocation().getWorld() == event.getTo().getWorld()) {
                 if (event.getTo().distance(gettoblaster.getCenteredEntity().getLocation()) < Gettoblaster.DISTANCE) {
                     gettoblaster.getSongPlayer().addPlayer(event.getPlayer());
@@ -209,7 +200,7 @@ public class MusicPlayerListener implements Listener {
 
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event) {
-        for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
+        for (Jukebox jukebox : musicPlayerManager.getJukeboxes()) {
             if (jukebox.getSongPlayer() == null) {
                 continue;
             }
@@ -221,14 +212,11 @@ public class MusicPlayerListener implements Listener {
 
     @EventHandler
     public void onSongStop(SongDestroyingEvent sde) {
-        for (MusicPlayer musicPlayer : MusicPlayerManager.getAllMusicPlayers()) {
+        for (MusicPlayer musicPlayer : musicPlayerManager.getAllMusicPlayers()) {
             if (musicPlayer.getSongPlayer() == sde.getSongPlayer()) {
                 musicPlayer.setPlaying(false);
                 if (musicPlayer.isRadioMode()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.getInstance(), () -> musicPlayer.playRandomTrack(TrackManager.getTracks()), 20L);
-                }
-                if (musicPlayer instanceof Tagable tag) {
-                    tag.getTag().setVisible(false);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.getInstance(), () -> musicPlayer.playRandomTrack(trackManager.getTracks()), 20L);
                 }
                 if (musicPlayer instanceof Lockable lock) {
                     lock.setLocked(false);
@@ -239,7 +227,7 @@ public class MusicPlayerListener implements Listener {
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        for (Jukebox jukebox : MusicPlayerManager.getJukeboxes()) {
+        for (Jukebox jukebox : musicPlayerManager.getJukeboxes()) {
             if (jukebox.getLocation().getWorld() == null) {
                 continue;
             }
@@ -250,14 +238,14 @@ public class MusicPlayerListener implements Listener {
                 continue;
             }
             Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.getInstance(), () -> {
-                jukebox.playRandomTrack(TrackManager.getTracks());
+                jukebox.playRandomTrack(trackManager.getTracks());
             }, 20L);
         }
     }
 
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent event) {
-        MusicPlayerManager.removeJukeboxesFromChunk(event.getChunk());
+        musicPlayerManager.removeJukeboxesFromChunk(event.getChunk());
     }
 
 }

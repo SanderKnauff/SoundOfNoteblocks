@@ -3,81 +3,73 @@ package nl.imine.soundofnoteblocks.model;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.PositionSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
-import nl.imine.api.holotag.ITag;
 import nl.imine.api.holotag.TagAPI;
+import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
 import nl.imine.soundofnoteblocks.model.design.MusicLocation;
-import nl.imine.soundofnoteblocks.model.design.Tagable;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.entity.Display;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TextDisplay;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
-public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLocation {
-
+public class Jukebox extends MusicPlayer implements Lockable, MusicLocation {
     public static final double DISTANCE = Math.pow(6, 2);
+    private static final double LINE_DISTANCE = .3;
 
     private final Location location;
-    private transient ITag tag;
+    private final TagAPI tagAPI;
+
     private boolean locked;
-    private boolean isVisible;
+    private boolean shouldShowTags;
+    private @Nullable TextDisplay titleText;
+    private @Nullable TextDisplay artistText;
 
-    public Jukebox(Location loc) {
-        this(loc, true, false, null);
+
+    public Jukebox(Location location, TagAPI tagAPI, TrackManager trackManager) {
+        super(false, null, trackManager);
+        this.location = location;
+        this.tagAPI = tagAPI;
+
+        this.locked = false;
+        this.shouldShowTags = true;
     }
 
-    public Jukebox(Location loc, boolean visible, boolean radioMode, UUID lastTrackId) {
-        super(radioMode, lastTrackId);
-        location = loc.clone();
-        isVisible = visible;
-        getTag();
-    }
-
-    @Override
-    public Location getTagLocation() {
-        Location loc = getLocation();
-        if (loc.clone().add(0, 1, 0).getBlock().getType().isOccluding()) {
-            loc.add(0, -1, 0);
-        }
-        return loc.add(0.5, 0.5, 0.5);
-    }
-
-    @Override
-    public ITag getTag() {
-        if (tag == null) {
-            tag = TagAPI.createTag(getTagLocation());
-            tag.addLine("Loading...");
-            tag.addLine("^,^");
-            tag.setVisible(false);
-        }
-        return tag;
-    }
-
-    @Override
-    public void setTagLines(String... lines) {
-        ITag tag = getTag();
-        for (int i = 0; i < lines.length; i++) {
-            tag.setLine(i, lines[i]);
-        }
-        tag.setVisible(isVisible());
+    private Location getTagLocation() {
+        return getLocation().add(0.5, 1.5, 0.5);
     }
 
     @Override
     public void playTrack(Track track) {
-        if (getLocation().getChunk().isLoaded()) {
-            if (getLocation().getBlock().getType() == Material.JUKEBOX) {
-                super.playTrack(track);
-            }
+        super.playTrack(track);
+
+        final var world = getTagLocation().getWorld();
+        if (world == null) {
+            return;
+        }
+
+        if (shouldShowTags) {
+            spawnTextDisplays();
+        }
+    }
+
+    @Override
+    public void setPlaying(boolean playing) {
+        super.setPlaying(playing);
+        if (!playing) {
+            removeTextDisplays();
         }
     }
 
     @Override
     public void stopPlaying() {
         super.stopPlaying();
-        getTag().remove();
+        removeTextDisplays();
     }
 
     @Override
@@ -123,14 +115,49 @@ public class Jukebox extends MusicPlayer implements Tagable, Lockable, MusicLoca
         return super.equals(obj);
     }
 
-    @Override
-    public void setVisible(boolean visible) {
-        isVisible = visible;
-        getTag().setVisible(visible);
+    public void toggleTags() {
+        if (this.shouldShowTags) {
+            hideTags();
+        } else {
+            showTags();
+        }
     }
 
-    @Override
-    public boolean isVisible() {
-        return isVisible;
+    public void hideTags() {
+        this.shouldShowTags = false;
+        this.removeTextDisplays();
+    }
+
+    public void showTags() {
+        this.shouldShowTags = true;
+        this.spawnTextDisplays();
+    }
+
+    private void removeTextDisplays() {
+        if (titleText != null) {
+            titleText.remove();
+            titleText = null;
+        }
+        if (artistText != null) {
+            artistText.remove();
+            artistText = null;
+        }
+    }
+
+    private void spawnTextDisplays() {
+        titleText = spawnTextDisplay(getTagLocation(), ChatColor.YELLOW + getCurrentTrack().name());
+        artistText = spawnTextDisplay(getTagLocation().subtract(0, LINE_DISTANCE, 0), ChatColor.DARK_AQUA + getCurrentTrack().artist());
+    }
+
+    private TextDisplay spawnTextDisplay(Location location, String text) {
+        if (location.getWorld() == null) {
+            return null;
+        }
+        final var textDisplay = (TextDisplay) location.getWorld().spawnEntity(location, EntityType.TEXT_DISPLAY);
+        textDisplay.setGravity(false);
+        textDisplay.setText(text);
+        textDisplay.setBillboard(Display.Billboard.CENTER);
+        tagAPI.writeSessionKey(textDisplay);
+        return textDisplay;
     }
 }
