@@ -1,14 +1,13 @@
 package nl.imine.api.gui;
 
-import java.util.List;
-
+import nl.imine.api.event.ContainerBuildInventoryEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import nl.imine.api.event.ContainerBuildInventoryEvent;
+import java.util.List;
 
 public class Button {
 	protected ItemStack itemStack;

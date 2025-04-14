@@ -1,9 +1,5 @@
 package nl.imine.soundofnoteblocks.model;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.UUID;
-
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
@@ -11,10 +7,13 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.soundofnoteblocks.controller.TrackManager;
+import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.UUID;
 
 public class Walkman extends MusicPlayer implements PlayerNotified {
     private final UUID playerId;

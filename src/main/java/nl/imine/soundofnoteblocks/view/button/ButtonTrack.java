@@ -1,13 +1,5 @@
 package nl.imine.soundofnoteblocks.view.button;
 
-import java.util.Arrays;
-
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import nl.imine.api.gui.Container;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
@@ -15,6 +7,13 @@ import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.Track;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
 import nl.imine.soundofnoteblocks.view.MusicPlayerView;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Arrays;
 
 public class ButtonTrack extends ButtonMusicPlayer {
 

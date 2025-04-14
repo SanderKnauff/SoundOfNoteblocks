@@ -1,29 +1,23 @@
 package nl.imine.api.gui;
 
-import java.util.ArrayList;
-
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+
 public class GuiManager {
+	private final ArrayList<Container> containers = new ArrayList<>();
 
-	private static GuiManager manager;
-
-	private final ArrayList<nl.imine.api.gui.Container> containers = new ArrayList<>();
-
-	public static void init(Plugin plugin) {
-		GuiManager.manager = new GuiManager();
-		GuiListener.init(plugin);
+	public void init(Plugin plugin) {
+		final var guiListener = new GuiListener(plugin, this);
+		Bukkit.getPluginManager().registerEvents(guiListener, plugin);
 	}
 
-	private GuiManager() {
+	public GuiManager() {
 	}
 
-	public static GuiManager getInstance() {
-		return manager;
-	}
-
-	public ArrayList<nl.imine.api.gui.Container> getContainers() {
+	public ArrayList<Container> getContainers() {
 		return containers;
 	}
 
@@ -60,7 +54,7 @@ public class GuiManager {
 	}
 
 	public boolean isGuiInventory(Inventory inv) {
-		for (nl.imine.api.gui.Container c : containers) {
+		for (Container c : containers) {
 			for (Inventory i : c.getOpenInventories()) {
 				if (i.equals(inv)) {
 					return true;
@@ -70,8 +64,8 @@ public class GuiManager {
 		return false;
 	}
 
-	public nl.imine.api.gui.Container getInventoryContainer(Inventory inv) {
-		for (nl.imine.api.gui.Container c : containers) {
+	public Container getInventoryContainer(Inventory inv) {
+		for (Container c : containers) {
 			for (Inventory i : c.getOpenInventories()) {
 				if (i.equals(inv)) {
 					return c;

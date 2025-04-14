@@ -1,18 +1,16 @@
 package nl.imine.soundofnoteblocks.model;
 
-import java.util.List;
-import java.util.UUID;
-
-import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import com.xxmicloxx.NoteBlockAPI.model.Song;
-
+import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import nl.imine.soundofnoteblocks.controller.TrackManager;
 import nl.imine.soundofnoteblocks.model.design.Playable;
 import nl.imine.soundofnoteblocks.model.design.PlayerNotified;
 import nl.imine.soundofnoteblocks.model.design.Radioable;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.UUID;
 
 public abstract class MusicPlayer implements Playable, Radioable {
     private final TrackManager trackManager;

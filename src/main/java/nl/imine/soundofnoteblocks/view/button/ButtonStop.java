@@ -1,14 +1,13 @@
 package nl.imine.soundofnoteblocks.view.button;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-
 import nl.imine.api.gui.Container;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 public class ButtonStop extends ButtonMusicPlayer {
 	public ButtonStop(MusicPlayer mp, int slot) {

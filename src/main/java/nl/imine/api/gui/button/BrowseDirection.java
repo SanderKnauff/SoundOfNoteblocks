@@ -1,10 +1,9 @@
 package nl.imine.api.gui.button;
 
+import nl.imine.api.util.ItemUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-
-import nl.imine.api.util.ItemUtil;
 
 public enum BrowseDirection {
 

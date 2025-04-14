@@ -1,8 +1,7 @@
 package nl.imine.api.event;
 
-import org.bukkit.event.HandlerList;
-
 import nl.imine.api.gui.Container;
+import org.bukkit.event.HandlerList;
 
 public class ContainerBuildInventoryEvent extends ContainerEvent {
 

@@ -1,10 +1,9 @@
 package nl.imine.soundofnoteblocks.model.design;
 
-import java.util.Collection;
-
+import nl.imine.soundofnoteblocks.model.Track;
 import org.bukkit.entity.Player;
 
-import nl.imine.soundofnoteblocks.model.Track;
+import java.util.Collection;
 
 public interface PlayerNotified {
 

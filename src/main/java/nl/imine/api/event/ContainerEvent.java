@@ -1,13 +1,12 @@
 package nl.imine.api.event;
 
-import java.util.List;
-
+import nl.imine.api.gui.Button;
+import nl.imine.api.gui.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import nl.imine.api.gui.Button;
-import nl.imine.api.gui.Container;
+import java.util.List;
 
 public class ContainerEvent extends Event {
 

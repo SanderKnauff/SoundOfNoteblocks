@@ -1,18 +1,15 @@
 package nl.imine.api.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
+import nl.imine.api.event.ContainerBuildInventoryEvent;
+import nl.imine.api.gui.button.BrowseDirection;
+import nl.imine.api.gui.button.ButtonChangePage;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import nl.imine.api.event.ContainerBuildInventoryEvent;
-import nl.imine.api.event.ContainerConstructEvent;
-import nl.imine.api.event.ContainerUpdateEvent;
-import nl.imine.api.gui.button.BrowseDirection;
-import nl.imine.api.gui.button.ButtonChangePage;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Container {
 
@@ -24,10 +21,9 @@ public abstract class Container {
 	private final String title;
 
 	private InventorySorter sort;
-	private boolean autoResize;
+	private final boolean autoResize;
 	private int maxScreenSize;
 	private int openPage = 0;
-	private int scheduler = -1;
 
 	protected Container(String title) {
 		this(title, 9);
@@ -49,7 +45,6 @@ public abstract class Container {
 			staticButtons.add(getDefaultPreviousButton(this));
 			staticButtons.add(getDefaultNextButton(this));
 		}
-		Bukkit.getPluginManager().callEvent(new ContainerConstructEvent(this));
 	}
 
 	public void open(Player player, int page) {
@@ -77,19 +72,7 @@ public abstract class Container {
 	}
 
 	public void refresh() {
-		Bukkit.getPluginManager().callEvent(new ContainerUpdateEvent(this));
 		buildInventory();
-	}
-
-	public void setRefreshRate(long refreshRate) {
-		if (scheduler > -1) {
-			Bukkit.getScheduler().cancelTask(scheduler);
-		}
-		if (refreshRate > -1) {
-			scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(SoundOfNoteBlocksPlugin.getInstance(), () -> {
-				refresh();
-			} , 0L, refreshRate);
-		}
 	}
 
 	private void buildInventory() {
@@ -98,7 +81,6 @@ public abstract class Container {
 
 	private void buildInventory(Inventory inv) {
 		inv.clear();
-		GuiManager.getInstance().ensureContainer(this);
 		ContainerBuildInventoryEvent event = new ContainerBuildInventoryEvent(this);
 		Bukkit.getPluginManager().callEvent(event);
 		buttons.forEach(b -> b.onRefresh(event));
@@ -118,9 +100,7 @@ public abstract class Container {
 
 	public void close() {
 		new ArrayList<>(openInvs).forEach(inv -> {
-			new ArrayList<>(inv.getViewers()).forEach(viewer -> {
-				viewer.closeInventory();
-			});
+			new ArrayList<>(inv.getViewers()).forEach(HumanEntity::closeInventory);
 		});
 	}
 
@@ -228,7 +208,7 @@ public abstract class Container {
 		if (nr.isEmpty()) {
 			return 0;
 		}
-		return (nr.get(0) == null ? 0 : nr.get(0));
+		return (nr.getFirst() == null ? 0 : nr.getFirst());
 	}
 
 	public int getFreeSlot() {

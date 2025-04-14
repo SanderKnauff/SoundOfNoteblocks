@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
 
 public class Gettoblaster extends MusicPlayer implements PlayerNotified {
 

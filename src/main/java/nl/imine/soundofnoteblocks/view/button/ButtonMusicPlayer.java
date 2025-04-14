@@ -1,9 +1,8 @@
 package nl.imine.soundofnoteblocks.view.button;
 
-import org.bukkit.inventory.ItemStack;
-
 import nl.imine.api.gui.Button;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class ButtonMusicPlayer extends Button {
 

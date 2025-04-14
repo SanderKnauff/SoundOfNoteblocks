@@ -1,15 +1,15 @@
 package nl.imine.soundofnoteblocks.controller;
 
 import com.xxmicloxx.NoteBlockAPI.event.SongDestroyingEvent;
-import nl.imine.api.holotag.TagAPI;
-import nl.imine.soundofnoteblocks.SoundOfNoteBlocksPlugin;
 import nl.imine.soundofnoteblocks.model.Gettoblaster;
 import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.Walkman;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
 import nl.imine.soundofnoteblocks.view.MusicPlayerView;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,23 +19,35 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public class MusicPlayerListener implements Listener {
     private static final int CREATIVE_MODE_HELMET_SLOT_ID = 5;
     private static final int SURVIVAL_MODE_HELMET_SLOT_ID = 39;
 
+    private final Plugin plugin;
     private final MusicPlayerManager musicPlayerManager;
+    private final MusicPlayerView musicPlayerView;
     private final TrackManager trackManager;
 
     public MusicPlayerListener(
+            Plugin plugin,
             MusicPlayerManager musicPlayerManager,
+            MusicPlayerView musicPlayerView,
             TrackManager trackManager
     ) {
+        this.plugin = plugin;
         this.musicPlayerManager = musicPlayerManager;
+        this.musicPlayerView = musicPlayerView;
         this.trackManager = trackManager;
     }
 
@@ -65,9 +77,9 @@ public class MusicPlayerListener implements Listener {
                     if (event.getItem() == null || !event.getItem().getType().name().toLowerCase().contains("record")) {
                         if (!jukebox.isLocked() || player.hasPermission("iMine.jukebox.lockbypass")) {
                             if (jukebox.isRadioMode()) {
-                                MusicPlayerView.getRadioModeContainer(jukebox).open(player);
+                                musicPlayerView.getRadioModeContainer(jukebox).open(player);
                             } else {
-                                MusicPlayerView.getMusicPlayerContainer(jukebox, trackManager).open(player);
+                                musicPlayerView.getMusicPlayerContainer(jukebox, trackManager).open(player);
                             }
                             event.setCancelled(true);
                         }
@@ -113,9 +125,9 @@ public class MusicPlayerListener implements Listener {
                 && player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             Gettoblaster gb = musicPlayerManager.getOrCreateGettoblaster(player);
             if (gb.isRadioMode()) {
-                MusicPlayerView.getRadioModeContainer(gb).open(player);
+                musicPlayerView.getRadioModeContainer(gb).open(player);
             } else {
-                MusicPlayerView.getMusicPlayerContainer(gb, trackManager).open(player);
+                musicPlayerView.getMusicPlayerContainer(gb, trackManager).open(player);
             }
         }
     }
@@ -125,12 +137,12 @@ public class MusicPlayerListener implements Listener {
         Player player = event.getPlayer();
         if (player.hasPermission("imine.jukebox.play")) {
             if (player.isSneaking() && event.getItemDrop().getItemStack().getType() == Material.JUKEBOX) {
-                Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     Gettoblaster gb = musicPlayerManager.getOrCreateGettoblaster(player);
                     if (gb.isRadioMode()) {
-                        MusicPlayerView.getRadioModeContainer(gb).open(player);
+                        musicPlayerView.getRadioModeContainer(gb).open(player);
                     } else {
-                        MusicPlayerView.getMusicPlayerContainer(gb, trackManager).open(player);
+                        musicPlayerView.getMusicPlayerContainer(gb, trackManager).open(player);
                     }
                 }, 0);
                 ItemStack helmet = player.getInventory().getHelmet();
@@ -152,12 +164,12 @@ public class MusicPlayerListener implements Listener {
         Player player = event.getPlayer();
         if (player.hasPermission("imine.jukebox.play")) {
             if (event.getOffHandItem() != null && event.getOffHandItem().getType() == Material.JUKEBOX) {
-                Bukkit.getScheduler().runTaskLater(SoundOfNoteBlocksPlugin.getInstance(), () -> {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     Walkman walkman = musicPlayerManager.getOrCreateWalkman(player);
                     if (walkman.isRadioMode()) {
-                        MusicPlayerView.getRadioModeContainer(walkman).open(player);
+                        musicPlayerView.getRadioModeContainer(walkman).open(player);
                     } else {
-                        MusicPlayerView.getMusicPlayerContainer(walkman, trackManager).open(player);
+                        musicPlayerView.getMusicPlayerContainer(walkman, trackManager).open(player);
                     }
                 }, 1);
             } else if (event.getMainHandItem() != null && event.getMainHandItem().getType() == Material.JUKEBOX) {
@@ -216,7 +228,7 @@ public class MusicPlayerListener implements Listener {
             if (musicPlayer.getSongPlayer() == sde.getSongPlayer()) {
                 musicPlayer.setPlaying(false);
                 if (musicPlayer.isRadioMode()) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.getInstance(), () -> musicPlayer.playRandomTrack(trackManager.getTracks()), 20L);
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> musicPlayer.playRandomTrack(trackManager.getTracks()), 20L);
                 }
                 if (musicPlayer instanceof Lockable lock) {
                     lock.setLocked(false);
@@ -237,7 +249,7 @@ public class MusicPlayerListener implements Listener {
             if (!jukebox.isRadioMode()) {
                 continue;
             }
-            Bukkit.getScheduler().scheduleSyncDelayedTask(SoundOfNoteBlocksPlugin.getInstance(), () -> {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 jukebox.playRandomTrack(trackManager.getTracks());
             }, 20L);
         }

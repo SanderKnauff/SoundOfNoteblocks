@@ -1,17 +1,16 @@
 package nl.imine.api.gui.button;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import nl.imine.api.gui.Button;
+import nl.imine.api.gui.Container;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import nl.imine.api.gui.Button;
-import nl.imine.api.gui.Container;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class ButtonList extends Button {
 

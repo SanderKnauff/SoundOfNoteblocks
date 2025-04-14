@@ -1,7 +1,10 @@
 package nl.imine.soundofnoteblocks.controller;
 
 import com.xxmicloxx.NoteBlockAPI.NoteBlockAPI;
-import com.xxmicloxx.NoteBlockAPI.model.*;
+import com.xxmicloxx.NoteBlockAPI.model.CustomInstrument;
+import com.xxmicloxx.NoteBlockAPI.model.Layer;
+import com.xxmicloxx.NoteBlockAPI.model.Note;
+import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.CompatibilityUtils;
 import com.xxmicloxx.NoteBlockAPI.utils.InstrumentUtils;

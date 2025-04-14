@@ -1,12 +1,10 @@
 package nl.imine.soundofnoteblocks.view;
 
-import nl.imine.soundofnoteblocks.model.Jukebox;
-import org.bukkit.Material;
-
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.soundofnoteblocks.controller.TrackManager;
+import nl.imine.soundofnoteblocks.model.Jukebox;
 import nl.imine.soundofnoteblocks.model.MusicPlayer;
 import nl.imine.soundofnoteblocks.model.Track;
 import nl.imine.soundofnoteblocks.model.design.Lockable;
@@ -18,6 +16,7 @@ import nl.imine.soundofnoteblocks.view.button.ButtonReplay;
 import nl.imine.soundofnoteblocks.view.button.ButtonStop;
 import nl.imine.soundofnoteblocks.view.button.ButtonToggleTag;
 import nl.imine.soundofnoteblocks.view.button.ButtonTrack;
+import org.bukkit.Material;
 
 import java.util.List;
 
@@ -42,8 +41,14 @@ public class MusicPlayerView {
             Material.MUSIC_DISC_WAIT
     );
 
-    public static Container getMusicPlayerContainer(MusicPlayer musicPlayer, TrackManager trackManager) {
-        Container container = GuiManager.getInstance()
+    private final GuiManager guiManager;
+
+    public MusicPlayerView(GuiManager guiManager) {
+        this.guiManager = guiManager;
+    }
+
+    public Container getMusicPlayerContainer(MusicPlayer musicPlayer, TrackManager trackManager) {
+        Container container = guiManager
                 .createContainer(ColorUtil.replaceColors("&dJukebox       &cChoose Track!"), 45, true, false);
         for (Track track : trackManager.getTracks()) {
             container.addButton(new ButtonTrack(track, musicPlayer, container.getButtons().size()), false);
@@ -64,8 +69,8 @@ public class MusicPlayerView {
         return container;
     }
 
-    public static Container getRadioModeContainer(MusicPlayer mp) {
-        Container container = GuiManager.getInstance().createContainer(ColorUtil.replaceColors("Radio!"), 9, false, false);
+    public Container getRadioModeContainer(MusicPlayer mp) {
+        Container container = guiManager.createContainer(ColorUtil.replaceColors("Radio!"), 9, false, false);
         container.addButton(new ButtonRadiomode(mp, 4), false);
         container.addButton(new ButtonStop(mp, 8), true);
         return container;

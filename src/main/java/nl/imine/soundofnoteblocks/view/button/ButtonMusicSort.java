@@ -1,13 +1,12 @@
 package nl.imine.soundofnoteblocks.view.button;
 
-import org.bukkit.Material;
-
 import nl.imine.api.gui.button.ButtonSort;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.ItemUtil;
 import nl.imine.soundofnoteblocks.view.sorter.InventorySorterTrackArtist;
 import nl.imine.soundofnoteblocks.view.sorter.InventorySorterTrackName;
 import nl.imine.soundofnoteblocks.view.sorter.InventorySorterTrackSongLength;
+import org.bukkit.Material;
 
 public class ButtonMusicSort extends ButtonSort {
 

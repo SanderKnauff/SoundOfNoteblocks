@@ -1,18 +1,17 @@
 package nl.imine.api.gui.button;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import nl.imine.api.event.ContainerBuildInventoryEvent;
+import nl.imine.api.gui.Button;
+import nl.imine.api.gui.Container;
+import nl.imine.api.gui.InventorySorter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import nl.imine.api.event.ContainerBuildInventoryEvent;
-import nl.imine.api.gui.Button;
-import nl.imine.api.gui.Container;
-import nl.imine.api.gui.InventorySorter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ButtonSort extends Button {
 
@@ -67,12 +66,12 @@ public class ButtonSort extends Button {
 	}
 
 	@Override
-	public void onRefresh(ContainerBuildInventoryEvent cbie) {
+	public void onRefresh(ContainerBuildInventoryEvent event) {
 		int page = getPage();
 		InventorySorter[] sorters = getSorters();
-		if (cbie.getContainer().hasButton(this)) {
+		if (event.getContainer().hasButton(this)) {
 			if (sorters[page] != null) {
-				cbie.getContainer().setSorter(sorters[page]);
+				event.getContainer().setSorter(sorters[page]);
 			}
 		}
 	}
